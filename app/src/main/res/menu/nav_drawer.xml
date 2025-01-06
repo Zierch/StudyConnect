@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/main">
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/ic_home"
+            android:title="Kelas" />
+        <item
+            android:id="@+id/notification"
+            android:icon="@drawable/ic_notification"
+            android:title="Notifikasi" />
+    </group>
+
+    <group android:id="@+id/classes">
+        <item
+            android:id="@+id/kelas1"
+            android:title="Kelas A" />
+        <item
+            android:id="@+id/kelas2"
+            android:title="Kelas B" />
+    </group>
+
+    <group android:id="@+id/submain">
+        <item
+            android:id="@+id/archived"
+            android:title="Kelas yang diarsipkan" />
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/ic_setting"
+            android:title="Setelan" />
+    </group>
+
+</menu>

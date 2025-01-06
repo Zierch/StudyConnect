@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
 }
 
@@ -35,6 +34,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        resources {
+            excludes.add("META-INF/gradle/incremental.annotation.processors")
+        }
+    }
 }
 
 dependencies {
@@ -49,7 +53,7 @@ dependencies {
 
 //    Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
-    implementation("com.google.dagger:hilt-android-compiler:2.51.1")
+    annotationProcessor("com.google.dagger:hilt-android-compiler:2.51.1")
 
 //    Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
