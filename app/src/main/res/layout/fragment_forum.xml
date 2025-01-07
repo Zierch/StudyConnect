@@ -94,49 +94,23 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-<!--        <com.google.android.material.card.MaterialCardView-->
-<!--            android:visibility="gone"-->
-        <com.google.android.material.card.MaterialCardView
-            android:visibility="visible"
-            android:id="@+id/card_forum_kosong"
+        <!--        nek pas forum chat e kosong iso dishow-->
+        <include
+            layout="@layout/forum_empty_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/materialCardView2" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialCardView2"
-            app:strokeWidth="0dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="15dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/toolsbg"
-                    android:contentDescription="@string/text_profile" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/text_deskripsi1"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/text_deskripsi2"
-                    android:textAlignment="center"
-                    android:textSize="15sp" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
+            tools:listitem="@layout/item_forum_text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

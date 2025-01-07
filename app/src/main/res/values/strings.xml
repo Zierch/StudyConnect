@@ -21,4 +21,10 @@
     <string name="text_deskripsi_pengumuman">Deskripsi pengumuman</string>
     <string name="text_tambah_komentar">Tambahkan komentar kelas</string>
     <string name="text_nama_gambar">nama gambar.jpg</string>
+    <string name="tools_background">tools background</string>
+    <string name="text_deskripsi3">Disinilah Anda akan memberikan tugas</string>
+    <string name="text_deskripsi4">Anda dapat menambahkan tugas dan pekerjaan lain untuk kelas, lalu mengaturnya ke dalam topik.</string>
+    <string name="text_judul_tugas">Judul Tugas</string>
+    <string name="text_diposting">Diposting 12.00</string>
+    <string name="text_edit_tugas">Edit Tugas</string>
 </resources>
