@@ -36,4 +36,10 @@
     <string name="text_tambahkan_lampiran">Tambahkan Lampiran</string>
     <string name="text_umumkan_sesuatu">Umumkan sesuatu kepada kelas anda</string>
     <string name="lampiran">Lampiran</string>
+    <string name="text_buat">Buat</string>
+    <string name="text_tugas">Tugas</string>
+    <string name="text_kuis">Kuis</string>
+    <string name="text_pertanyaan">Pertanyaan</string>
+    <string name="text_materi">Materi</string>
+    <string name="text_topik">Topik</string>
 </resources>
