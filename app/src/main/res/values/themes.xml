@@ -61,7 +61,7 @@
     </style>
     <style name="NavTitle">
         <item name="android:fontFamily">@font/poppins_bold</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:textColor">@color/md_theme_onSurface</item>
     </style>

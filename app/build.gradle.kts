@@ -39,6 +39,9 @@ android {
             excludes.add("META-INF/gradle/incremental.annotation.processors")
         }
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -51,13 +54,18 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+//    Navigation
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+
 //    Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    annotationProcessor("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation(libs.hilt.android)
+    annotationProcessor(libs.hilt.android.compiler)
 
 //    Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
-    implementation("androidx.preference:preference:1.2.0")
+//    Preference
+    implementation(libs.preference)
 }
