@@ -36,22 +36,6 @@
         app:iconTint="@color/black" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddKuis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:padding="15dp"
-        android:text="@string/text_kuis"
-        android:textAlignment="textStart"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        app:cornerRadius="0dp"
-        app:icon="@drawable/baseline_description_24"
-        app:iconPadding="20dp"
-        app:iconSize="40sp"
-        app:iconTint="@color/black" />
-
-    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddPertanyaan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,27 +63,6 @@
         android:textSize="25sp"
         app:cornerRadius="0dp"
         app:icon="@drawable/baseline_book_24"
-        app:iconPadding="20dp"
-        app:iconSize="40sp"
-        app:iconTint="@color/black" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/md_theme_outline" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddTopik"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:padding="15dp"
-        android:text="@string/text_topik"
-        android:textAlignment="textStart"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        app:cornerRadius="0dp"
-        app:icon="@drawable/baseline_view_list_24"
         app:iconPadding="20dp"
         app:iconSize="40sp"
         app:iconTint="@color/black" />

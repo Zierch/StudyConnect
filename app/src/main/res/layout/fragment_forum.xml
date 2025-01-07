@@ -91,7 +91,6 @@
                         android:contentDescription="@string/text_profile" />
                 </com.google.android.material.card.MaterialCardView>
 
-
                 <TextView
                     android:id="@+id/tv_add_pengumuman"
                     android:layout_width="wrap_content"
