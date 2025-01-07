@@ -27,4 +27,13 @@
     <string name="text_judul_tugas">Judul Tugas</string>
     <string name="text_diposting">Diposting 12.00</string>
     <string name="text_edit_tugas">Edit Tugas</string>
+    <string name="text_batalkan_pendaftaran">Batalkan pendaftaran</string>
+    <string name="text_edit_kelas">Edit kelas</string>
+    <string name="text_arsipkan_kelas">Arsipkan kelas</string>
+    <string name="text_settings">Settings</string>
+    <string name="close">Close</string>
+    <string name="text_posting">Posting</string>
+    <string name="text_tambahkan_lampiran">Tambahkan Lampiran</string>
+    <string name="text_umumkan_sesuatu">Umumkan sesuatu kepada kelas anda</string>
+    <string name="lampiran">Lampiran</string>
 </resources>
