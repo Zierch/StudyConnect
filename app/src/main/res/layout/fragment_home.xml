@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,10 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_theme_background"
+        android:paddingStart="15dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:navigationIcon="@drawable/ic_menu"
-        android:paddingStart="15dp"
-        app:title="Study Connect">
+        app:title="Study Connect"
+        tools:ignore="RtlSymmetry">
 
         <ImageView
             android:id="@+id/profile_image"
@@ -22,7 +24,8 @@
             android:layout_height="40dp"
             android:layout_gravity="end"
             android:layout_marginEnd="30dp"
-            android:background="@drawable/background_circle" />
+            android:background="@drawable/background_circle"
+            android:contentDescription="@string/text_profile" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -44,27 +47,27 @@
             android:layout_height="match_parent"
             android:padding="15dp">
 
-
-
             <LinearLayout
                 android:id="@+id/linearButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="100dp"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/joinClass"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:background="@drawable/button"
                     android:paddingTop="-3dp"
                     android:paddingBottom="-3dp"
-                    android:text="Gabung ke kelas"
+                    android:text="@string/text_gabung_ke_kelas"
                     android:textAllCaps="false"
-                    android:textSize="16dp" />
+                    android:textSize="16sp"
+                    tools:ignore="ButtonStyle" />
 
                 <Button
                     android:id="@+id/createClass"
@@ -73,27 +76,29 @@
                     android:background="@drawable/button"
                     android:paddingTop="-3dp"
                     android:paddingBottom="-3dp"
-                    android:text="Buat kelas"
+                    android:text="@string/text_buat_kelas"
                     android:textAllCaps="false"
-                    android:textSize="16dp" />
+                    android:textSize="16sp"
+                    tools:ignore="ButtonStyle" />
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/add"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                app:cardElevation="3dp"
-                android:layout_margin="10dp"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                app:cardCornerRadius="100dp">
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="100dp"
+                app:cardElevation="3dp">
 
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-                    app:tint="@color/md_theme_outlineVariant_highContrast"
-                    android:src="@drawable/ic_add" />
+                    android:contentDescription="@string/text_add"
+                    android:src="@drawable/ic_add"
+                    app:tint="@color/md_theme_outlineVariant_highContrast" />
             </androidx.cardview.widget.CardView>
 
 

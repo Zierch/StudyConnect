@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:gravity="start"
-        android:text="Batalkan pendaftaran"
+        android:text="@string/text_batalkan_pendaftaran"
         android:textColor="@color/black" />
 
     <Button
@@ -23,7 +23,7 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@android:color/transparent"
         android:gravity="start"
-        android:text="Edit kelas"
+        android:text="@string/text_edit_kelas"
         android:textColor="@color/black" />
 
     <Button
@@ -34,6 +34,6 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@android:color/transparent"
         android:gravity="start"
-        android:text="Arsipkan kelas"
+        android:text="@string/text_arsipkan_kelas"
         android:textColor="@color/black" />
 </LinearLayout>
