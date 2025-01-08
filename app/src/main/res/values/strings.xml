@@ -51,4 +51,10 @@
     <string name="esai">Esai</string>
     <string name="text_jawaban">Jawaban Anda</string>
     <string name="ditugaskan">Ditugaskan</string>
+    <string name="pilihan_1">Pilihan 1</string>
+    <string name="pilihan_2">Pilihan 2</string>
+    <string name="pilihan_3">Pilihan 3</string>
+    <string name="text_pilihan">Pilihan</string>
+    <string name="text_serahkan">Serahkan</string>
+    <string name="swipe_up">Swipe Up</string>
 </resources>
