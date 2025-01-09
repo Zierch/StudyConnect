@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import dagger.hilt.android.qualifiers.ApplicationContext;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,15 +75,20 @@ public class AuthViewModel extends ViewModel {
         repository.signUp(name, email, role, password).enqueue(new Callback<RegisterResponse>() {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                sharedPreferencesManager.saveData("email", response.body().getEmail());
+                if (response.isSuccessful()) {
+                    sharedPreferencesManager.saveData("email", response.body().getEmail());
 
-                Toast.makeText(context, "Registrasi Berhasil", Toast.LENGTH_SHORT).show();
-                scheduler.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        Helper.startActivity(SignInActivity.class, context);
-                    }
-                }, 1500, TimeUnit.MILLISECONDS);
+
+                    Toast.makeText(context, "Registrasi Berhasil", Toast.LENGTH_SHORT).show();
+                    scheduler.schedule(new Runnable() {
+                        @Override
+                        public void run() {
+                            Helper.startFlagedActivity(SignInActivity.class, context);
+                        }
+                    }, 1500, TimeUnit.MILLISECONDS);
+                } else {
+                    Toast.makeText(context, "Email telah digunakan", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -91,4 +97,25 @@ public class AuthViewModel extends ViewModel {
             }
         });
     }
+
+
+    public void logout() {
+        repository.logout().enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    sharedPreferencesManager.removeData();
+
+                    Toast.makeText(context, "Logout Berhasil", Toast.LENGTH_SHORT).show();
+                    Helper.startFlagedActivity(SignInActivity.class, context);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, "Logout failed : "+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

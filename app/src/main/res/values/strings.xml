@@ -3,6 +3,8 @@
     <string name="txt_sign_in">Sign In</string>
     <string name="txt_sign_up">Sign Up</string>
     <string name="text_profile">Profile</string>
+    <string name="drawer_open">Drawer Opened</string>
+    <string name="drawer_close">Drawer Closed</string>
     <string name="text_gabung_ke_kelas">Gabung ke kelas</string>
     <string name="text_buat_kelas">Buat kelas</string>
     <string name="text_add">Add</string>

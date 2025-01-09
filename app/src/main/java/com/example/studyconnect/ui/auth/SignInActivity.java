@@ -84,6 +84,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 binding.btnSign.setEnabled(false);
+                binding.tvSign.setEnabled(false);
                 check();
             }
         });
@@ -91,8 +92,7 @@ public class SignInActivity extends AppCompatActivity {
         binding.tvSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
-                startActivity(intent);
+                Helper.startActivity(SignUpActivity.class, SignInActivity.this);
             }
         });
     }
@@ -116,6 +116,7 @@ public class SignInActivity extends AppCompatActivity {
 
         if (!check) {
             binding.btnSign.setEnabled(true);
+            binding.tvSign.setEnabled(true);
         } else {
             viewModel.signIn(email, password);
         }

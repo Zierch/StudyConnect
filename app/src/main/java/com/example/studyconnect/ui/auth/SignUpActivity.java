@@ -14,10 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.databinding.ActivitySignUpBinding;
+import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding binding;
@@ -59,15 +63,15 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 binding.btnSign.setEnabled(false);
-                selectRole();
+                binding.tvSign.setEnabled(false);
+                check();
             }
         });
 
         binding.tvSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
-                startActivity(intent);
+                Helper.startActivity(SignInActivity.class, SignUpActivity.this);
             }
         });
     }
@@ -81,19 +85,25 @@ public class SignUpActivity extends AppCompatActivity {
                 .setPositiveButton("Guru", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         role = "teacher";
+                        viewModel.signUp(username, email, role, password);
                     }
                 })
                 .setNegativeButton("Siswa", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         role = "student";
+                        viewModel.signUp(username, email, role, password);
                     }
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
-        if (!role.isEmpty()){
-            check();
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                binding.btnSign.setEnabled(true);
+                binding.tvSign.setEnabled(true);
+            }
+        }, 1500);
     }
     private void check() {
         boolean check = true;
@@ -112,6 +122,10 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "Email Kosong !", Toast.LENGTH_SHORT).show();
             binding.etSignupEmail.setError("Isi Email !");
             check = false;
+        } else if (password.length() <= 6) {
+            Toast.makeText(this, "Password harus lebih dari 6 huruf !", Toast.LENGTH_SHORT).show();
+            binding.etSignupPassword.setError("Password terlalu pendek !");
+            check = false;
         } else if (password.isEmpty()) {
             Toast.makeText(this, "Password Kosong !", Toast.LENGTH_SHORT).show();
             binding.etSignupPassword.setError("Isi Password !");
@@ -124,8 +138,9 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (!check) {
             binding.btnSign.setEnabled(true);
+            binding.tvSign.setEnabled(true);
         } else {
-            viewModel.signUp(username, email, role, password);
+            selectRole();
         }
     }
 }

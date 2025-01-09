@@ -11,14 +11,14 @@
             android:title="Notifikasi" />
     </group>
 
-    <group android:id="@+id/classes">
-        <item
-            android:id="@+id/kelas1"
-            android:title="Kelas A" />
-        <item
-            android:id="@+id/kelas2"
-            android:title="Kelas B" />
-    </group>
+<!--    <group android:id="@+id/classes">-->
+<!--        <item-->
+<!--            android:id="@+id/kelas1"-->
+<!--            android:title="Kelas A" />-->
+<!--        <item-->
+<!--            android:id="@+id/kelas2"-->
+<!--            android:title="Kelas B" />-->
+<!--    </group>-->
 
     <group android:id="@+id/submain">
         <item

@@ -34,5 +34,10 @@ public class SharedPreferencesManager {
     public int getData(String key, int defaultValue) {
         return sharedPreferences.getInt(key, defaultValue);
     }
+
+    public void removeData() {
+        editor.clear();
+        editor.apply();
+    }
 }
 

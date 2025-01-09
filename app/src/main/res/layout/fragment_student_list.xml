@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_theme_background"
-        android:paddingStart="15dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:navigationIcon="@drawable/ic_menu"
         app:title="@string/text_nama_kelas"
@@ -35,7 +34,7 @@
             android:layout_height="35dp"
             android:layout_gravity="end"
             android:layout_marginEnd="15dp"
-            android:background="@drawable/ic_dashboard_black_24dp"
+            android:background="@drawable/ic_setting"
             android:backgroundTint="@color/black"
             android:contentDescription="@string/text_settings" />
     </androidx.appcompat.widget.Toolbar>
