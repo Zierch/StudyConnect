@@ -1,23 +1,27 @@
 package com.example.studyconnect.ui.auth;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.studyconnect.MainActivity;
 import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.data.response.LoginResponse;
+import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.ui.home.Drawer;
+import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
-import java.util.logging.Handler;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import okhttp3.ResponseBody;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,6 +29,11 @@ import retrofit2.Response;
 @HiltViewModel
 public class AuthViewModel extends ViewModel {
     private final StudyRepository repository;
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    @Inject
+    @ApplicationContext
+    Context context;
 
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
@@ -39,21 +48,47 @@ public class AuthViewModel extends ViewModel {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 sharedPreferencesManager.saveData("token", response.body().getToken());
+                sharedPreferencesManager.saveData("role", response.body().getRole());
 
-//                Disini Handler delay mbek intent nang Home Drawer
-                new Handler().postDelayed(() -> {
-                    Intent intent = new Intent(this, Drawer.class);
-                    startActivity(intent);
-                    finish();
-                }, 1500);
+                if (response.body().getRole().equals("teacher")) {
+                    sharedPreferencesManager.saveData("teacherId", response.body().getUser_id());
+                }
+
+                Toast.makeText(context, "Login Berhasil", Toast.LENGTH_SHORT).show();
+                scheduler.schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        Helper.startFlagedActivity(Drawer.class, context);
+                    }
+                }, 2, TimeUnit.SECONDS);
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Toast.makeText(this, "Login failed. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Login failed : "+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    public void signUp(String name, String email, String role, String password) {
+        repository.signUp(name, email, role, password).enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                sharedPreferencesManager.saveData("email", response.body().getEmail());
 
+                Toast.makeText(context, "Registrasi Berhasil", Toast.LENGTH_SHORT).show();
+                scheduler.schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        Helper.startActivity(SignInActivity.class, context);
+                    }
+                }, 1500, TimeUnit.MILLISECONDS);
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Toast.makeText(context, "Register failed : "+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

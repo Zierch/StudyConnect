@@ -1,36 +1,100 @@
 package com.example.studyconnect.ui.auth;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.databinding.ActivitySignInBinding;
+import com.example.studyconnect.ui.home.Drawer;
+import com.example.studyconnect.utils.Helper;
+import com.example.studyconnect.utils.SharedPreferencesManager;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 @AndroidEntryPoint
 public class SignInActivity extends AppCompatActivity {
     protected ActivitySignInBinding binding;
     private String email, password;
+    private boolean backPressedOnce = false;
+    private Toast backToast;
     private AuthViewModel viewModel;
+
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
+
+    @Inject
+    @ApplicationContext
+    Context context;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (sharedPreferencesManager.getData("token", null) != null) {
+            Helper.startFlagedActivity(Drawer.class, context);
+        }
+
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
+
         initView();
     }
 
     private void initView(){
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (backPressedOnce) {
+                    if (backToast != null) backToast.cancel();
+                    finish();
+                } else {
+                    backPressedOnce = true;
+                    backToast = Toast.makeText(SignInActivity.this, "Press back again to exit", Toast.LENGTH_SHORT);
+                    backToast.show();
 
+                    // Reset flag after 2 seconds
+                    new Handler().postDelayed(() -> backPressedOnce = false, 2000);
+                }
+            }
+        });
+
+        email = sharedPreferencesManager.getData("email", null);
+        password = sharedPreferencesManager.getData("password", null);
+
+        if (email != null && password != null) {
+            binding.etSignupEmail.setText(email);
+            binding.etSignupPassword.setText(password);
+        }
+
+        binding.btnSign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.btnSign.setEnabled(false);
+                check();
+            }
+        });
+
+        binding.tvSign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void check() {
@@ -56,4 +120,5 @@ public class SignInActivity extends AppCompatActivity {
             viewModel.signIn(email, password);
         }
     }
+
 }

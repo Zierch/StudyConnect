@@ -1,19 +1,19 @@
 package com.example.studyconnect.data.response;
 
 public class LoginResponse {
-    private String email;
-    private String password;
     private String token;
+    private int user_id;
+    private String role;
 
     public String getToken() {
         return token;
     }
 
-    public String getPassword() {
-        return password;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getRole() {
+        return role;
     }
 }

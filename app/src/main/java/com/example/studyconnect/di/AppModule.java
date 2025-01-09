@@ -34,7 +34,6 @@ public class AppModule {
         return (MyApp) context;
     }
 
-    // Menyediakan ApiService
     @Provides
     @Singleton
     public ApiService provideApiService(@ApplicationContext Context context) {
@@ -68,7 +67,7 @@ public class AppModule {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://127.0.0.1:8000/api/")
+                .baseUrl("https://studyconnect-api-production.up.railway.app/api/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -76,7 +75,6 @@ public class AppModule {
         return retrofit.create(ApiService.class);
     }
 
-    // Kamu bisa menyediakan Repository di sini jika diperlukan
     @Provides
     @Singleton
     public StudyRepository provideMyRepository(ApiService apiService) {

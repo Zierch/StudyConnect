@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="15dp"
     app:cardElevation="4dp"
+    android:layout_marginBottom="16dp"
     app:strokeColor="@color/black">
 
     <LinearLayout
@@ -36,11 +37,11 @@
                     android:textSize="18dp" />
 
                 <TextView
-                    android:id="@+id/namaRuang"
+                    android:id="@+id/mapel"
                     style="@style/TextSemiBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lagi"
+                    android:text="Mapel"
                     android:textColor="@color/white"
                     android:textSize="12dp" />
             </LinearLayout>

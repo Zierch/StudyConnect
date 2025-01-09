@@ -16,18 +16,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:navigationIcon="@drawable/ic_menu"
         app:title="Study Connect"
-        tools:ignore="RtlSymmetry">
-
-        <ImageView
-            android:id="@+id/profile_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/background_circle"
-            android:contentDescription="@string/text_profile" />
-
-    </androidx.appcompat.widget.Toolbar>
+        tools:ignore="RtlSymmetry"/>
 
     <View
         android:layout_width="match_parent"
@@ -46,6 +35,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="15dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/linearButton"
+                android:clipToPadding="false"/>
 
             <LinearLayout
                 android:id="@+id/linearButton"

@@ -22,8 +22,17 @@ public class SharedPreferencesManager {
         editor.apply();
     }
 
+    public void saveData(String key, int value) {
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
     public String getData(String key, String defaultValue) {
         return sharedPreferences.getString(key, defaultValue);
+    }
+
+    public int getData(String key, int defaultValue) {
+        return sharedPreferences.getInt(key, defaultValue);
     }
 }
 
