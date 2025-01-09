@@ -60,6 +60,11 @@ public class StudyRepository {
         return apiService.getClasses();
     }
 
+    // method get class w id
+    public Call<ClassResponse> getClass(int id) {
+        return apiService.getClass(id);
+    }
+
     // method create class
     public Call<ClassResponse> createClass(RequestBody body) {
         return apiService.createClass(body);

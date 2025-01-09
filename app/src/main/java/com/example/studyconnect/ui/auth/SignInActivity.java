@@ -39,6 +39,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (sharedPreferencesManager.getData("token", null) != null) {
             Helper.startFlagedActivity(Drawer.class, this);
+            finish();
         }
 
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
@@ -115,6 +116,26 @@ public class SignInActivity extends AppCompatActivity {
             binding.tvSign.setEnabled(true);
         } else {
             viewModel.signIn(email, password);
+
+            viewModel.getSignInResponse().observe(this, loginResponse -> {
+                if (loginResponse != null) {
+                    sharedPreferencesManager.saveData("token", loginResponse.getToken());
+                    sharedPreferencesManager.saveData("role", loginResponse.getRole());
+
+                    if (loginResponse.getRole().equals("teacher")) {
+                        sharedPreferencesManager.saveData("teacherId", loginResponse.getUser_id());
+                    }
+
+                    Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show();
+
+                    new Handler().postDelayed(() -> {
+                        Helper.startFlagedActivity(Drawer.class, this);
+                        finish();
+                    }, 1000);
+                } else {
+                    Toast.makeText(this, "Login Gagal", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

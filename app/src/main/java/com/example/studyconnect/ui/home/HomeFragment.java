@@ -20,6 +20,7 @@ import com.example.studyconnect.databinding.BottomHomeDialogBinding;
 import com.example.studyconnect.databinding.FragmentHomeBinding;
 import com.example.studyconnect.ui.adapter.HomeAdapter;
 import com.example.studyconnect.ui.class_ui.ClassFragment;
+import com.example.studyconnect.ui.class_ui.ClassViewModel;
 import com.example.studyconnect.ui.class_ui.FormClassActivity;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -43,6 +44,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         teacherId = sharedPreferencesManager.getData("teacherId", 0);
 
         initView();
@@ -94,14 +96,13 @@ public class HomeFragment extends Fragment {
                     .replace(R.id.frame_layout, classFragment)
                     .addToBackStack(null)
                     .commit();
-        });
+        }, homeViewModel, sharedPreferencesManager);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(homeAdapter);
     }
 
     private void initObserver() {
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         homeViewModel.getClasses().observe(getViewLifecycleOwner(), classes -> {
             if (classes != null) {
                 homeAdapter.setClassList(classes); // Set data ke adapter
@@ -114,6 +115,20 @@ public class HomeFragment extends Fragment {
         homeViewModel.getUser(teacherId).observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 homeAdapter.setUser(user);
+            }
+        });
+    }
+
+//    recy ga ke refresh kalo ada perubahan
+    @Override
+    public void onResume() {
+        super.onResume();
+        homeViewModel.getClasses().observe(getViewLifecycleOwner(), classes -> {
+            if (classes != null) {
+                homeAdapter.setClassList(classes); // Pastikan adapter mendapatkan data yang benar
+                binding.linearButton.setVisibility(View.GONE);
+            } else {
+                binding.linearButton.setVisibility(View.VISIBLE);
             }
         });
     }

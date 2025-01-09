@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
-import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
 import java.util.List;
@@ -59,6 +58,29 @@ public class ClassViewModel extends ViewModel {
         return updateClassResult;
     }
 
+    public LiveData<ClassResponse> getClass(int classId) {
+        MutableLiveData<ClassResponse> classData = new MutableLiveData<>();
+
+        repository.getClass(classId).enqueue(new Callback<ClassResponse>() {
+            @Override
+            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+                if (response.isSuccessful()) {
+                    classData.setValue(response.body());
+                } else {
+                    classData.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ClassResponse> call, Throwable t) {
+                Log.d("getClass", "onFailure: " + t.getMessage());
+                classData.setValue(null);
+            }
+        });
+
+        return classData;
+    }
+
     public void createClass(String name, String subject, String description, int teacherId) {
         RequestBody body = new FormBody.Builder()
                 .add("name", name)
@@ -81,7 +103,7 @@ public class ClassViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<ClassResponse> call, Throwable t) {
-                Log.d("createClass", "onFailure: "+t.getMessage());
+                Log.d("createClass", "onFailure: " + t.getMessage());
                 Toast.makeText(context, "Failed to create class", Toast.LENGTH_SHORT).show();
                 createClassResult.setValue(false);
             }
@@ -111,53 +133,15 @@ public class ClassViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<ClassResponse> call, Throwable t) {
-                Log.d("updateClass", "onFailure: "+t.getMessage());
+                Log.d("updateClass", "onFailure: " + t.getMessage());
                 Toast.makeText(context, "Failed to update class", Toast.LENGTH_SHORT).show();
                 createClassResult.setValue(false);
             }
         });
     }
 
-    public Call<ResponseBody> deleteClass(int id) {
-        return repository.deleteClass(id);
-    }
-
     public Call<List<RegisterResponse>> getClassStudents(int id) {
         return repository.getClassStudents(id);
-    }
-
-    public void joinClass(int id) {
-        repository.joinClass(id).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "Berhasil bergabung ke kelas", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("joinClass", "onFailure: "+t.getMessage());
-                Toast.makeText(context, "Gagal bergabung ke kelas", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void leaveClass(int id) {
-        repository.leaveClass(id).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "Berhasil meninggalkan kelas", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("leaveClass", "onFailure: "+t.getMessage());
-                Toast.makeText(context, "Gagal meninggalkan kelas", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void fetchStudents() {

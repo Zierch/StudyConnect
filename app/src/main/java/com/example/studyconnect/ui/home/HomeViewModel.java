@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import dagger.hilt.android.qualifiers.ApplicationContext;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,6 +78,59 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
                 Toast.makeText(context, "Failed to fetch user: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void joinClass(int id) {
+        repository.joinClass(id).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Berhasil bergabung ke kelas", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("joinClass", "onFailure: " + t.getMessage());
+                Toast.makeText(context, "Gagal bergabung ke kelas", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void leaveClass(int id) {
+        repository.leaveClass(id).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Berhasil meninggalkan kelas", Toast.LENGTH_SHORT).show();
+                    fetchClasses();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("leaveClass", "onFailure: " + t.getMessage());
+                Toast.makeText(context, "Gagal meninggalkan kelas", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void deleteClass(int id) {
+        repository.deleteClass(id).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Kelas berhasil dihapus", Toast.LENGTH_SHORT).show();
+                    fetchClasses();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("deleteClass", "onFailure: " + t.getMessage());
+                Toast.makeText(context, "Gagal menghapus kelas", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -17,6 +17,8 @@ import com.example.studyconnect.databinding.ActivitySignUpBinding;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -29,6 +31,9 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean backPressedOnce = false;
     private Toast backToast;
     private AuthViewModel viewModel;
+
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,13 +102,19 @@ public class SignUpActivity extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                binding.btnSign.setEnabled(true);
-                binding.tvSign.setEnabled(true);
+        viewModel.getSignUpResponse().observe(this, response -> {
+            if (response != null) {
+                sharedPreferencesManager.saveData("email", response.getEmail());
+
+                Toast.makeText(SignUpActivity.this, "Register Berhasil", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(() -> {
+                    Helper.startFlagedActivity(SignInActivity.class, SignUpActivity.this);
+                    finish();
+                }, 1000);
+            } else {
+                Toast.makeText(SignUpActivity.this, "Email Sudah Terdaftar", Toast.LENGTH_SHORT).show();
             }
-        }, 1500);
+        });
     }
     private void check() {
         boolean check = true;

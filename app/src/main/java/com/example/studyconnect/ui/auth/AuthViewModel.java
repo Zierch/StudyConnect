@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.studyconnect.data.StudyRepository;
@@ -44,29 +46,31 @@ public class AuthViewModel extends ViewModel {
         this.repository = repository;
     }
 
+    private final MutableLiveData<LoginResponse> signInResponse = new MutableLiveData<>();
+    private final MutableLiveData<RegisterResponse> signUpResponse = new MutableLiveData<>();
+
+    public LiveData<LoginResponse> getSignInResponse() {
+        return signInResponse;
+    }
+
+    public LiveData<RegisterResponse> getSignUpResponse() {
+        return signUpResponse;
+    }
+
     public void signIn(String email, String password) {
         repository.signIn(email, password).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                sharedPreferencesManager.saveData("token", response.body().getToken());
-                sharedPreferencesManager.saveData("role", response.body().getRole());
-
-                if (response.body().getRole().equals("teacher")) {
-                    sharedPreferencesManager.saveData("teacherId", response.body().getUser_id());
+                if (response.isSuccessful()) {
+                    signInResponse.setValue(response.body());
+                } else {
+                    signInResponse.setValue(null);
                 }
-
-                Toast.makeText(context, "Login Berhasil", Toast.LENGTH_SHORT).show();
-                scheduler.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        Helper.startFlagedActivity(Drawer.class, context);
-                    }
-                }, 2, TimeUnit.SECONDS);
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Toast.makeText(context, "Login failed : "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                signInResponse.setValue(null);
             }
         });
     }
@@ -76,24 +80,15 @@ public class AuthViewModel extends ViewModel {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 if (response.isSuccessful()) {
-                    sharedPreferencesManager.saveData("email", response.body().getEmail());
-
-
-                    Toast.makeText(context, "Registrasi Berhasil", Toast.LENGTH_SHORT).show();
-                    scheduler.schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            Helper.startFlagedActivity(SignInActivity.class, context);
-                        }
-                    }, 1500, TimeUnit.MILLISECONDS);
+                    signUpResponse.setValue(response.body());
                 } else {
-                    Toast.makeText(context, "Email telah digunakan", Toast.LENGTH_SHORT).show();
+                    signUpResponse.setValue(null);
                 }
             }
 
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                Toast.makeText(context, "Register failed : "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                signUpResponse.setValue(null);
             }
         });
     }

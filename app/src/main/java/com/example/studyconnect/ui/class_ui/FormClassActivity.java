@@ -1,6 +1,7 @@
 package com.example.studyconnect.ui.class_ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,13 +17,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class FormClassActivity extends AppCompatActivity {
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
     private SettingKelasBinding binding;
     private ClassViewModel viewModel;
     private String namaKelas, mataPelajaran, deskripsiKelas, kodeKelas;
     private boolean isUpdate = false; // Defaultnya create, bisa diganti saat update
-
-    @Inject
-    SharedPreferencesManager sharedPreferencesManager;
     private int teacherId, classId;
 
     @Override
@@ -62,17 +62,15 @@ public class FormClassActivity extends AppCompatActivity {
             binding.toolbar.setTitle("Update Kelas");
             binding.btnSimpan.setText("Update");
 
-//            // Ambil data kelas yang sudah ada dan tampilkan di field
-//            // Misalnya, ambil data kelas dari intent atau database
-//            namaKelas = getIntent().getStringExtra("namaKelas");
-//            mataPelajaran = getIntent().getStringExtra("mataPelajaran");
-//            deskripsiKelas = getIntent().getStringExtra("deskripsiKelas");
-//            kodeKelas = getIntent().getStringExtra("kodeKelas");
-
-            binding.namaKelas.setText(namaKelas);
-            binding.mataPelajaran.setText(mataPelajaran);
-            binding.deskripsiKelas.setText(deskripsiKelas);
-            binding.kodeKelas.setText(kodeKelas);
+            int classId = sharedPreferencesManager.getData("classId", 0);
+            viewModel.getClass(classId).observe(this, classResponse -> {
+                if (classResponse != null) {
+                    binding.namaKelas.setText(classResponse.getName());
+                    binding.mataPelajaran.setText(classResponse.getSubject());
+                    binding.deskripsiKelas.setText(classResponse.getDescription());
+                    binding.kodeKelas.setText(classResponse.getCode());
+                }
+            });
         } else {
             binding.toolbar.setTitle("Create Kelas");
 

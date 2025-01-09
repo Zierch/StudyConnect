@@ -34,6 +34,9 @@ public interface ApiService {
     @GET("classes")
     Call<List<ClassResponse>> getClasses();
 
+    @GET("classes/{id}")
+    Call<ClassResponse> getClass(@Path("id") int id);
+
     @POST("classes")
     Call<ClassResponse> createClass(@Body RequestBody body);
 
