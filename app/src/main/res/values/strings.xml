@@ -44,4 +44,19 @@
     <string name="text_pertanyaan">Pertanyaan</string>
     <string name="text_materi">Materi</string>
     <string name="text_topik">Topik</string>
+    <string name="text_swipe_down">Swipe Down</string>
+    <string name="tak_ada_batas_waktu">Tak ada batas waktu</string>
+    <string name="text_empty_lampiran">Tidak ada lampiran diupload</string>
+    <string name="text_tambah_tugas">Tambahkan tugas</string>
+    <string name="back">kembali</string>
+    <string name="text_poin">100 poin</string>
+    <string name="esai">Esai</string>
+    <string name="text_jawaban">Jawaban Anda</string>
+    <string name="ditugaskan">Ditugaskan</string>
+    <string name="pilihan_1">Pilihan 1</string>
+    <string name="pilihan_2">Pilihan 2</string>
+    <string name="pilihan_3">Pilihan 3</string>
+    <string name="text_pilihan">Pilihan</string>
+    <string name="text_serahkan">Serahkan</string>
+    <string name="swipe_up">Swipe Up</string>
 </resources>
