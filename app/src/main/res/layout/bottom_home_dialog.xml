@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
+        android:layout_marginTop="16dp"
         android:gravity="start"
         android:text="Buat kelas"
         android:textColor="@color/black" />

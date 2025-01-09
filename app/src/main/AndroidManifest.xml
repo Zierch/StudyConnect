@@ -30,5 +30,6 @@
         <!-- Aktivitas lainnya -->
         <activity android:name="com.example.studyconnect.ui.home.Drawer" />
         <activity android:name="com.example.studyconnect.ui.auth.SignUpActivity" />
+        <activity android:name="com.example.studyconnect.ui.class_ui.FormClassActivity" />
     </application>
 </manifest>

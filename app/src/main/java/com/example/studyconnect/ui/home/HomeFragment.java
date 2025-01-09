@@ -1,5 +1,6 @@
 package com.example.studyconnect.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.studyconnect.R;
+import com.example.studyconnect.databinding.BottomHomeDialogBinding;
 import com.example.studyconnect.databinding.FragmentHomeBinding;
 import com.example.studyconnect.ui.adapter.HomeAdapter;
+import com.example.studyconnect.ui.class_ui.FormClassActivity;
+import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import javax.inject.Inject;
 
@@ -45,6 +51,37 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView() {
+        if (teacherId != 0) {
+            binding.joinClass.setVisibility(View.GONE);
+        } else {
+            binding.createClass.setVisibility(View.GONE);
+        }
+
+        binding.add.setOnClickListener(v -> {
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
+            BottomHomeDialogBinding bottomBinding = BottomHomeDialogBinding.inflate(getLayoutInflater());
+            bottomSheetDialog.setContentView(bottomBinding.getRoot());
+
+            // Menyembunyikan tombol sesuai dengan kondisi teacherId
+            bottomBinding.createClass.setVisibility(teacherId == 0 ? View.GONE : View.VISIBLE);
+            bottomBinding.joinClass.setVisibility(teacherId != 0 ? View.GONE : View.VISIBLE);
+
+            bottomBinding.createClass.setOnClickListener(v1 -> {
+                Intent intent = new Intent(requireContext(), FormClassActivity.class);
+                intent.putExtra("isUpdate", false);
+                startActivity(intent);
+                bottomSheetDialog.dismiss();
+            });
+
+            bottomBinding.joinClass.setOnClickListener(v1 -> {
+//                Intent intent = new Intent(requireContext(), );
+//                startActivity(intent);
+                bottomSheetDialog.dismiss();
+            });
+
+            bottomSheetDialog.show();
+        });
+
         homeAdapter = new HomeAdapter(classItem -> {
             // Handle item click
             Toast.makeText(requireContext(), "Clicked: " + classItem.getName(), Toast.LENGTH_SHORT).show();
@@ -59,6 +96,9 @@ public class HomeFragment extends Fragment {
         homeViewModel.getClasses().observe(getViewLifecycleOwner(), classes -> {
             if (classes != null) {
                 homeAdapter.setClassList(classes); // Set data ke adapter
+                binding.linearButton.setVisibility(View.GONE);
+            } else {
+                binding.linearButton.setVisibility(View.VISIBLE);
             }
         });
 

@@ -34,15 +34,11 @@ public class SignInActivity extends AppCompatActivity {
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
 
-    @Inject
-    @ApplicationContext
-    Context context;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (sharedPreferencesManager.getData("token", null) != null) {
-            Helper.startFlagedActivity(Drawer.class, context);
+            Helper.startFlagedActivity(Drawer.class, this);
         }
 
         binding = ActivitySignInBinding.inflate(getLayoutInflater());

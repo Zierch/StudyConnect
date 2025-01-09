@@ -10,8 +10,10 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ApiService {
@@ -31,5 +33,23 @@ public interface ApiService {
 //    Class
     @GET("classes")
     Call<List<ClassResponse>> getClasses();
+
+    @POST("classes")
+    Call<ClassResponse> createClass(@Body RequestBody body);
+
+    @POST("classes/{id}?_method=PUT")
+    Call<ClassResponse> updateClass(@Path("id") int id, @Body RequestBody body);
+
+    @DELETE("classes/{id}")
+    Call<ResponseBody> deleteClass(@Path("id") int id);
+
+    @GET("classes/{id}/students")
+    Call<List<RegisterResponse>> getClassStudents(@Path("id") int id);
+
+    @POST("classes/{id}/join")
+    Call<ResponseBody> joinClass(@Path("id") int id);
+
+    @POST("classes/{id}/leave")
+    Call<ResponseBody> leaveClass(@Path("id") int id);
 }
 

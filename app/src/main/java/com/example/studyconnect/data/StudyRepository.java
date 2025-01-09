@@ -59,4 +59,34 @@ public class StudyRepository {
     public Call<List<ClassResponse>> getClasses() {
         return apiService.getClasses();
     }
+
+    // method create class
+    public Call<ClassResponse> createClass(RequestBody body) {
+        return apiService.createClass(body);
+    }
+
+    // method update class
+    public Call<ClassResponse> updateClass(int id, RequestBody body) {
+        return apiService.updateClass(id, body);
+    }
+
+    // method delete class
+    public Call<ResponseBody> deleteClass(int id) {
+        return apiService.deleteClass(id);
+    }
+
+    // method get class students
+    public Call<List<RegisterResponse>> getClassStudents(int id) {
+        return apiService.getClassStudents(id);
+    }
+
+    // method join class
+    public Call<ResponseBody> joinClass(int id) {
+        return apiService.joinClass(id);
+    }
+
+    // method leave class
+    public Call<ResponseBody> leaveClass(int id) {
+        return apiService.leaveClass(id);
+    }
 }
