@@ -5,14 +5,13 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="10dp"
     app:cardElevation="4dp"
-    android:layout_marginBottom="10dp"
-    app:strokeColor="@color/black">
+    android:layout_marginBottom="10dp">
 
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_theme_onPrimaryFixedVariant"
+        android:background="@drawable/gradient_blue_background"
         android:orientation="vertical"
         android:padding="15dp">
 

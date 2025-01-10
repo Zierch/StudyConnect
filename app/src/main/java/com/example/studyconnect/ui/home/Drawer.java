@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.ActivityDrawerBinding;
+import com.example.studyconnect.ui.archieved.ArchievedFragment;
 import com.example.studyconnect.ui.auth.AuthViewModel;
 import com.example.studyconnect.ui.auth.SignInActivity;
 import com.google.android.material.navigation.NavigationView;
@@ -56,16 +57,21 @@ public class Drawer extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (backPressedOnce) {
-                    if (backToast != null) backToast.cancel();
-                    finish();
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    // Jika ada fragment di back stack, kembali ke fragment sebelumnya
+                    getSupportFragmentManager().popBackStack();
                 } else {
-                    backPressedOnce = true;
-                    backToast = Toast.makeText(Drawer.this, "Press back again to exit", Toast.LENGTH_SHORT);
-                    backToast.show();
+                    if (backPressedOnce) {
+                        if (backToast != null) backToast.cancel();
+                        finish();
+                    } else {
+                        backPressedOnce = true;
+                        backToast = Toast.makeText(Drawer.this, "Press back again to exit", Toast.LENGTH_SHORT);
+                        backToast.show();
 
-                    // Reset flag after 2 seconds
-                    new Handler().postDelayed(() -> backPressedOnce = false, 2000);
+                        // Reset flag setelah 2 detik
+                        new Handler().postDelayed(() -> backPressedOnce = false, 2000);
+                    }
                 }
             }
         });
@@ -84,7 +90,7 @@ public class Drawer extends AppCompatActivity {
                 } else if (selected == R.id.notification) {
                     Toast.makeText(Drawer.this, "404 Not Found", Toast.LENGTH_SHORT).show();
                 } else if (selected == R.id.archived) {
-                    Toast.makeText(Drawer.this, "404 Not Found", Toast.LENGTH_SHORT).show();
+                    replaceFragment(new ArchievedFragment());
                 } else if (selected == R.id.setting) {
                     Toast.makeText(Drawer.this, "404 Not Found", Toast.LENGTH_SHORT).show();
                 } else if (selected == R.id.logout) {
