@@ -1,6 +1,7 @@
 package com.example.studyconnect.ui.adapter;
 
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.databinding.ItemTugasListBinding;
+import com.example.studyconnect.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +32,13 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
     }
 
     // Set data user
+    @SuppressLint("NotifyDataSetChanged")
     public void setUser(RegisterResponse user) {
         this.user = user;
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setClassAssignmentList(List<ClassAssignmentResponse> newClassAssignmentList) {
         classAssignmentList.clear();
         classAssignmentList.addAll(newClassAssignmentList);
@@ -52,7 +56,10 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
         ClassAssignmentResponse classAssignmentItem = classAssignmentList.get(position);
 
         holder.binding.tvJudulTugas.setText(classAssignmentItem.getTitle());
-        holder.binding.tvDiposting.setText(classAssignmentItem.getCreatedAt());
+
+        String inputDate = classAssignmentItem.getCreated_at();
+        String formattedDate = Helper.formatDate(inputDate);
+        holder.binding.tvDiposting.setText(formattedDate);
 
         // Set onClickListener
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(classAssignmentItem));
@@ -64,7 +71,7 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private ItemTugasListBinding binding;
+        private final ItemTugasListBinding binding;
 
         public ViewHolder(@NonNull ItemTugasListBinding itemView) {
             super(itemView.getRoot());

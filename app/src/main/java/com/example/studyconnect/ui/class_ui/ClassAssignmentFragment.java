@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,15 +30,33 @@ public class ClassAssignmentFragment extends Fragment {
     SharedPreferencesManager sharedPreferencesManager;
     private int teacherId;
 
+    private static final String ARG_CLASS_ID = "classId";
+    private int classId;
+
+    public static ClassAssignmentFragment newInstance(int classId) {
+        ClassAssignmentFragment fragment = new ClassAssignmentFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_CLASS_ID, classId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            classId = getArguments().getInt(ARG_CLASS_ID);
+            Log.d("ClassAssignmentFragment", "Received classId: " + classId);
+        } else {
+            Log.e("ClassAssignmentFragment", "Arguments are null");
+        }
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentClassAssignmentBinding.inflate(inflater, container, false);
 
-//        int classId = getArguments().getInt("classId");
-        int classId = 1;
-
-        Log.d("ClassAssignmentFragment", "classId: " + classId);
         teacherId = sharedPreferencesManager.getData("teacherId", 0);
 
         initView();
@@ -50,6 +69,7 @@ public class ClassAssignmentFragment extends Fragment {
         tugasAdapter = new TugasAdapter(classAssignmentItem -> {
             Bundle bundle = new Bundle();
             bundle.putInt("AssignmentId", classAssignmentItem.getId());
+
 //            ClassFragment classFragment = new ClassFragment();
 //            classFragment.setArguments(bundle);
 
@@ -65,7 +85,7 @@ public class ClassAssignmentFragment extends Fragment {
 
     private void initObserver() {
         ClassAssignmentViewModel classAssignmentViewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
-        classAssignmentViewModel.getClassAssignment(1).observe(getViewLifecycleOwner(), classAssignment -> {
+        classAssignmentViewModel.getClassAssignment(classId).observe(getViewLifecycleOwner(), classAssignment -> {
             if (classAssignment != null) {
                 tugasAdapter.setClassAssignmentList(classAssignment); // Set data ke adapter
             }

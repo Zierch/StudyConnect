@@ -1,6 +1,7 @@
 package com.example.studyconnect.ui.class_ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,8 @@ public class ClassFragment extends Fragment {
             if (itemId == R.id.navigation_forum) {
                 selectedFragment = new ForumFragment();
             } else if (itemId == R.id.navigation_class_assignment) {
-                selectedFragment = new ClassAssignmentFragment();
+                Log.d("ClassFragment", "Sending classId: " + classId);
+                selectedFragment = ClassAssignmentFragment.newInstance(classId);
             } else if (itemId == R.id.navigation_student_list) {
                 selectedFragment = new StudentListFragment();
             }

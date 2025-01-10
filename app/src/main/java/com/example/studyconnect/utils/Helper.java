@@ -5,12 +5,34 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import javax.inject.Inject;
-
-import dagger.hilt.android.qualifiers.ApplicationContext;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class Helper {
 
+    public static String formatDate(String inputDate) {
+        // Format tanggal input (ISO 8601 dengan timezone Z)
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Set timezone ke UTC
+
+        // Format tanggal output
+        SimpleDateFormat outputFormat = new SimpleDateFormat("'Diposting ' dd MMM 'jam' HH:mm", new Locale("id", "ID"));
+
+        try {
+            // Parse tanggal input ke dalam objek Date
+            Date date = inputFormat.parse(inputDate);
+
+            // Format tanggal ke dalam string yang diinginkan
+            assert date != null;
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "Format tanggal tidak valid";
+        }
+    }
 
     public static boolean hasNetworkConnection(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -31,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:textSize="10sp"
         android:layout_marginTop="10dp"
         android:text="@string/text_diposting"
         app:layout_constraintBottom_toBottomOf="parent"
