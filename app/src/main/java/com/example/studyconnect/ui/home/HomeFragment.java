@@ -123,13 +123,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        homeViewModel.getClasses().observe(getViewLifecycleOwner(), classes -> {
-            if (classes != null) {
-                homeAdapter.setClassList(classes); // Pastikan adapter mendapatkan data yang benar
-                binding.linearButton.setVisibility(View.GONE);
-            } else {
-                binding.linearButton.setVisibility(View.VISIBLE);
-            }
-        });
+        homeViewModel.fetchClasses();
+        homeAdapter.notifyDataSetChanged();
     }
 }

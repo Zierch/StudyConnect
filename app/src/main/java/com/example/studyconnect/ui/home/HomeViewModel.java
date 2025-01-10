@@ -49,7 +49,7 @@ public class HomeViewModel extends ViewModel {
         return user;
     }
 
-    private void fetchClasses() {
+    public void fetchClasses() {
         repository.getClasses().enqueue(new Callback<List<ClassResponse>>() {
             @Override
             public void onResponse(Call<List<ClassResponse>> call, Response<List<ClassResponse>> response) {
