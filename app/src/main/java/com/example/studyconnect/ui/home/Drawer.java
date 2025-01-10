@@ -46,6 +46,7 @@ public class Drawer extends AppCompatActivity {
         binding = ActivityDrawerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setSupportActionBar(binding.appBar.toolbar);
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         drawerLayout = binding.drawerLayout;
         navigationView = binding.navDrawer;
@@ -106,30 +107,7 @@ public class Drawer extends AppCompatActivity {
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.replace(R.id.fragment_host, fragment);
         fragmentTransaction.commit();
-
-        fragmentTransaction.runOnCommit(() -> {
-            // Set toolbar dari fragment aktif
-            setToolbar(fragment);
-        });
-    }
-
-    private void setToolbar(Fragment fragment) {
-        View view = fragment.getView();
-        if (view != null) {
-            Toolbar toolbar = view.findViewById(R.id.toolbar);
-            if (toolbar != null) {
-                setSupportActionBar(toolbar);
-
-                // Setup DrawerToggle
-                toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
-                drawerLayout.addDrawerListener(toggle);
-                toggle.syncState();
-
-                // OnClick Listener untuk membuka Drawer
-                toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-            }
-        }
     }
 }

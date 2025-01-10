@@ -16,10 +16,9 @@
         app:navigationIcon="@drawable/baseline_arrow_back_24"
         app:title="Buat Kelas"
         tools:ignore="RtlSymmetry"/>
-
     <View
         android:layout_width="match_parent"
-        android:layout_height="4dp"
+        android:layout_height="3dp"
         android:layout_below="@id/toolbar"
         android:background="@drawable/toolbar_shadow" />
 

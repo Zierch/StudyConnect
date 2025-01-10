@@ -7,27 +7,10 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/md_theme_background"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        app:navigationIcon="@drawable/ic_menu"
-        app:title="Study Connect"
-        tools:ignore="RtlSymmetry"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_below="@id/toolbar"
-        android:background="@drawable/toolbar_shadow" />
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
         android:fillViewport="true">
 
         <RelativeLayout

@@ -90,7 +90,7 @@ public class ArchievedFragment extends Fragment {
             classFragment.setArguments(bundle);
 
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.frame_layout, classFragment)
+                    .replace(R.id.fragment_host, classFragment)
                     .addToBackStack(null)
                     .commit();
         }, homeViewModel, sharedPreferencesManager);
