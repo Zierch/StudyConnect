@@ -1,14 +1,16 @@
 package com.example.studyconnect.ui.adapter;
 
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.studyconnect.R;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.databinding.BottomItemKelasDialogBinding;
@@ -23,7 +25,7 @@ import java.util.List;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     private final List<ClassResponse> classList = new ArrayList<>();
-    private HomeViewModel viewModel;
+    private final HomeViewModel viewModel;
     private final OnItemClickListener onItemClickListener;
     private final SharedPreferencesManager sharedPreferencesManager;
     private RegisterResponse user;
@@ -41,11 +43,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     // Set data user
+    @SuppressLint("NotifyDataSetChanged")
     public void setUser(RegisterResponse user) {
         this.user = user;
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setClassList(List<ClassResponse> newClassList) {
         classList.clear();
         classList.addAll(newClassList);
@@ -94,7 +98,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 bottomSheetDialog.dismiss();
             });
 
-            bottomSheetBinding.arsipkanKelas.setText("Delete (sementara)");
+            bottomSheetBinding.arsipkanKelas.setText(R.string.text_delete_sementara);
             bottomSheetBinding.arsipkanKelas.setOnClickListener(view -> {
                 viewModel.deleteClass(classItem.getId());
 
@@ -105,7 +109,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             bottomSheetDialog.show();
         });
 
-        if (sharedPreferencesManager.getData("role", "").equals("siswa")){
+        if (sharedPreferencesManager.getData("role", "").equals("siswa")) {
             holder.binding.namaGuru.setText(user.getName());
         } else {
             holder.binding.namaGuru.setVisibility(View.GONE);
@@ -121,7 +125,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private ItemKelasBinding binding;
+        private final ItemKelasBinding binding;
+
         public ViewHolder(@NonNull ItemKelasBinding itemView) {
             super(itemView.getRoot());
             binding = itemView;

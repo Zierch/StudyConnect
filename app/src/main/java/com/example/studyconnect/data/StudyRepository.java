@@ -1,12 +1,11 @@
 package com.example.studyconnect.data;
 
+import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -93,5 +92,10 @@ public class StudyRepository {
     // method leave class
     public Call<ResponseBody> leaveClass(int id) {
         return apiService.leaveClass(id);
+    }
+
+    // method get assignment by class id
+    public Call<List<ClassAssignmentResponse>> getClassAssignment(int classId) {
+        return apiService.getClassAssignment(classId);
     }
 }

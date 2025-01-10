@@ -39,7 +39,7 @@
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/rv_list_tugas_kelas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="5dp"

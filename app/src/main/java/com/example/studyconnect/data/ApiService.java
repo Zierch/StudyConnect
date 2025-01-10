@@ -1,5 +1,6 @@
 package com.example.studyconnect.data;
 
+import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
@@ -13,7 +14,6 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ApiService {
@@ -33,6 +33,10 @@ public interface ApiService {
 //    Class
     @GET("classes")
     Call<List<ClassResponse>> getClasses();
+
+//    Class Assignment
+    @GET("assignment/{classId}")
+    Call<List<ClassAssignmentResponse>> getClassAssignment(@Path("classId") int classId);
 
     @GET("classes/{id}")
     Call<ClassResponse> getClass(@Path("id") int id);

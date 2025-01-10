@@ -1,12 +1,11 @@
 package com.example.studyconnect.ui.home;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,12 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.studyconnect.R;
-import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.BottomHomeDialogBinding;
 import com.example.studyconnect.databinding.FragmentHomeBinding;
 import com.example.studyconnect.ui.adapter.HomeAdapter;
 import com.example.studyconnect.ui.class_ui.ClassFragment;
-import com.example.studyconnect.ui.class_ui.ClassViewModel;
 import com.example.studyconnect.ui.class_ui.FormClassActivity;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -119,6 +116,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onResume() {
         super.onResume();
