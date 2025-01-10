@@ -47,8 +47,8 @@ public class HomeFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         teacherId = sharedPreferencesManager.getData("teacherId", 0);
 
-        initView();
         initObserver();
+        initView();
 
         return binding.getRoot();
     }
@@ -119,7 +119,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-//    recy ga ke refresh kalo ada perubahan
     @Override
     public void onResume() {
         super.onResume();

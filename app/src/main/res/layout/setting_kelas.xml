@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_theme_background"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         app:navigationIcon="@drawable/baseline_arrow_back_24"
         app:title="Buat Kelas"
         tools:ignore="RtlSymmetry"/>
@@ -39,12 +39,17 @@
             android:textColor="@color/black"
             android:textSize="17dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             app:boxBackgroundColor="@color/white"
-            app:boxBackgroundMode="outline"
+            app:boxBackgroundMode="filled"
             app:boxCollapsedPaddingTop="0dp"
             app:boxCornerRadiusBottomEnd="5dp"
             app:boxCornerRadiusBottomStart="5dp"
@@ -65,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:boxBackgroundColor="@color/white"
-            app:boxBackgroundMode="outline"
+            app:boxBackgroundMode="filled"
             android:layout_marginTop="5dp"
             app:boxCollapsedPaddingTop="0dp"
             app:boxCornerRadiusBottomEnd="5dp"
@@ -87,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:boxBackgroundColor="@color/white"
-            app:boxBackgroundMode="outline"
+            app:boxBackgroundMode="filled"
             app:boxCollapsedPaddingTop="0dp"
             android:layout_marginTop="5dp"
             app:boxCornerRadiusBottomEnd="5dp"
@@ -109,7 +114,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:boxBackgroundColor="@color/white"
-            app:boxBackgroundMode="outline"
+            app:boxBackgroundMode="filled"
             app:boxCollapsedPaddingTop="0dp"
             android:layout_marginTop="5dp"
             app:boxCornerRadiusBottomEnd="5dp"
@@ -126,6 +131,7 @@
                 android:padding="15dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnSimpan"

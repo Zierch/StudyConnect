@@ -19,7 +19,7 @@
         android:theme="@style/Theme.StudyConnect"
         tools:targetApi="31">
         <activity
-            android:name=".ui.auth.SignInActivity"
+            android:name=".ui.home.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +29,7 @@
 
         <!-- Aktivitas lainnya -->
         <activity android:name="com.example.studyconnect.ui.home.Drawer" />
+        <activity android:name="com.example.studyconnect.ui.auth.SignInActivity" />
         <activity android:name="com.example.studyconnect.ui.auth.SignUpActivity" />
         <activity android:name="com.example.studyconnect.ui.class_ui.FormClassActivity" />
     </application>

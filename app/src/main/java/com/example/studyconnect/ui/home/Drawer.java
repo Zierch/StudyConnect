@@ -1,6 +1,7 @@
 package com.example.studyconnect.ui.home;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,8 @@ public class Drawer extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
+    private boolean backPressedOnce = false;
+    private Toast backToast;
     private AuthViewModel viewModel;
 
     @Override
@@ -50,6 +53,23 @@ public class Drawer extends AppCompatActivity {
     }
 
     private void initView() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (backPressedOnce) {
+                    if (backToast != null) backToast.cancel();
+                    finish();
+                } else {
+                    backPressedOnce = true;
+                    backToast = Toast.makeText(Drawer.this, "Press back again to exit", Toast.LENGTH_SHORT);
+                    backToast.show();
+
+                    // Reset flag after 2 seconds
+                    new Handler().postDelayed(() -> backPressedOnce = false, 2000);
+                }
+            }
+        });
+
 //        Default fragment
         replaceFragment(new HomeFragment());
 
