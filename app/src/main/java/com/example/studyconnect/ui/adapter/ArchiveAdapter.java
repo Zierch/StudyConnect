@@ -60,7 +60,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
 
             bottomSheetBinding.option1.setText("Pulihkan");
             bottomSheetBinding.option1.setOnClickListener(view -> {
-                viewModel.leaveClass(classItem.getId());
+                viewModel.restoreClass(classItem.getId());
 
                 bottomSheetDialog.dismiss();
             });

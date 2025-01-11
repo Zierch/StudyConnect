@@ -32,11 +32,13 @@ public class ClassAssignmentFragment extends Fragment {
 
     private static final String ARG_CLASS_ID = "classId";
     private int classId;
+    private boolean isArchived;
 
-    public static ClassAssignmentFragment newInstance(int classId) {
+    public static ClassAssignmentFragment newInstance(int classId, boolean isArchived) {
         ClassAssignmentFragment fragment = new ClassAssignmentFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_CLASS_ID, classId);
+        args.putBoolean("isArchived", isArchived);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,6 +47,7 @@ public class ClassAssignmentFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            isArchived = getArguments().getBoolean("isArchived");
             classId = getArguments().getInt(ARG_CLASS_ID);
             Log.d("ClassAssignmentFragment", "Received classId: " + classId);
         } else {
@@ -66,6 +69,10 @@ public class ClassAssignmentFragment extends Fragment {
     }
 
     private void initView() {
+        if (isArchived){
+            binding.fabAddTugas.setVisibility(View.GONE);
+        }
+
         tugasAdapter = new TugasAdapter(classAssignmentItem -> {
             Bundle bundle = new Bundle();
             bundle.putInt("AssignmentId", classAssignmentItem.getId());

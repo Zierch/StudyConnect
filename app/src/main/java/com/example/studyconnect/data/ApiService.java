@@ -55,13 +55,13 @@ public interface ApiService {
     @POST("classes/{id}/leave")
     Call<ResponseBody> leaveClass(@Path("id") int id);
 
-    @POST("/archive/{id}")
+    @POST("archive/{id}")
     Call<ResponseBody> archiveClass(@Path("id") int id);
 
-    @POST("/restore/{id}")
+    @POST("restore/{id}")
     Call<ResponseBody> restoreClass(@Path("id") int id);
 
-    @GET("/archived-classes")
+    @GET("archived-classes")
     Call<List<ClassResponse>> getArchivedClasses();
 
 //    Class Assignment

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.FragmentArsipBinding;
-import com.example.studyconnect.ui.adapter.HomeAdapter;
+import com.example.studyconnect.ui.adapter.ArchiveAdapter;
 import com.example.studyconnect.ui.class_ui.ClassFragment;
 import com.example.studyconnect.ui.home.HomeViewModel;
 import com.example.studyconnect.utils.SharedPreferencesManager;
@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ArchivedFragment extends Fragment {
     private FragmentArsipBinding binding;
     private HomeViewModel homeViewModel;
-    private HomeAdapter homeAdapter;
+    private ArchiveAdapter adapter;
 
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
@@ -38,10 +38,9 @@ public class ArchivedFragment extends Fragment {
         binding = FragmentArsipBinding.inflate(inflater, container, false);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        homeViewModel.fetchArchivedClasses();
 
-        initView();
         initObserver();
+        initView();
 
         return binding.getRoot();
     }
@@ -55,28 +54,29 @@ public class ArchivedFragment extends Fragment {
             }
         }
 
-        homeAdapter = new HomeAdapter(classItem -> {
+        adapter = new ArchiveAdapter(classItem -> {
             Bundle bundle = new Bundle();
             bundle.putInt("classId", classItem.getId());
             bundle.putString("className", classItem.getName());
+            bundle.putBoolean("isArchived", true);
 
             ClassFragment classFragment = new ClassFragment();
             classFragment.setArguments(bundle);
 
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_host, classFragment)
-                    .addToBackStack(null)
+                    .addToBackStack("ClassFragment")
                     .commit();
-        }, homeViewModel, sharedPreferencesManager);
+        }, homeViewModel);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerView.setAdapter(homeAdapter);
+        binding.recyclerView.setAdapter(adapter);
     }
 
     private void initObserver() {
         homeViewModel.getArchivedClasses().observe(getViewLifecycleOwner(), classes -> {
             if (classes != null) {
-                homeAdapter.setClassList(classes); // Set data ke adapter
+                adapter.setClassList(classes); // Set data ke adapter
             } else {
             }
         });
@@ -86,6 +86,6 @@ public class ArchivedFragment extends Fragment {
     public void onResume() {
         super.onResume();
         homeViewModel.fetchArchivedClasses();
-        homeAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 }

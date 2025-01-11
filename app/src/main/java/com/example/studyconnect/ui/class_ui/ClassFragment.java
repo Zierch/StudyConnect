@@ -10,19 +10,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.FragmentClassBinding;
+import com.example.studyconnect.ui.home.Drawer;
+import com.example.studyconnect.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ClassFragment extends Fragment {
 
     private FragmentClassBinding binding;
+    private ClassViewModel viewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentClassBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(requireActivity()).get(ClassViewModel.class);
 
         return binding.getRoot();
     }
@@ -43,15 +48,25 @@ public class ClassFragment extends Fragment {
         assert getArguments() != null;
         int classId = getArguments().getInt("classId");
 
+        boolean isArchived = getArguments().getBoolean("isArchived");
+        if (isArchived){
+            binding.restore.setOnClickListener(v -> {
+                Log.d("ClassFragment", "Restore button clicked");
+                binding.restore.setClickable(false);
+                viewModel.restoreClass(classId);
+            });
+        } else {
+            binding.archivedCard.setVisibility(View.GONE);
+        }
+
         binding.bottomNavFragmentClass.setOnItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
             if (itemId == R.id.navigation_forum) {
-                selectedFragment = new ForumFragment();
+                selectedFragment = ForumFragment.newInstance(classId);
             } else if (itemId == R.id.navigation_class_assignment) {
-                Log.d("ClassFragment", "Sending classId: " + classId);
-                selectedFragment = ClassAssignmentFragment.newInstance(classId);
+                selectedFragment = ClassAssignmentFragment.newInstance(classId, isArchived);
             } else if (itemId == R.id.navigation_student_list) {
                 selectedFragment = new StudentListFragment();
             }
@@ -68,6 +83,14 @@ public class ClassFragment extends Fragment {
         if (savedInstanceState == null) {
             binding.bottomNavFragmentClass.setSelectedItemId(R.id.navigation_forum);
         }
+
+        viewModel.getRestoreClassResult().observe(getViewLifecycleOwner(), isSuccess -> {
+            if (isSuccess) {
+                getParentFragmentManager().popBackStack();
+            } else {
+                binding.restore.setClickable(true);
+            }
+        });
     }
 
     @Override

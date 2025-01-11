@@ -30,8 +30,11 @@ import retrofit2.Response;
 public class ClassViewModel extends ViewModel {
     private final StudyRepository repository;
     private final MutableLiveData<List<RegisterResponse>> students = new MutableLiveData<>();
+    private final MutableLiveData<ClassResponse> classes = new MutableLiveData<>();
+    private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
     private final MutableLiveData<Boolean> createClassResult = new MutableLiveData<>();
     private final MutableLiveData<Boolean> updateClassResult = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> restoreClassResult = new MutableLiveData<>();
 
     @Inject
     @ApplicationContext
@@ -54,8 +57,21 @@ public class ClassViewModel extends ViewModel {
         return createClassResult;
     }
 
+    public LiveData<ClassResponse> getClassResult() {
+        return classes;
+    }
+
+    public LiveData<RegisterResponse> getTeacher(int id) {
+        fetchUser(id);
+        return user;
+    }
+
     public LiveData<Boolean> getUpdateClassResult() {
         return updateClassResult;
+    }
+
+    public LiveData<Boolean> getRestoreClassResult() {
+        return restoreClassResult;
     }
 
     public LiveData<ClassResponse> getClass(int classId) {
@@ -124,9 +140,9 @@ public class ClassViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Kelas berhasil diperbarui", Toast.LENGTH_SHORT).show();
                     if (response.isSuccessful()) {
-                        createClassResult.setValue(true);
+                        updateClassResult.setValue(true);
                     } else {
-                        createClassResult.setValue(false);
+                        updateClassResult.setValue(false);
                     }
                 }
             }
@@ -135,13 +151,25 @@ public class ClassViewModel extends ViewModel {
             public void onFailure(Call<ClassResponse> call, Throwable t) {
                 Log.d("updateClass", "onFailure: " + t.getMessage());
                 Toast.makeText(context, "Failed to update class", Toast.LENGTH_SHORT).show();
-                createClassResult.setValue(false);
+                updateClassResult.setValue(false);
             }
         });
     }
 
-    public Call<List<RegisterResponse>> getClassStudents(int id) {
-        return repository.getClassStudents(id);
+    public void fetchClass(int classId){
+        repository.getClass(classId).enqueue(new Callback<ClassResponse>() {
+            @Override
+            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+                if (response.isSuccessful()) {
+                    classes.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ClassResponse> call, Throwable t) {
+                Toast.makeText(context, "Failed to fetch students: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void fetchStudents() {
@@ -156,6 +184,45 @@ public class ClassViewModel extends ViewModel {
             @Override
             public void onFailure(Call<List<RegisterResponse>> call, Throwable t) {
                 Toast.makeText(context, "Failed to fetch students: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void restoreClass(int id) {
+        repository.restoreClass(id).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Kelas berhasil dipulihkan", Toast.LENGTH_SHORT).show();
+                    if (response.isSuccessful()) {
+                        restoreClassResult.setValue(true);
+                    } else {
+                        restoreClassResult.setValue(false);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("restoreClass", "onFailure: " + t.getMessage());
+                Toast.makeText(context, "Gagal memulihkan kelas", Toast.LENGTH_SHORT).show();
+                restoreClassResult.setValue(false);
+            }
+        });
+    }
+
+    private void fetchUser(int id) {
+        repository.getUser(id).enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                if (response.isSuccessful()) {
+                    user.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Toast.makeText(context, "Failed to fetch user: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

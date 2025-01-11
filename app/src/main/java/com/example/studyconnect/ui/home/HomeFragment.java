@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        homeViewModel.fetchActiveClasses();
         teacherId = sharedPreferencesManager.getData("teacherId", 0);
 
         initObserver();
@@ -87,13 +86,14 @@ public class HomeFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putInt("classId", classItem.getId());
             bundle.putString("className", classItem.getName());
+            bundle.putBoolean("isArchived", false);
 
             ClassFragment classFragment = new ClassFragment();
             classFragment.setArguments(bundle);
 
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_host, classFragment)
-                    .addToBackStack(null)
+                    .addToBackStack("ClassFragment")
                     .commit();
         }, homeViewModel, sharedPreferencesManager);
 

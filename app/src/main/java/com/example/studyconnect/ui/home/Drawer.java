@@ -121,6 +121,7 @@ public class Drawer extends AppCompatActivity {
     }
 
     private void replaceFragment(Fragment fragment) {
+        binding.appBar.toolbar.setTitle(R.string.app_toolbar_title);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_host, fragment);

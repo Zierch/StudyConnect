@@ -38,7 +38,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/namaRuang"
+                    android:id="@+id/deskripsi"
                     style="@style/TextSemiBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
