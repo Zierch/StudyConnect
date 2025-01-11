@@ -7,6 +7,12 @@
     android:orientation="vertical"
     tools:context=".ui.class_ui.ForumFragment">
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/md_theme_outline" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -21,24 +27,21 @@
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_margin="20dp"
                 android:text="@string/text_nama_guru"
                 android:textColor="@color/md_theme_primary"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="15dp"
-                android:background="@drawable/ic_add"
-                android:backgroundTint="@color/md_theme_primary"
-                android:contentDescription="@string/text_add"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/viewspace"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView2" />
 
             <View
                 android:id="@+id/divider1"
@@ -46,19 +49,17 @@
                 android:layout_height="3dp"
                 android:layout_marginTop="15dp"
                 android:background="@color/md_theme_primary"
-                app:layout_constraintEnd_toEndOf="@+id/imageView3"
+                app:layout_constraintEnd_toEndOf="@+id/viewspace"
                 app:layout_constraintStart_toStartOf="@+id/textView2"
-                app:layout_constraintTop_toBottomOf="@id/imageView3" />
+                app:layout_constraintTop_toBottomOf="@id/textView2" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_guru_list"
+            <include
+                android:id="@+id/include_guru_list"
+                layout="@layout/item_guru_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider1"
-                tools:listitem="@layout/item_guru_list" />
+                app:layout_constraintTop_toBottomOf="@id/divider1" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -76,12 +77,12 @@
                 android:id="@+id/imageView4"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_margin="15dp"
+                android:layout_margin="20dp"
                 android:background="@drawable/ic_add"
                 android:backgroundTint="@color/md_theme_primary"
                 android:contentDescription="@string/text_add"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_guru_list" />
+                app:layout_constraintTop_toBottomOf="@id/include_guru_list" />
 
             <View
                 android:id="@+id/divider2"

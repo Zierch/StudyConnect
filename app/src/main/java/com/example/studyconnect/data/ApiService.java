@@ -68,5 +68,7 @@ public interface ApiService {
     @GET("assignment/{classId}")
     Call<List<ClassAssignmentResponse>> getClassAssignment(@Path("classId") int classId);
 
+    @DELETE("assignment/{id}")
+    Call<ResponseBody> deleteAssignment(@Path("id") int id);
 }
 

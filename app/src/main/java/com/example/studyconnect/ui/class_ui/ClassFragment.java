@@ -14,9 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.FragmentClassBinding;
-import com.example.studyconnect.ui.home.Drawer;
-import com.example.studyconnect.ui.home.HomeFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ClassFragment extends Fragment {
 
@@ -36,7 +33,9 @@ public class ClassFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        assert getArguments() != null;
         String className = getArguments().getString("className");
+
         // Ubah judul ActionBar
         if (requireActivity() instanceof AppCompatActivity) {
             AppCompatActivity activity = (AppCompatActivity) requireActivity();
@@ -59,7 +58,7 @@ public class ClassFragment extends Fragment {
             binding.archivedCard.setVisibility(View.GONE);
         }
 
-        binding.bottomNavFragmentClass.setOnItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) item -> {
+        binding.bottomNavFragmentClass.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
@@ -68,7 +67,7 @@ public class ClassFragment extends Fragment {
             } else if (itemId == R.id.navigation_class_assignment) {
                 selectedFragment = ClassAssignmentFragment.newInstance(classId, isArchived);
             } else if (itemId == R.id.navigation_student_list) {
-                selectedFragment = new StudentListFragment();
+                selectedFragment = StudentListFragment.newInstance(classId);
             }
 
             if (selectedFragment != null) {

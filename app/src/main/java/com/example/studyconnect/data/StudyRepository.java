@@ -114,4 +114,10 @@ public class StudyRepository {
     public Call<List<ClassAssignmentResponse>> getClassAssignment(int classId) {
         return apiService.getClassAssignment(classId);
     }
+
+    // method hapus tugas
+    public Call<ResponseBody> deleteAssignment(int id) {
+        return apiService.deleteAssignment(id);
+    }
+
 }

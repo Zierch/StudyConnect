@@ -61,5 +61,10 @@
     <string name="text_pilihan">Pilihan</string>
     <string name="text_serahkan">Serahkan</string>
     <string name="swipe_up">Swipe Up</string>
+    <string name="text_mapel">Mapel</string>
+    <string name="text_opsi_1">Opsi 1</string>
+    <string name="text_opsi_2">Opsi 2</string>
+    <string name="text_edit">Edit</string>
+    <string name="text_hapus">Hapus</string>
 
 </resources>

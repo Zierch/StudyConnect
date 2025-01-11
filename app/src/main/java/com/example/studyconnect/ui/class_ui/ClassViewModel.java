@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -46,7 +47,6 @@ public class ClassViewModel extends ViewModel {
     @Inject
     public ClassViewModel(StudyRepository repository) {
         this.repository = repository;
-        fetchStudents();
     }
 
     public LiveData<List<RegisterResponse>> getStudents() {
@@ -79,7 +79,10 @@ public class ClassViewModel extends ViewModel {
 
         repository.getClass(classId).enqueue(new Callback<ClassResponse>() {
             @Override
-            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+            public void onResponse(
+                    @NonNull Call<ClassResponse> call,
+                    @NonNull Response<ClassResponse> response
+            ) {
                 if (response.isSuccessful()) {
                     classData.setValue(response.body());
                 } else {
@@ -88,7 +91,10 @@ public class ClassViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<ClassResponse> call, Throwable t) {
+            public void onFailure(
+                    @NonNull Call<ClassResponse> call,
+                    @NonNull Throwable t
+            ) {
                 Log.d("getClass", "onFailure: " + t.getMessage());
                 classData.setValue(null);
             }
@@ -107,7 +113,11 @@ public class ClassViewModel extends ViewModel {
 
         repository.createClass(body).enqueue(new Callback<ClassResponse>() {
             @Override
-            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+            public void onResponse(
+                    @NonNull Call<ClassResponse> call,
+                    @NonNull Response<ClassResponse> response
+            ) {
+                assert response.body() != null;
                 sharedPreferencesManager.saveData("classId", response.body().getId());
                 Toast.makeText(context, "Kelas berhasil dibuat", Toast.LENGTH_SHORT).show();
                 if (response.isSuccessful()) {
@@ -118,7 +128,7 @@ public class ClassViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<ClassResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ClassResponse> call, @NonNull Throwable t) {
                 Log.d("createClass", "onFailure: " + t.getMessage());
                 Toast.makeText(context, "Failed to create class", Toast.LENGTH_SHORT).show();
                 createClassResult.setValue(false);
@@ -136,7 +146,10 @@ public class ClassViewModel extends ViewModel {
 
         repository.updateClass(id, body).enqueue(new Callback<ClassResponse>() {
             @Override
-            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+            public void onResponse(
+                    @NonNull Call<ClassResponse> call,
+                    @NonNull Response<ClassResponse> response
+            ) {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Kelas berhasil diperbarui", Toast.LENGTH_SHORT).show();
                     if (response.isSuccessful()) {
@@ -148,7 +161,7 @@ public class ClassViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<ClassResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ClassResponse> call, @NonNull Throwable t) {
                 Log.d("updateClass", "onFailure: " + t.getMessage());
                 Toast.makeText(context, "Failed to update class", Toast.LENGTH_SHORT).show();
                 updateClassResult.setValue(false);
@@ -159,30 +172,36 @@ public class ClassViewModel extends ViewModel {
     public void fetchClass(int classId){
         repository.getClass(classId).enqueue(new Callback<ClassResponse>() {
             @Override
-            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+            public void onResponse(
+                    @NonNull Call<ClassResponse> call,
+                    @NonNull Response<ClassResponse> response
+            ) {
                 if (response.isSuccessful()) {
                     classes.postValue(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<ClassResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ClassResponse> call, @NonNull Throwable t) {
                 Toast.makeText(context, "Failed to fetch students: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void fetchStudents() {
-        repository.getClassStudents(1).enqueue(new Callback<List<RegisterResponse>>() {
+    private void fetchStudents(int classId) {
+        repository.getClassStudents(classId).enqueue(new Callback<List<RegisterResponse>>() {
             @Override
-            public void onResponse(Call<List<RegisterResponse>> call, Response<List<RegisterResponse>> response) {
+            public void onResponse(
+                    @NonNull Call<List<RegisterResponse>> call,
+                    @NonNull Response<List<RegisterResponse>> response
+            ) {
                 if (response.isSuccessful()) {
                     students.postValue(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<RegisterResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<RegisterResponse>> call, @NonNull Throwable t) {
                 Toast.makeText(context, "Failed to fetch students: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -191,7 +210,10 @@ public class ClassViewModel extends ViewModel {
     public void restoreClass(int id) {
         repository.restoreClass(id).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Response<ResponseBody> response
+            ) {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Kelas berhasil dipulihkan", Toast.LENGTH_SHORT).show();
                     if (response.isSuccessful()) {
@@ -203,7 +225,7 @@ public class ClassViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Log.d("restoreClass", "onFailure: " + t.getMessage());
                 Toast.makeText(context, "Gagal memulihkan kelas", Toast.LENGTH_SHORT).show();
                 restoreClassResult.setValue(false);
@@ -214,14 +236,17 @@ public class ClassViewModel extends ViewModel {
     private void fetchUser(int id) {
         repository.getUser(id).enqueue(new Callback<RegisterResponse>() {
             @Override
-            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+            public void onResponse(
+                    @NonNull Call<RegisterResponse> call,
+                    @NonNull Response<RegisterResponse> response
+            ) {
                 if (response.isSuccessful()) {
                     user.postValue(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
                 Toast.makeText(context, "Failed to fetch user: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

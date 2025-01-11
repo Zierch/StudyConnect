@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import dagger.hilt.android.qualifiers.ApplicationContext;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,10 +49,13 @@ public class ClassAssignmentViewModel extends ViewModel {
         return user;
     }
 
-    private void fetchClassAssignment(int classId) {
+    public void fetchClassAssignment(int classId) {
         repository.getClassAssignment(classId).enqueue(new Callback<List<ClassAssignmentResponse>>() {
             @Override
-            public void onResponse(@NonNull Call<List<ClassAssignmentResponse>> call, Response<List<ClassAssignmentResponse>> response) {
+            public void onResponse(
+                    @NonNull Call<List<ClassAssignmentResponse>> call,
+                    @NonNull Response<List<ClassAssignmentResponse>> response
+            ) {
                 if (response.isSuccessful()) {
                     classAssignment.postValue(response.body());
                     Log.d("KELAS_ASSIGNMENT", "onResponse: " + response.body());
@@ -59,8 +63,15 @@ public class ClassAssignmentViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<ClassAssignmentResponse>> call, Throwable t) {
-                Toast.makeText(context, "Failed to fetch classAssignment: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(
+                    @NonNull Call<List<ClassAssignmentResponse>> call,
+                    @NonNull Throwable t
+            ) {
+                Toast.makeText(
+                        context,
+                        "Failed to fetch classAssignment: " + t.getMessage(),
+                        Toast.LENGTH_SHORT
+                ).show();
             }
         });
     }
@@ -68,17 +79,47 @@ public class ClassAssignmentViewModel extends ViewModel {
     private void fetchUser(int id) {
         repository.getUser(id).enqueue(new Callback<RegisterResponse>() {
             @Override
-            public void onResponse(@NonNull Call<RegisterResponse> call, Response<RegisterResponse> response) {
+            public void onResponse(
+                    @NonNull Call<RegisterResponse> call,
+                    @NonNull Response<RegisterResponse> response
+            ) {
                 if (response.isSuccessful()) {
                     user.postValue(response.body());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<RegisterResponse> call, Throwable t) {
+            public void onFailure(
+                    @NonNull Call<RegisterResponse> call,
+                    @NonNull Throwable t
+            ) {
                 Toast.makeText(context, "Failed to fetch user: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    public void deleteAssignment(int id, int classId) {
+        repository.deleteAssignment(id).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Response<ResponseBody> response
+            ) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(
+                            context,
+                            "Tugas berhasil dihapus",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    fetchClassAssignment(classId);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Log.d("deleteAssignment", "onFailure: " + t.getMessage());
+                Toast.makeText(context, "Gagal menghapus tugas", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

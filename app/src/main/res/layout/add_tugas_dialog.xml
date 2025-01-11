@@ -12,7 +12,7 @@
         android:padding="10dp"
         android:text="@string/text_buat"
         android:textAlignment="center"
-        android:textSize="30sp" />
+        android:textSize="25sp" />
 
     <View
         android:layout_width="match_parent"
@@ -28,11 +28,11 @@
         android:text="@string/text_tugas"
         android:textAlignment="textStart"
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:cornerRadius="0dp"
         app:icon="@drawable/baseline_description_24"
         app:iconPadding="20dp"
-        app:iconSize="40sp"
+        app:iconSize="25sp"
         app:iconTint="@color/black" />
 
     <com.google.android.material.button.MaterialButton
@@ -44,11 +44,11 @@
         android:text="@string/text_pertanyaan"
         android:textAlignment="textStart"
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:cornerRadius="0dp"
         app:icon="@drawable/baseline_question_mark_24"
         app:iconPadding="20dp"
-        app:iconSize="40sp"
+        app:iconSize="25sp"
         app:iconTint="@color/black" />
 
     <com.google.android.material.button.MaterialButton
@@ -60,10 +60,10 @@
         android:text="@string/text_materi"
         android:textAlignment="textStart"
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:cornerRadius="0dp"
         app:icon="@drawable/baseline_book_24"
         app:iconPadding="20dp"
-        app:iconSize="40sp"
+        app:iconSize="25sp"
         app:iconTint="@color/black" />
 </LinearLayout>

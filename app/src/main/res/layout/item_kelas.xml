@@ -32,22 +32,23 @@
                     style="@style/TextSemiBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nama Kelas"
+                    android:text="@string/text_nama_kelas"
                     android:textColor="@color/white"
-                    android:textSize="18dp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/mapel"
                     style="@style/TextSemiBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mapel"
+                    android:text="@string/text_mapel"
                     android:textColor="@color/white"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/more"
+                android:contentDescription="@string/text_settings"
                 android:padding="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,9 +60,8 @@
             android:id="@+id/namaGuru"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nama Guru"
+            android:text="@string/text_nama_guru"
             android:textColor="@color/white"
-            android:textSize="12dp" />
+            android:textSize="12sp" />
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>

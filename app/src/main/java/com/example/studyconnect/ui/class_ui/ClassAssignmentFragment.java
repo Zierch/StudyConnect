@@ -12,9 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.studyconnect.databinding.AddTugasDialogBinding;
 import com.example.studyconnect.databinding.FragmentClassAssignmentBinding;
 import com.example.studyconnect.ui.adapter.TugasAdapter;
 import com.example.studyconnect.utils.SharedPreferencesManager;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import javax.inject.Inject;
 
@@ -24,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ClassAssignmentFragment extends Fragment {
 
     private FragmentClassAssignmentBinding binding;
+    private ClassAssignmentViewModel classAssignmentViewModel;
     private TugasAdapter tugasAdapter;
 
     @Inject
@@ -60,10 +63,44 @@ public class ClassAssignmentFragment extends Fragment {
 
         binding = FragmentClassAssignmentBinding.inflate(inflater, container, false);
 
+        classAssignmentViewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
+//        classAssignmentViewModel.fetchClassAssignment(classId);
         teacherId = sharedPreferencesManager.getData("teacherId", 0);
 
         initView();
         initObserver();
+
+        binding.fabAddTugas.setOnClickListener(v -> {
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
+            AddTugasDialogBinding bottomBinding = AddTugasDialogBinding.inflate(getLayoutInflater());
+            bottomSheetDialog.setContentView(bottomBinding.getRoot());
+
+            // Menyembunyikan tombol sesuai dengan kondisi teacherId
+//            bottomBinding.createClass.setVisibility(teacherId == 0 ? View.GONE : View.VISIBLE);
+//            bottomBinding.joinClass.setVisibility(teacherId != 0 ? View.GONE : View.VISIBLE);
+
+            bottomBinding.btnAddTugas.setOnClickListener(v1 -> {
+//                Intent intent = new Intent(requireContext(), FormClassActivity.class);
+//                intent.putExtra("isUpdate", false);
+//                startActivity(intent);
+                bottomSheetDialog.dismiss();
+            });
+
+            bottomBinding.btnAddPertanyaan.setOnClickListener(v1 -> {
+//                Intent intent = new Intent(requireContext(), FormClassActivity.class);
+//                intent.putExtra("isUpdate", false);
+//                startActivity(intent);
+                bottomSheetDialog.dismiss();
+            });
+
+            bottomBinding.btnAddMateri.setOnClickListener(v1 -> {
+//                Intent intent = new Intent(requireContext(), );
+//                startActivity(intent);
+                bottomSheetDialog.dismiss();
+            });
+
+            bottomSheetDialog.show();
+        });
 
         return binding.getRoot();
     }
@@ -84,14 +121,14 @@ public class ClassAssignmentFragment extends Fragment {
 //                    .replace(R.id.frame_layout, classFragment)
 //                    .addToBackStack(null)
 //                    .commit();
-        });
+        }, classAssignmentViewModel);
 
         binding.rvListTugasKelas.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvListTugasKelas.setAdapter(tugasAdapter);
     }
 
     private void initObserver() {
-        ClassAssignmentViewModel classAssignmentViewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
+        classAssignmentViewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
         classAssignmentViewModel.getClassAssignment(classId).observe(getViewLifecycleOwner(), classAssignment -> {
             if (classAssignment != null) {
                 tugasAdapter.setClassAssignmentList(classAssignment); // Set data ke adapter

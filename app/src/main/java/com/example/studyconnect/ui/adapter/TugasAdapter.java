@@ -3,15 +3,20 @@ package com.example.studyconnect.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.studyconnect.R;
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
+import com.example.studyconnect.databinding.BottomTwoDialogBinding;
 import com.example.studyconnect.databinding.ItemTugasListBinding;
+import com.example.studyconnect.ui.class_ui.ClassAssignmentViewModel;
 import com.example.studyconnect.utils.Helper;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +24,16 @@ import java.util.List;
 public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> {
     private final List<ClassAssignmentResponse> classAssignmentList = new ArrayList<>();
     private final OnItemClickListener onItemClickListener;
+    private final ClassAssignmentViewModel viewModel;
     private RegisterResponse user;
 
     // Constructor untuk menerima listener
-    public TugasAdapter(OnItemClickListener onItemClickListener) {
+    public TugasAdapter(
+            OnItemClickListener onItemClickListener,
+            ClassAssignmentViewModel viewModel
+    ) {
         this.onItemClickListener = onItemClickListener;
+        this.viewModel = viewModel;
     }
 
     // Interface untuk click listener
@@ -39,7 +49,9 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setClassAssignmentList(List<ClassAssignmentResponse> newClassAssignmentList) {
+    public void setClassAssignmentList(
+            List<ClassAssignmentResponse> newClassAssignmentList
+    ) {
         classAssignmentList.clear();
         classAssignmentList.addAll(newClassAssignmentList);
         notifyDataSetChanged();
@@ -48,7 +60,11 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TugasAdapter.ViewHolder(ItemTugasListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new TugasAdapter.ViewHolder(ItemTugasListBinding.inflate(
+                LayoutInflater.from(parent.getContext()),
+                parent,
+                false)
+        );
     }
 
     @Override
@@ -61,8 +77,54 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
         String formattedDate = Helper.formatDate(inputDate);
         holder.binding.tvDiposting.setText(formattedDate);
 
+        if (user.getRole().equals("siswa"))
+            holder.binding.settingTugas.setVisibility(View.GONE);
+
+        holder.binding.settingTugas.setOnClickListener(v -> {
+            // Tampilkan BottomSheet
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
+                    holder.itemView.getContext()
+            );
+            BottomTwoDialogBinding bottomSheetBinding =
+                    BottomTwoDialogBinding.inflate(
+                            LayoutInflater.from(holder.itemView.getContext())
+                    );
+
+            bottomSheetBinding.option1.setText(R.string.text_edit);
+            bottomSheetBinding.option2.setText(R.string.text_hapus);
+
+            if (user.getRole().equals("siswa")) {
+                bottomSheetBinding.option1.setVisibility(View.GONE);
+                bottomSheetBinding.option2.setVisibility(View.GONE);
+            }
+
+            bottomSheetBinding.option1.setOnClickListener(view -> {
+//                int classId = classItem.getId();
+//                sharedPreferencesManager.saveData("classId", classId);
+//                Intent intent = new Intent(holder.itemView.getContext(), FormClassActivity.class);
+//                intent.putExtra("isUpdate", true);
+//                holder.itemView.getContext().startActivity(intent);
+//
+                bottomSheetDialog.dismiss();
+            });
+
+            bottomSheetBinding.option2.setOnClickListener(view -> {
+                viewModel.deleteAssignment(
+                        classAssignmentItem.getId(),
+                        classAssignmentItem.getClass_id()
+                );
+
+                bottomSheetDialog.dismiss();
+            });
+
+            bottomSheetDialog.setContentView(bottomSheetBinding.getRoot());
+            bottomSheetDialog.show();
+        });
+
         // Set onClickListener
-        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(classAssignmentItem));
+        holder.itemView.setOnClickListener(v ->
+                onItemClickListener.onItemClick(classAssignmentItem)
+        );
     }
 
     @Override
