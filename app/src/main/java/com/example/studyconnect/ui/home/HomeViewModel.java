@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
-import com.example.studyconnect.utils.SharedPreferencesManager;
 
 import java.util.List;
 
@@ -28,8 +27,8 @@ import retrofit2.Response;
 public class HomeViewModel extends ViewModel {
     private final StudyRepository repository;
     private final MutableLiveData<List<ClassResponse>> classes = new MutableLiveData<>();
+    private final MutableLiveData<List<ClassResponse>> archivedClasses = new MutableLiveData<>();
     private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
-
     @Inject
     @ApplicationContext
     Context context;
@@ -37,11 +36,14 @@ public class HomeViewModel extends ViewModel {
     @Inject
     public HomeViewModel(StudyRepository repository) {
         this.repository = repository;
-        fetchClasses();
     }
 
     public LiveData<List<ClassResponse>> getClasses() {
         return classes;
+    }
+
+    public LiveData<List<ClassResponse>> getArchivedClasses() {
+        return archivedClasses;
     }
 
     public LiveData<RegisterResponse> getUser(int id) {
@@ -49,14 +51,27 @@ public class HomeViewModel extends ViewModel {
         return user;
     }
 
-    public void fetchClasses() {
+    public void fetchActiveClasses() {
         repository.getClasses().enqueue(new Callback<List<ClassResponse>>() {
             @Override
             public void onResponse(Call<List<ClassResponse>> call, Response<List<ClassResponse>> response) {
                 if (response.isSuccessful()) {
                     classes.postValue(response.body());
-                    Log.d("KELAS", "onResponse: " + response.body());
                 }
+            }
+
+            @Override
+            public void onFailure(Call<List<ClassResponse>> call, Throwable t) {
+                Toast.makeText(context, "Failed to fetch classes: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void fetchArchivedClasses() {
+        repository.getArchivedClasses().enqueue(new Callback<List<ClassResponse>>() {
+            @Override
+            public void onResponse(Call<List<ClassResponse>> call, Response<List<ClassResponse>> response) {
+                archivedClasses.postValue(response.body());
             }
 
             @Override
@@ -88,6 +103,7 @@ public class HomeViewModel extends ViewModel {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Berhasil bergabung ke kelas", Toast.LENGTH_SHORT).show();
+                    fetchActiveClasses();
                 }
             }
 
@@ -105,7 +121,7 @@ public class HomeViewModel extends ViewModel {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Berhasil meninggalkan kelas", Toast.LENGTH_SHORT).show();
-                    fetchClasses();
+                    fetchActiveClasses();
                 }
             }
 
@@ -123,7 +139,7 @@ public class HomeViewModel extends ViewModel {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(context, "Kelas berhasil dihapus", Toast.LENGTH_SHORT).show();
-                    fetchClasses();
+                    fetchArchivedClasses();
                 }
             }
 
@@ -135,4 +151,40 @@ public class HomeViewModel extends ViewModel {
         });
     }
 
+
+    public void archiveClass(int id) {
+        repository.archiveClass(id).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Kelas berhasil diarsipkan", Toast.LENGTH_SHORT).show();
+                    fetchActiveClasses();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("archiveClass", "onFailure: " + t.getMessage());
+                Toast.makeText(context, "Gagal mengarsipkan kelas", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void restoreClass(int id) {
+        repository.restoreClass(id).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context, "Kelas berhasil dipulihkan", Toast.LENGTH_SHORT).show();
+                    fetchArchivedClasses();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("restoreClass", "onFailure: " + t.getMessage());
+                Toast.makeText(context, "Gagal memulihkan kelas", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

@@ -6,23 +6,23 @@
     android:padding="16dp">
 
     <Button
-        android:id="@+id/restore"
+        android:id="@+id/option1"
         style="@style/CustomButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:gravity="start"
-        android:text="Gabung ke kelas"
+        android:text="Opsi 1"
         android:textColor="@color/black" />
 
     <Button
-        android:id="@+id/createClass"
+        android:id="@+id/option2"
         style="@style/CustomButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:layout_marginTop="16dp"
         android:gravity="start"
-        android:text="Buat kelas"
+        android:text="Opsi 2"
         android:textColor="@color/black" />
 </LinearLayout>

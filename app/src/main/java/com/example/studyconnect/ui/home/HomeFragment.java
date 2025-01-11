@@ -42,6 +42,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        homeViewModel.fetchActiveClasses();
         teacherId = sharedPreferencesManager.getData("teacherId", 0);
 
         initObserver();
@@ -85,6 +86,7 @@ public class HomeFragment extends Fragment {
         homeAdapter = new HomeAdapter(classItem -> {
             Bundle bundle = new Bundle();
             bundle.putInt("classId", classItem.getId());
+            bundle.putString("className", classItem.getName());
 
             ClassFragment classFragment = new ClassFragment();
             classFragment.setArguments(bundle);
@@ -120,7 +122,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        homeViewModel.fetchClasses();
+        homeViewModel.fetchActiveClasses();
         homeAdapter.notifyDataSetChanged();
     }
 }

@@ -98,9 +98,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 bottomSheetDialog.dismiss();
             });
 
-            bottomSheetBinding.arsipkanKelas.setText(R.string.text_delete_sementara);
             bottomSheetBinding.arsipkanKelas.setOnClickListener(view -> {
-                viewModel.deleteClass(classItem.getId());
+                viewModel.archiveClass(classItem.getId());
 
                 bottomSheetDialog.dismiss();
             });

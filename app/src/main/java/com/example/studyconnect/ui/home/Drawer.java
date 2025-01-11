@@ -23,10 +23,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.ActivityDrawerBinding;
-import com.example.studyconnect.ui.archieved.ArchievedFragment;
+import com.example.studyconnect.ui.archieved.ArchivedFragment;
 import com.example.studyconnect.ui.auth.AuthViewModel;
 import com.example.studyconnect.ui.auth.SignInActivity;
+import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.navigation.NavigationView;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -40,6 +43,9 @@ public class Drawer extends AppCompatActivity {
     private Toast backToast;
     private AuthViewModel viewModel;
 
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,15 +57,26 @@ public class Drawer extends AppCompatActivity {
         drawerLayout = binding.drawerLayout;
         navigationView = binding.navDrawer;
 
+        // Inisialisasi ActionBarDrawerToggle
+        toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, binding.appBar.toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
         initView();
     }
 
     private void initView() {
+        if (sharedPreferencesManager.getData("role", "").equals("siswa")) {
+            binding.navDrawer.getMenu().findItem(R.id.archived).setVisible(false);
+        }
+
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     // Jika ada fragment di back stack, kembali ke fragment sebelumnya
+                    binding.appBar.toolbar.setTitle(R.string.app_toolbar_title);
                     getSupportFragmentManager().popBackStack();
                 } else {
                     if (backPressedOnce) {
@@ -80,7 +97,6 @@ public class Drawer extends AppCompatActivity {
 //        Default fragment
         replaceFragment(new HomeFragment());
 
-
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -91,7 +107,7 @@ public class Drawer extends AppCompatActivity {
                 } else if (selected == R.id.notification) {
                     Toast.makeText(Drawer.this, "404 Not Found", Toast.LENGTH_SHORT).show();
                 } else if (selected == R.id.archived) {
-                    replaceFragment(new ArchievedFragment());
+                    replaceFragment(new ArchivedFragment());
                 } else if (selected == R.id.setting) {
                     Toast.makeText(Drawer.this, "404 Not Found", Toast.LENGTH_SHORT).show();
                 } else if (selected == R.id.logout) {

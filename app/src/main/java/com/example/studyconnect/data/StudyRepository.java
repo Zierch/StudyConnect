@@ -94,6 +94,22 @@ public class StudyRepository {
         return apiService.leaveClass(id);
     }
 
+
+    // method arsipkan class
+    public Call<ResponseBody> archiveClass(int id) {
+        return apiService.archiveClass(id);
+    }
+
+    // method pulihkan class
+    public Call<ResponseBody> restoreClass(int id) {
+        return apiService.restoreClass(id);
+    }
+
+    // method get class yang diarsipkan
+    public Call<List<ClassResponse>> getArchivedClasses() {
+        return apiService.getArchivedClasses();
+    }
+
     // method get assignment by class id
     public Call<List<ClassAssignmentResponse>> getClassAssignment(int classId) {
         return apiService.getClassAssignment(classId);

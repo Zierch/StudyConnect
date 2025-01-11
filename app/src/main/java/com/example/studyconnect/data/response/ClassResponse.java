@@ -9,6 +9,7 @@ public class ClassResponse {
     private String description;
     private int teacher_id;
     private String code;
+    private String status;
 
     public ClassResponse(int id, String name, String subject, String description, int teacher_id, String code) {
         this.id = id;
@@ -65,6 +66,14 @@ public class ClassResponse {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

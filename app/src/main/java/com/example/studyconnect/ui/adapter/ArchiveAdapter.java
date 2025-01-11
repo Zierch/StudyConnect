@@ -1,9 +1,7 @@
 package com.example.studyconnect.ui.adapter;
 
 
-import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -11,40 +9,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studyconnect.R;
 import com.example.studyconnect.data.response.ClassResponse;
-import com.example.studyconnect.data.response.RegisterResponse;
-import com.example.studyconnect.databinding.BottomItemKelasDialogBinding;
+import com.example.studyconnect.databinding.BottomTwoDialogBinding;
 import com.example.studyconnect.databinding.ItemKelasBinding;
-import com.example.studyconnect.ui.class_ui.FormClassActivity;
 import com.example.studyconnect.ui.home.HomeViewModel;
-import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArchieveAdapter extends RecyclerView.Adapter<ArchieveAdapter.ViewHolder> {
+public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHolder> {
     private final List<ClassResponse> classList = new ArrayList<>();
     private HomeViewModel viewModel;
     private final OnItemClickListener onItemClickListener;
-    private final SharedPreferencesManager sharedPreferencesManager;
-    private RegisterResponse user;
 
     // Constructor untuk menerima listener
-    public ArchieveAdapter(OnItemClickListener onItemClickListener, HomeViewModel viewModel, SharedPreferencesManager sharedPreferencesManager) {
+    public ArchiveAdapter(OnItemClickListener onItemClickListener, HomeViewModel viewModel) {
         this.onItemClickListener = onItemClickListener;
         this.viewModel = viewModel;
-        this.sharedPreferencesManager = sharedPreferencesManager;
     }
 
     // Interface untuk click listener
     public interface OnItemClickListener {
         void onItemClick(ClassResponse classItem);
-    }
-
-    // Set data user
-    public void setUser(RegisterResponse user) {
-        this.user = user;
-        notifyDataSetChanged();
     }
 
     public void setClassList(List<ClassResponse> newClassList) {
@@ -56,7 +42,7 @@ public class ArchieveAdapter extends RecyclerView.Adapter<ArchieveAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ArchieveAdapter.ViewHolder(ItemKelasBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ArchiveAdapter.ViewHolder(ItemKelasBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
@@ -70,33 +56,17 @@ public class ArchieveAdapter extends RecyclerView.Adapter<ArchieveAdapter.ViewHo
         holder.binding.more.setOnClickListener(v -> {
             // Tampilkan BottomSheet
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(holder.itemView.getContext());
-            BottomItemKelasDialogBinding bottomSheetBinding = BottomItemKelasDialogBinding.inflate(LayoutInflater.from(holder.itemView.getContext()));
+            BottomTwoDialogBinding bottomSheetBinding = BottomTwoDialogBinding.inflate(LayoutInflater.from(holder.itemView.getContext()));
 
-            if (user.getRole().equals("siswa")) {
-                bottomSheetBinding.editKelas.setVisibility(View.GONE);
-                bottomSheetBinding.arsipkanKelas.setVisibility(View.GONE);
-            } else {
-                bottomSheetBinding.batalkanPendaftaran.setVisibility(View.GONE);
-            }
-
-            bottomSheetBinding.batalkanPendaftaran.setOnClickListener(view -> {
+            bottomSheetBinding.option1.setText("Pulihkan");
+            bottomSheetBinding.option1.setOnClickListener(view -> {
                 viewModel.leaveClass(classItem.getId());
 
                 bottomSheetDialog.dismiss();
             });
 
-            bottomSheetBinding.editKelas.setOnClickListener(view -> {
-                int classId = classItem.getId();
-                sharedPreferencesManager.saveData("classId", classId);
-                Intent intent = new Intent(holder.itemView.getContext(), FormClassActivity.class);
-                intent.putExtra("isUpdate", true);
-                holder.itemView.getContext().startActivity(intent);
-
-                bottomSheetDialog.dismiss();
-            });
-
-            bottomSheetBinding.arsipkanKelas.setText("Delete (sementara)");
-            bottomSheetBinding.arsipkanKelas.setOnClickListener(view -> {
+            bottomSheetBinding.option2.setText("Hapus");
+            bottomSheetBinding.option2.setOnClickListener(view -> {
                 viewModel.deleteClass(classItem.getId());
 
                 bottomSheetDialog.dismiss();
@@ -105,12 +75,6 @@ public class ArchieveAdapter extends RecyclerView.Adapter<ArchieveAdapter.ViewHo
             bottomSheetDialog.setContentView(bottomSheetBinding.getRoot());
             bottomSheetDialog.show();
         });
-
-        if (sharedPreferencesManager.getData("role", "").equals("siswa")){
-            holder.binding.namaGuru.setText(user.getName());
-        } else {
-            holder.binding.namaGuru.setVisibility(View.GONE);
-        }
 
         // Set onClickListener
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(classItem));
@@ -126,7 +90,7 @@ public class ArchieveAdapter extends RecyclerView.Adapter<ArchieveAdapter.ViewHo
         public ViewHolder(@NonNull ItemKelasBinding itemView) {
             super(itemView.getRoot());
             binding = itemView;
-            binding.linear.setBackgroundColor(binding.linear.getContext().getColor(R.color.md_theme_secondary_mediumContrast));
+            binding.linear.setBackground(binding.linear.getContext().getDrawable(R.drawable.gradient_light_blue_background));
         }
     }
 }

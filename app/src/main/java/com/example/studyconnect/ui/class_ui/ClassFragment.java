@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.studyconnect.R;
@@ -29,6 +30,15 @@ public class ClassFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        String className = getArguments().getString("className");
+        // Ubah judul ActionBar
+        if (requireActivity() instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) requireActivity();
+            if (activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().setTitle(className);
+            }
+        }
 
         assert getArguments() != null;
         int classId = getArguments().getInt("classId");

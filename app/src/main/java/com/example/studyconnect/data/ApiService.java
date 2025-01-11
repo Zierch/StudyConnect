@@ -34,10 +34,6 @@ public interface ApiService {
     @GET("classes")
     Call<List<ClassResponse>> getClasses();
 
-//    Class Assignment
-    @GET("assignment/{classId}")
-    Call<List<ClassAssignmentResponse>> getClassAssignment(@Path("classId") int classId);
-
     @GET("classes/{id}")
     Call<ClassResponse> getClass(@Path("id") int id);
 
@@ -58,5 +54,19 @@ public interface ApiService {
 
     @POST("classes/{id}/leave")
     Call<ResponseBody> leaveClass(@Path("id") int id);
+
+    @POST("/archive/{id}")
+    Call<ResponseBody> archiveClass(@Path("id") int id);
+
+    @POST("/restore/{id}")
+    Call<ResponseBody> restoreClass(@Path("id") int id);
+
+    @GET("/archived-classes")
+    Call<List<ClassResponse>> getArchivedClasses();
+
+//    Class Assignment
+    @GET("assignment/{classId}")
+    Call<List<ClassAssignmentResponse>> getClassAssignment(@Path("classId") int classId);
+
 }
 
