@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,18 +24,14 @@ public class Helper {
     }
 
     public static String formatDate(String inputDate) {
-        // Format tanggal input (ISO 8601 dengan timezone Z)
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Set timezone ke UTC
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        // Format tanggal output
         SimpleDateFormat outputFormat = new SimpleDateFormat("'Diposting ' dd MMM 'jam' HH:mm", new Locale("id", "ID"));
 
         try {
-            // Parse tanggal input ke dalam objek Date
             Date date = inputFormat.parse(inputDate);
 
-            // Format tanggal ke dalam string yang diinginkan
             assert date != null;
             return outputFormat.format(date);
         } catch (ParseException e) {

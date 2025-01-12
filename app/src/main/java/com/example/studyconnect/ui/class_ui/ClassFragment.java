@@ -15,6 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.FragmentClassBinding;
+import com.example.studyconnect.ui.class_ui.assignment.ClassAssignmentFragment;
+import com.example.studyconnect.ui.class_ui.forum.ForumFragment;
+import com.example.studyconnect.ui.class_ui.student.StudentListFragment;
 import com.example.studyconnect.utils.Helper;
 
 public class ClassFragment extends Fragment {
@@ -28,13 +31,13 @@ public class ClassFragment extends Fragment {
         binding = FragmentClassBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ClassViewModel.class);
 
-        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
-            Helper.showLoading(binding.progressBar.progressBar, isLoading);
-        });
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading ->
+                Helper.showLoading(binding.progressBarIncl.progressBar, isLoading)
+        );
 
-        viewModel.getIsSuccess().observe(getViewLifecycleOwner(), isSuccess -> {
-            getParentFragmentManager().popBackStack();
-        });
+        viewModel.getIsSuccess().observe(getViewLifecycleOwner(), isSuccess ->
+                getParentFragmentManager().popBackStack()
+        );
 
         viewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg -> {
             Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show();
@@ -63,7 +66,7 @@ public class ClassFragment extends Fragment {
         int classId = getArguments().getInt("classId");
 
         boolean isArchived = getArguments().getBoolean("isArchived");
-        if (isArchived){
+        if (isArchived) {
             binding.restore.setOnClickListener(v -> {
                 Log.d("ClassFragment", "Restore button clicked");
                 binding.restore.setClickable(false);

@@ -1,7 +1,6 @@
-package com.example.studyconnect.ui.class_ui;
+package com.example.studyconnect.ui.class_ui.assignment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +25,16 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ClassAssignmentFragment extends Fragment {
-
-    private FragmentClassAssignmentBinding binding;
-    private ClassAssignmentViewModel classAssignmentViewModel;
-    private TugasAdapter tugasAdapter;
+    public static final String IS_ARCHIVED = "isArchived";
+    private static final String ARG_CLASS_ID = "classId";
 
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
-    private int teacherId;
 
-    private static final String ARG_CLASS_ID = "classId";
+    private FragmentClassAssignmentBinding binding;
+    private ClassAssignmentViewModel viewModel;
+    private TugasAdapter tugasAdapter;
+    private int teacherId;
     private int classId;
     private boolean isArchived;
 
@@ -43,7 +42,7 @@ public class ClassAssignmentFragment extends Fragment {
         ClassAssignmentFragment fragment = new ClassAssignmentFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_CLASS_ID, classId);
-        args.putBoolean("isArchived", isArchived);
+        args.putBoolean(IS_ARCHIVED, isArchived);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,9 +53,6 @@ public class ClassAssignmentFragment extends Fragment {
         if (getArguments() != null) {
             isArchived = getArguments().getBoolean("isArchived");
             classId = getArguments().getInt(ARG_CLASS_ID);
-            Log.d("ClassAssignmentFragment", "Received classId: " + classId);
-        } else {
-            Log.e("ClassAssignmentFragment", "Arguments are null");
         }
     }
 
@@ -64,13 +60,12 @@ public class ClassAssignmentFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentClassAssignmentBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
 
-        classAssignmentViewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
-//        classAssignmentViewModel.fetchClassAssignment(classId);
         teacherId = sharedPreferencesManager.getData("teacherId", 0);
 
-        initView();
         initObserver();
+        initView();
 
         binding.fabAddTugas.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
@@ -108,7 +103,7 @@ public class ClassAssignmentFragment extends Fragment {
     }
 
     private void initView() {
-        if (isArchived){
+        if (isArchived) {
             binding.fabAddTugas.setVisibility(View.GONE);
         }
 
@@ -123,39 +118,39 @@ public class ClassAssignmentFragment extends Fragment {
 //                    .replace(R.id.frame_layout, classFragment)
 //                    .addToBackStack(null)
 //                    .commit();
-        }, classAssignmentViewModel);
+        }, viewModel);
 
         binding.rvListTugasKelas.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvListTugasKelas.setAdapter(tugasAdapter);
     }
 
     private void initObserver() {
-        classAssignmentViewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
+        viewModel.fetchClassAssignment(classId);
+        viewModel.fetchUser(teacherId);
 
-//        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
-//            Helper.showLoading(binding.progressBar.progressBar, isLoading);
-//        });
-//
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading ->
+                Helper.showLoading(binding.progressBar.progressBar, isLoading)
+        );
+
 //        viewModel.getIsSuccess().observe(getViewLifecycleOwner(), isSuccess -> {
 //            getParentFragmentManager().popBackStack();
 //        });
 //
-//        viewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg -> {
-//            Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show();
-//            binding.restore.setClickable(true);
-//        });
+        viewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg ->
+                Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show()
+        );
 
-//        classAssignmentViewModel.getClassAssignment(classId).observe(getViewLifecycleOwner(), classAssignment -> {
-//            if (classAssignment != null) {
-//                tugasAdapter.setClassAssignmentList(classAssignment); // Set data ke adapter
-//            }
-//        });
-//
-//        classAssignmentViewModel.getUser(teacherId).observe(getViewLifecycleOwner(), user -> {
-//            if (user != null) {
-//                tugasAdapter.setUser(user);
-//            }
-//        });
+        viewModel.getClassAssignment().observe(getViewLifecycleOwner(), classAssignment -> {
+            if (classAssignment != null) {
+                tugasAdapter.setClassAssignmentList(classAssignment);
+            }
+        });
+
+        viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                tugasAdapter.setUser(user);
+            }
+        });
     }
 
     @Override

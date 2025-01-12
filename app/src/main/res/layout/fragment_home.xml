@@ -84,7 +84,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <include
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarIncl"
         layout="@layout/progress_bar"/>
 
 </RelativeLayout>

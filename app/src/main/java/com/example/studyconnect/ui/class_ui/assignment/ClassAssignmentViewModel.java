@@ -1,7 +1,6 @@
-package com.example.studyconnect.ui.class_ui;
+package com.example.studyconnect.ui.class_ui.assignment;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -56,20 +55,22 @@ public class ClassAssignmentViewModel extends ViewModel {
 
     public void fetchClassAssignment(int classId) {
         isLoading.postValue(true);
+
         LiveData<Result<List<ClassAssignmentResponse>>> classAssignmentLiveData = repository.getClassAssignment(classId);
         classAssignmentLiveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Loading) {
                     isLoading.postValue(true);
                 } else if (result instanceof Result.Success) {
-                    isLoading.postValue(false);
                     Result.Success<List<ClassAssignmentResponse>> successResult = (Result.Success<List<ClassAssignmentResponse>>) result;
                     classAssignment.postValue(successResult.getData());
-                    Log.d("KELAS_ASSIGNMENT", "onResponse: " + successResult.getData());
-                } else if (result instanceof Result.Error<?>) {
+
                     isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue(errorResult.getError());
+
+                    isLoading.postValue(false);
                 }
             }
         });
@@ -77,19 +78,22 @@ public class ClassAssignmentViewModel extends ViewModel {
 
     public void fetchUser(int id) {
         isLoading.postValue(true);
+
         LiveData<Result<RegisterResponse>> userLiveData = repository.getUser(id);
         userLiveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Loading) {
                     isLoading.postValue(true);
                 } else if (result instanceof Result.Success) {
-                    isLoading.postValue(false);
                     Result.Success<RegisterResponse> successResult = (Result.Success<RegisterResponse>) result;
                     user.postValue(successResult.getData());
-                } else if (result instanceof Result.Error<?>) {
+
                     isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue(errorResult.getError());
+
+                    isLoading.postValue(false);
                 }
             }
         });
@@ -97,19 +101,22 @@ public class ClassAssignmentViewModel extends ViewModel {
 
     public void deleteAssignment(int id, int classId) {
         isLoading.postValue(true);
+
         LiveData<Result<ResponseBody>> deleteAssignmentLiveData = repository.deleteAssignment(id);
         deleteAssignmentLiveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Loading) {
                     isLoading.postValue(true);
                 } else if (result instanceof Result.Success) {
-                    isLoading.postValue(false);
                     errorMsg.postValue("Tugas berhasil dihapus");
-                    fetchClassAssignment(classId); // Refresh the list of assignments
-                } else if (result instanceof Result.Error<?>) {
+                    fetchClassAssignment(classId);
+
                     isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue("Gagal menghapus tugas: " + errorResult.getError());
+
+                    isLoading.postValue(false);
                 }
             }
         });

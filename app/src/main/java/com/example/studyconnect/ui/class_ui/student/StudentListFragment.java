@@ -1,7 +1,6 @@
-package com.example.studyconnect.ui.class_ui;
+package com.example.studyconnect.ui.class_ui.student;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.databinding.FragmentStudentListBinding;
+import com.example.studyconnect.utils.Helper;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -20,7 +20,7 @@ public class StudentListFragment extends Fragment {
 
     private static final String ARG_CLASS_ID = "classId";
     private FragmentStudentListBinding binding;
-    private ClassViewModel classViewModel;
+    private StudentListViewModel viewModel;
     private int classId;
 
     public static StudentListFragment newInstance(int classId) {
@@ -36,9 +36,6 @@ public class StudentListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             classId = getArguments().getInt(ARG_CLASS_ID);
-            Log.d("StudentListFragment", "Received classId: " + classId);
-        } else {
-            Log.e("StudentListFragment", "Arguments are null");
         }
     }
 
@@ -46,8 +43,7 @@ public class StudentListFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentStudentListBinding.inflate(inflater, container, false);
-        classViewModel = new ViewModelProvider(this).get(ClassViewModel.class);
-        classViewModel.fetchClass(classId);
+        viewModel = new ViewModelProvider(this).get(StudentListViewModel.class);
 
         initObserver();
         initView();
@@ -59,6 +55,18 @@ public class StudentListFragment extends Fragment {
     }
 
     private void initObserver() {
+        viewModel.fetchUser(classId);
+
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading ->
+                Helper.showLoading(binding.progressBarIncl.progressBar, isLoading)
+        );
+
+        viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                binding.includeGuruList.tvNamaGuru.setText(user.getName());
+            }
+        });
+
 //        classViewModel.getClassResult().observe(getViewLifecycleOwner(), classResponse -> {
 //            if (classResponse != null) {
 //                int teacherId = classResponse.getTeacher_id();

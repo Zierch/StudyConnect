@@ -46,7 +46,7 @@ public class Result<R> {
     }
 
     public static final class Error<R> extends Result<R> {
-        private final String error; // State untuk menyimpan pesan error
+        private final String error;
         private static final Error<Object> INSTANCE = new Error<>("Default error message");
 
         public Error(String error) {

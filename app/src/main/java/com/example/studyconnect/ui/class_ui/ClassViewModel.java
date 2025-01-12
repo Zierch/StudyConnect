@@ -170,7 +170,6 @@ public class ClassViewModel extends ViewModel {
     }
 
     public void restoreClass(int id) {
-        isLoading.postValue(true);
         isSuccess.postValue(false);
         LiveData<Result<ResponseBody>> restoreClassLiveData = repository.restoreClass(id);
         restoreClassLiveData.observeForever(result -> {
@@ -180,9 +179,11 @@ public class ClassViewModel extends ViewModel {
                 } else if (result instanceof Result.Success) {
                     isLoading.postValue(false);
                     isSuccess.postValue(true);
+
                     errorMsg.postValue("Kelas berhasil dipulihkan");
                 } else if (result instanceof Result.Error<?>) {
                     isLoading.postValue(false);
+
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue("Gagal memulihkan kelas: " + errorResult.getError());
                 }

@@ -14,7 +14,7 @@ import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.databinding.BottomTwoDialogBinding;
 import com.example.studyconnect.databinding.ItemTugasListBinding;
-import com.example.studyconnect.ui.class_ui.ClassAssignmentViewModel;
+import com.example.studyconnect.ui.class_ui.assignment.ClassAssignmentViewModel;
 import com.example.studyconnect.utils.Helper;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 

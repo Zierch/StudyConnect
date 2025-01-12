@@ -2,7 +2,6 @@ package com.example.studyconnect.ui.auth;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -14,6 +13,8 @@ import com.example.studyconnect.databinding.ActivitySignInBinding;
 import com.example.studyconnect.ui.home.Drawer;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -42,9 +43,9 @@ public class SignInActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        viewModel.getIsLoading().observe(this, isLoading -> {
-            Helper.showLoading(binding.progressBar.progressBar, isLoading);
-        });
+        viewModel.getIsLoading().observe(this, isLoading ->
+                Helper.showLoading(binding.progressBar.progressBar, isLoading)
+        );
 
         viewModel.getIsSuccess().observe(this, isSuccess -> {
             if (isSuccess) {
@@ -88,42 +89,40 @@ public class SignInActivity extends AppCompatActivity {
             binding.etSignupPassword.setText(password);
         }
 
-        binding.btnSign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.btnSign.setEnabled(false);
-                binding.tvSign.setEnabled(false);
-                check();
-            }
+        binding.btnSign.setOnClickListener(v -> {
+            binding.btnSign.setEnabled(false);
+            binding.tvSign.setEnabled(false);
+            check();
         });
 
-        binding.tvSign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Helper.startActivity(SignUpActivity.class, SignInActivity.this);
-            }
-        });
+        binding.tvSign.setOnClickListener(v ->
+                Helper.startActivity(SignUpActivity.class,
+                        SignInActivity.this
+                )
+        );
     }
 
     private void check() {
-        boolean check = true;
+        boolean check;
 
 //        Mendapatkan variabel
-        email = binding.etSignupEmail.getText().toString();
-        password = binding.etSignupPassword.getText().toString();
+        email = Objects.requireNonNull(binding.etSignupEmail.getText()).toString();
+        password = Objects.requireNonNull(binding.etSignupPassword.getText()).toString();
 
         if (email.isEmpty()) {
             Toast.makeText(this, "Email Kosong !", Toast.LENGTH_SHORT).show();
             binding.etSignupEmail.setError("Isi Email !");
             check = false;
-        } else if (password.length() <= 6) {
-            Toast.makeText(this, "Password minimal 6 huruf !", Toast.LENGTH_SHORT).show();
-            binding.etSignupPassword.setError("Password terlalu pendek !");
-            check = false;
         } else if (password.isEmpty()) {
             Toast.makeText(this, "Password Kosong !", Toast.LENGTH_SHORT).show();
             binding.etSignupPassword.setError("Isi Password !");
             check = false;
+        } else if (password.length() <= 6) {
+            Toast.makeText(this, "Password minimal 6 huruf !", Toast.LENGTH_SHORT).show();
+            binding.etSignupPassword.setError("Password terlalu pendek !");
+            check = false;
+        } else {
+            check = true;
         }
 
         if (!check) {

@@ -66,5 +66,7 @@
     <string name="text_opsi_2">Opsi 2</string>
     <string name="text_edit">Edit</string>
     <string name="text_hapus">Hapus</string>
+    <string name="text_diarsipkan">Kelas ini telah diarsipkan</string>
+    <string name="text_pulihkan">Pulihkan</string>
 
 </resources>

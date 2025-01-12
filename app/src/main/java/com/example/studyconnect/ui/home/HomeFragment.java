@@ -104,13 +104,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void initObserver() {
-        homeViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
-            Helper.showLoading(binding.progressBar.progressBar, isLoading);
-        });
+        homeViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading ->
+                Helper.showLoading(binding.progressBarIncl.progressBar, isLoading)
+        );
 
-        homeViewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg -> {
-            Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show();
-        });
+        homeViewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg ->
+                Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show()
+        );
 
         homeViewModel.getClasses().observe(getViewLifecycleOwner(), classes -> {
             if (classes != null) {

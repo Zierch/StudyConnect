@@ -1,4 +1,4 @@
-package com.example.studyconnect.ui.class_ui;
+package com.example.studyconnect.ui.class_ui.forum;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,11 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.databinding.FragmentForumBinding;
+import com.example.studyconnect.utils.Helper;
 
 public class ForumFragment extends Fragment {
 
     private FragmentForumBinding binding;
-    private ClassViewModel viewModel;
+    private ForumViewModel viewModel;
     private int classId;
 
     public static ForumFragment newInstance(int classId) {
@@ -32,9 +33,6 @@ public class ForumFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             classId = getArguments().getInt("classId");
-            Log.d("ClassAssignmentFragment", "Received classId: " + classId);
-        } else {
-            Log.e("ClassAssignmentFragment", "Arguments are null");
         }
     }
 
@@ -42,29 +40,33 @@ public class ForumFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentForumBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(ClassViewModel.class);
-        viewModel.fetchClass(classId);
+        viewModel = new ViewModelProvider(requireActivity()).get(ForumViewModel.class);
 
         initObserver();
-        initView();
+
         return binding.getRoot();
     }
 
-    private void initView(){
+    private void initObserver() {
+        viewModel.fetchClass(classId);
 
-    }
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            Log.d("Loading", String.valueOf(isLoading));
+            Helper.showLoading(binding.progressBarIncl.progressBar, isLoading);
+        });
 
-    private void initObserver(){
-//        viewModel.getClassResult().observe(getViewLifecycleOwner(), classes -> {
-//            if (classes != null) {
-//                binding.namaKelas.setText(classes.getName());
-//                binding.deskripsi.setText(classes.getDescription());
-//
-//                viewModel.getTeacher(classes.getTeacher_id()).observe(getViewLifecycleOwner(), teacher -> {
-//                    binding.namaGuru.setText(teacher.getName());
-//                });
-//            }
-//        });
+        viewModel.getClassData().observe(getViewLifecycleOwner(), classes -> {
+            if (classes != null) {
+                binding.namaKelas.setText(classes.getName());
+                binding.deskripsi.setText(classes.getDescription());
+
+                viewModel.fetchUser(classes.getTeacher_id());
+
+                viewModel.getUser().observe(getViewLifecycleOwner(), teacher ->
+                        binding.namaGuru.setText(teacher.getName())
+                );
+            }
+        });
     }
 
     @Override

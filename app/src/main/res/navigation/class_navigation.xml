@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_forum"
-        android:name="com.example.studyconnect.ui.class_ui.ClassAssignmentFragment"
+        android:name="com.example.studyconnect.ui.class_ui.assignment.ClassAssignmentFragment"
         android:label="Forum"
         tools:layout="@layout/fragment_forum" />
 
     <fragment
         android:id="@+id/navigation_class_assignment"
-        android:name="com.example.studyconnect.ui.class_ui.ClassAssignmentFragment"
+        android:name="com.example.studyconnect.ui.class_ui.assignment.ClassAssignmentFragment"
         android:label="Tugas Kelas"
         tools:layout="@layout/fragment_class_assignment" />
 
     <fragment
         android:id="@+id/navigation_student_list"
-        android:name="com.example.studyconnect.ui.class_ui.StudentListFragment"
+        android:name="com.example.studyconnect.ui.class_ui.student.StudentListFragment"
         android:label="Orang"
         tools:layout="@layout/fragment_student_list" />
 </navigation>
