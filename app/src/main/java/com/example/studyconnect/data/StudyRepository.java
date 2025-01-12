@@ -65,7 +65,9 @@ public class StudyRepository {
     }
 
     // method register
-    public Call<RegisterResponse> signUp(String name, String email, String role, String password) {
+    public LiveData<Result<RegisterResponse>> signUp(String name, String email, String role, String password) {
+        MutableLiveData<Result<RegisterResponse>> resultLiveData = new MutableLiveData<>();
+
         RequestBody body = new FormBody.Builder()
                 .add("name", name)
                 .add("email", email)
@@ -73,83 +75,387 @@ public class StudyRepository {
                 .add("password", password)
                 .build();
 
-        return apiService.signUp(body);
+        Call<RegisterResponse> call = apiService.signUp(body);
+        call.enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Success case
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    // Handle HTTP error responses (e.g., 400, 401)
+                    String errorMessage = "Register gagal : Email sudah Terdaftar!";
+                    resultLiveData.postValue(new Result.Error<>(errorMessage));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                // Handle network-level failures (e.g., no internet connection)
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method logout
-    public Call<ResponseBody> logout() {
-        return apiService.logout();
+    // Method logout
+    public LiveData<Result<ResponseBody>> logout() {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.logout();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Logout failed"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method get user
-    public Call<RegisterResponse> getUser(int id) {
-        return apiService.getUser(id);
+    // Method get user
+    public LiveData<Result<RegisterResponse>> getUser(int id) {
+        MutableLiveData<Result<RegisterResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<RegisterResponse> call = apiService.getUser(id);
+        call.enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get user"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method get class
-    public Call<List<ClassResponse>> getClasses() {
-        return apiService.getClasses();
+    // Method get classes
+    public LiveData<Result<List<ClassResponse>>> getClasses() {
+        MutableLiveData<Result<List<ClassResponse>>> resultLiveData = new MutableLiveData<>();
+
+        Call<List<ClassResponse>> call = apiService.getClasses();
+        call.enqueue(new Callback<List<ClassResponse>>() {
+            @Override
+            public void onResponse(Call<List<ClassResponse>> call, Response<List<ClassResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get classes"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ClassResponse>> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method get class w id
-    public Call<ClassResponse> getClass(int id) {
-        return apiService.getClass(id);
+    // Method get class by id
+    public LiveData<Result<ClassResponse>> getClass(int id) {
+        MutableLiveData<Result<ClassResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<ClassResponse> call = apiService.getClass(id);
+        call.enqueue(new Callback<ClassResponse>() {
+            @Override
+            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get class"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ClassResponse> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method create class
-    public Call<ClassResponse> createClass(RequestBody body) {
-        return apiService.createClass(body);
+    // Method create class
+    public LiveData<Result<ClassResponse>> createClass(RequestBody body) {
+        MutableLiveData<Result<ClassResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<ClassResponse> call = apiService.createClass(body);
+        call.enqueue(new Callback<ClassResponse>() {
+            @Override
+            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to create class"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ClassResponse> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method update class
-    public Call<ClassResponse> updateClass(int id, RequestBody body) {
-        return apiService.updateClass(id, body);
+    // Method update class
+    public LiveData<Result<ClassResponse>> updateClass(int id, RequestBody body) {
+        MutableLiveData<Result<ClassResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<ClassResponse> call = apiService.updateClass(id, body);
+        call.enqueue(new Callback<ClassResponse>() {
+            @Override
+            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to update class"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ClassResponse> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method delete class
-    public Call<ResponseBody> deleteClass(int id) {
-        return apiService.deleteClass(id);
+    // Method delete class
+    public LiveData<Result<ResponseBody>> deleteClass(int id) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.deleteClass(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to delete class"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method get class students
-    public Call<List<RegisterResponse>> getClassStudents(int id) {
-        return apiService.getClassStudents(id);
+    // Method get class students
+    public LiveData<Result<List<RegisterResponse>>> getClassStudents(int id) {
+        MutableLiveData<Result<List<RegisterResponse>>> resultLiveData = new MutableLiveData<>();
+
+        Call<List<RegisterResponse>> call = apiService.getClassStudents(id);
+        call.enqueue(new Callback<List<RegisterResponse>>() {
+            @Override
+            public void onResponse(Call<List<RegisterResponse>> call, Response<List<RegisterResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get class students"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RegisterResponse>> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method join class
-    public Call<ResponseBody> joinClass(int id) {
-        return apiService.joinClass(id);
+    // Method join class
+    public LiveData<Result<ResponseBody>> joinClass(int id) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.joinClass(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to join class"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method leave class
-    public Call<ResponseBody> leaveClass(int id) {
-        return apiService.leaveClass(id);
+    // Method leave class
+    public LiveData<Result<ResponseBody>> leaveClass(int id) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.leaveClass(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to leave class"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
+    // Method archive class
+    public LiveData<Result<ResponseBody>> archiveClass(int id) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
 
-    // method arsipkan class
-    public Call<ResponseBody> archiveClass(int id) {
-        return apiService.archiveClass(id);
+        Call<ResponseBody> call = apiService.archiveClass(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to archive class"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method pulihkan class
-    public Call<ResponseBody> restoreClass(int id) {
-        return apiService.restoreClass(id);
+    // Method restore class
+    public LiveData<Result<ResponseBody>> restoreClass(int id) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.restoreClass(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to restore class"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method get class yang diarsipkan
-    public Call<List<ClassResponse>> getArchivedClasses() {
-        return apiService.getArchivedClasses();
+    // Method get archived classes
+    public LiveData<Result<List<ClassResponse>>> getArchivedClasses() {
+        MutableLiveData<Result<List<ClassResponse>>> resultLiveData = new MutableLiveData<>();
+
+        Call<List<ClassResponse>> call = apiService.getArchivedClasses();
+        call.enqueue(new Callback<List<ClassResponse>>() {
+            @Override
+            public void onResponse(Call<List<ClassResponse>> call, Response<List<ClassResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get archived classes"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ClassResponse>> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method get assignment by class id
-    public Call<List<ClassAssignmentResponse>> getClassAssignment(int classId) {
-        return apiService.getClassAssignment(classId);
+    // Method get class assignment by class id
+    public LiveData<Result<List<ClassAssignmentResponse>>> getClassAssignment(int classId) {
+        MutableLiveData<Result<List<ClassAssignmentResponse>>> resultLiveData = new MutableLiveData<>();
+
+        Call<List<ClassAssignmentResponse>> call = apiService.getClassAssignment(classId);
+        call.enqueue(new Callback<List<ClassAssignmentResponse>>() {
+            @Override
+            public void onResponse(Call<List<ClassAssignmentResponse>> call, Response<List<ClassAssignmentResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get class assignments"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ClassAssignmentResponse>> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
     }
 
-    // method hapus tugas
-    public Call<ResponseBody> deleteAssignment(int id) {
-        return apiService.deleteAssignment(id);
-    }
+    // Method delete assignment
+    public LiveData<Result<ResponseBody>> deleteAssignment(int id) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
 
+        Call<ResponseBody> call = apiService.deleteAssignment(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to delete assignment"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
 }
