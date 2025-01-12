@@ -1,9 +1,14 @@
 package com.example.studyconnect.data;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
+import com.example.studyconnect.utils.Result;
 
 import java.util.List;
 
@@ -13,6 +18,8 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StudyRepository {
     private final ApiService apiService;
@@ -23,14 +30,49 @@ public class StudyRepository {
     }
 
     // method login
-    public Call<LoginResponse> signIn(String email, String password) {
+    public LiveData<Result<LoginResponse>> signIn(String email, String password) {
+        MutableLiveData<Result<LoginResponse>> liveData = new MutableLiveData<>();
+
+        // Emit loading state
+        liveData.postValue(Result.Loading.getInstance());
+
+        // Create the request object
         RequestBody body = new FormBody.Builder()
                 .add("email", email)
                 .add("password", password)
                 .build();
 
-        return apiService.signIn(body);
+        // Make the API call asynchronously
+        Call<LoginResponse> call = apiService.signIn(body);
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Emit success state with the response data
+                    liveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    // Emit error state if the response is not successful
+                    liveData.postValue(new Result.Error<>("Login gagal, email atau password anda salah!"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
+                // Emit error state if the API call fails
+                liveData.postValue(new Result.Error<>("Login gagal, email atau password anda salah!"));
+            }
+        });
+
+        return liveData;
     }
+//    public LiveData<Result<LoginResponse>> signIn(String email, String password) {
+//        RequestBody body = new FormBody.Builder()
+//                .add("email", email)
+//                .add("password", password)
+//                .build();
+//
+//        return apiService.signIn(body);
+//    }
 
     // method register
     public Call<RegisterResponse> signUp(String name, String email, String role, String password) {

@@ -1,8 +1,6 @@
 package com.example.studyconnect.ui.auth;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
@@ -12,13 +10,13 @@ import androidx.lifecycle.ViewModel;
 import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
-import com.example.studyconnect.ui.home.Drawer;
 import com.example.studyconnect.utils.Helper;
+import com.example.studyconnect.utils.Result;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -49,6 +47,22 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<LoginResponse> signInResponse = new MutableLiveData<>();
     private final MutableLiveData<RegisterResponse> signUpResponse = new MutableLiveData<>();
 
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<String> userToken = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
+
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    public LiveData<String> getUserToken() {
+        return userToken;
+    }
+
+    public LiveData<String> getErrorMsg() {
+        return errorMsg;
+    }
+
     public LiveData<LoginResponse> getSignInResponse() {
         return signInResponse;
     }
@@ -58,20 +72,42 @@ public class AuthViewModel extends ViewModel {
     }
 
     public void signIn(String email, String password) {
-        repository.signIn(email, password).enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful()) {
-                    signInResponse.setValue(response.body());
-                } else {
-                    signInResponse.setValue(null);
+//        repository.signIn(email, password).enqueue(new Callback<LoginResponse>() {
+//            @Override
+//            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+//                if (response.isSuccessful()) {
+//                    signInResponse.setValue(response.body());
+//                } else {
+//                    signInResponse.setValue(null);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<LoginResponse> call, Throwable t) {
+//                signInResponse.setValue(null);
+//            }
+//        });
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            repository.signIn(email, password).observeForever(result -> {
+                if (result != null) {
+                    if (result instanceof Result.Loading) {
+                        isLoading.postValue(true);
+                    } else if (result instanceof Result.Success) {
+                        isLoading.postValue(false);
+                        Result.Success<LoginResponse> successResult =
+                                (Result.Success<LoginResponse>) result;
+                        sharedPreferencesManager.saveData("token", successResult.getData().getToken());
+                        sharedPreferencesManager.saveData("role", successResult.getData().getRole());
+                        sharedPreferencesManager.saveData("teacherId", successResult.getData().getUser_id());
+                        errorMsg.postValue("Login Berhasil");
+                    } else if (result instanceof Result.Error) {
+                        isLoading.postValue(false);
+                        Result.Error errorResult = (Result.Error) result;
+                        errorMsg.postValue(errorResult.getError());
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                signInResponse.setValue(null);
-            }
+            });
         });
     }
 
@@ -108,7 +144,7 @@ public class AuthViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(context, "Logout failed : "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Logout failed : " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

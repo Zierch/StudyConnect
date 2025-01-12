@@ -47,11 +47,14 @@ public class SignInActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
+        viewModel.getIsLoading().observe(this, isLoading -> {
+            Helper.showLoading(binding.progressBar, isLoading);
+        });
 
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -117,25 +120,32 @@ public class SignInActivity extends AppCompatActivity {
         } else {
             viewModel.signIn(email, password);
 
-            viewModel.getSignInResponse().observe(this, loginResponse -> {
-                if (loginResponse != null) {
-                    sharedPreferencesManager.saveData("token", loginResponse.getToken());
-                    sharedPreferencesManager.saveData("role", loginResponse.getRole());
+            Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show();
 
-                    if (loginResponse.getRole().equals("teacher")) {
-                        sharedPreferencesManager.saveData("teacherId", loginResponse.getUser_id());
-                    }
+            new Handler().postDelayed(() -> {
+                Helper.startFlagedActivity(Drawer.class, this);
+                finish();
+            }, 2000);
 
-                    Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show();
-
-                    new Handler().postDelayed(() -> {
-                        Helper.startFlagedActivity(Drawer.class, this);
-                        finish();
-                    }, 1000);
-                } else {
-                    Toast.makeText(this, "Login Gagal", Toast.LENGTH_SHORT).show();
-                }
-            });
+//            viewModel.getSignInResponse().observe(this, loginResponse -> {
+//                if (loginResponse != null) {
+//                    sharedPreferencesManager.saveData("token", loginResponse.getToken());
+//                    sharedPreferencesManager.saveData("role", loginResponse.getRole());
+//
+//                    if (loginResponse.getRole().equals("teacher")) {
+//                        sharedPreferencesManager.saveData("teacherId", loginResponse.getUser_id());
+//                    }
+//
+//                    Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show();
+//
+//                    new Handler().postDelayed(() -> {
+//                        Helper.startFlagedActivity(Drawer.class, this);
+//                        finish();
+//                    }, 2000);
+//                } else {
+//                    Toast.makeText(this, "Login Gagal", Toast.LENGTH_SHORT).show();
+//                }
+//            });
         }
     }
 

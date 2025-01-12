@@ -58,6 +58,10 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
+//    viewmodel
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
+
 //    Dagger Hilt
     implementation(libs.hilt.android)
     annotationProcessor(libs.hilt.android.compiler)

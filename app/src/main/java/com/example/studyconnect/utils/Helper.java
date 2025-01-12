@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +14,14 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class Helper {
+
+    public static void showLoading(ProgressBar progressBar, Boolean isLoading) {
+        if (isLoading){
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+        }
+    }
 
     public static String formatDate(String inputDate) {
         // Format tanggal input (ISO 8601 dengan timezone Z)
