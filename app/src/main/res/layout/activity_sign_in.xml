@@ -6,13 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:padding="20dp"
     tools:context=".ui.auth.SignInActivity">
 
     <LinearLayout
         android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -92,6 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear1"
+        android:layout_margin="20dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/button"
         android:text="@string/txt_sign_in"
@@ -106,6 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnSign"
+        android:layout_margin="20dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:orientation="horizontal"
@@ -131,15 +133,7 @@
             android:textSize="15dp" />
     </LinearLayout>
 
-    <ProgressBar
+    <include
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        layout="@layout/progress_bar"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

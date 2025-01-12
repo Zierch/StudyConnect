@@ -79,9 +79,12 @@
                     app:tint="@color/md_theme_outlineVariant_highContrast" />
             </androidx.cardview.widget.CardView>
 
-
         </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/progressBar"
+        layout="@layout/progress_bar"/>
 
 </RelativeLayout>

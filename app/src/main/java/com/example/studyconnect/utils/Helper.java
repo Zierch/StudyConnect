@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import java.text.ParseException;
@@ -15,7 +16,7 @@ import java.util.TimeZone;
 
 public class Helper {
 
-    public static void showLoading(ProgressBar progressBar, Boolean isLoading) {
+    public static void showLoading(FrameLayout progressBar, Boolean isLoading) {
         if (isLoading){
             progressBar.setVisibility(View.VISIBLE);
         } else {

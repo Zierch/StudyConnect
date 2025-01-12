@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.studyconnect.databinding.SettingKelasBinding;
+import com.example.studyconnect.databinding.FormKelasBinding;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class FormClassActivity extends AppCompatActivity {
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
-    private SettingKelasBinding binding;
+    private FormKelasBinding binding;
     private ClassViewModel viewModel;
     private String namaKelas, mataPelajaran, deskripsiKelas, kodeKelas;
     private boolean isUpdate = false; // Defaultnya create, bisa diganti saat update
@@ -28,7 +28,7 @@ public class FormClassActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = SettingKelasBinding.inflate(getLayoutInflater());
+        binding = FormKelasBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         classId = sharedPreferencesManager.getData("classId", 0);

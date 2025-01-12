@@ -134,7 +134,7 @@ public class SignUpActivity extends AppCompatActivity {
             binding.etSignupEmail.setError("Isi Email !");
             check = false;
         } else if (password.length() <= 6) {
-            Toast.makeText(this, "Password harus lebih dari 6 huruf !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Password minimal 6 huruf !", Toast.LENGTH_SHORT).show();
             binding.etSignupPassword.setError("Password terlalu pendek !");
             check = false;
         } else if (password.isEmpty()) {

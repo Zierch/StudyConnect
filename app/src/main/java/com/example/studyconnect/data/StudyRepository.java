@@ -10,6 +10,7 @@ import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.utils.Result;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,10 +32,7 @@ public class StudyRepository {
 
     // method login
     public LiveData<Result<LoginResponse>> signIn(String email, String password) {
-        MutableLiveData<Result<LoginResponse>> liveData = new MutableLiveData<>();
-
-        // Emit loading state
-        liveData.postValue(Result.Loading.getInstance());
+        MutableLiveData<Result<LoginResponse>> resultLiveData = new MutableLiveData<>();
 
         // Create the request object
         RequestBody body = new FormBody.Builder()
@@ -42,37 +40,29 @@ public class StudyRepository {
                 .add("password", password)
                 .build();
 
-        // Make the API call asynchronously
         Call<LoginResponse> call = apiService.signIn(body);
         call.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // Emit success state with the response data
-                    liveData.postValue(new Result.Success<>(response.body()));
+                    // Success case
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
-                    // Emit error state if the response is not successful
-                    liveData.postValue(new Result.Error<>("Login gagal, email atau password anda salah!"));
+                    // Handle HTTP error responses (e.g., 400, 401)
+                    String errorMessage = "Login gagal : Email atau Password anda salah!";
+                    resultLiveData.postValue(new Result.Error<>(errorMessage));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
-                // Emit error state if the API call fails
-                liveData.postValue(new Result.Error<>("Login gagal, email atau password anda salah!"));
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                // Handle network-level failures (e.g., no internet connection)
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
 
-        return liveData;
+        return resultLiveData;
     }
-//    public LiveData<Result<LoginResponse>> signIn(String email, String password) {
-//        RequestBody body = new FormBody.Builder()
-//                .add("email", email)
-//                .add("password", password)
-//                .build();
-//
-//        return apiService.signIn(body);
-//    }
 
     // method register
     public Call<RegisterResponse> signUp(String name, String email, String role, String password) {

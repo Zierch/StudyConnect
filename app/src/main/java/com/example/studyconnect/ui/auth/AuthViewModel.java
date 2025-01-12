@@ -1,6 +1,8 @@
 package com.example.studyconnect.ui.auth;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
@@ -48,15 +50,15 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<RegisterResponse> signUpResponse = new MutableLiveData<>();
 
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-    private final MutableLiveData<String> userToken = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
 
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
     }
 
-    public LiveData<String> getUserToken() {
-        return userToken;
+    public LiveData<Boolean> getIsSuccess() {
+        return isSuccess;
     }
 
     public LiveData<String> getErrorMsg() {
@@ -72,41 +74,36 @@ public class AuthViewModel extends ViewModel {
     }
 
     public void signIn(String email, String password) {
-//        repository.signIn(email, password).enqueue(new Callback<LoginResponse>() {
-//            @Override
-//            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-//                if (response.isSuccessful()) {
-//                    signInResponse.setValue(response.body());
-//                } else {
-//                    signInResponse.setValue(null);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LoginResponse> call, Throwable t) {
-//                signInResponse.setValue(null);
-//            }
-//        });
+        isLoading.postValue(true); // Indicate loading started
+
         Executor executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            repository.signIn(email, password).observeForever(result -> {
-                if (result != null) {
-                    if (result instanceof Result.Loading) {
-                        isLoading.postValue(true);
-                    } else if (result instanceof Result.Success) {
-                        isLoading.postValue(false);
-                        Result.Success<LoginResponse> successResult =
-                                (Result.Success<LoginResponse>) result;
-                        sharedPreferencesManager.saveData("token", successResult.getData().getToken());
-                        sharedPreferencesManager.saveData("role", successResult.getData().getRole());
-                        sharedPreferencesManager.saveData("teacherId", successResult.getData().getUser_id());
-                        errorMsg.postValue("Login Berhasil");
-                    } else if (result instanceof Result.Error) {
-                        isLoading.postValue(false);
-                        Result.Error errorResult = (Result.Error) result;
-                        errorMsg.postValue(errorResult.getError());
+            // Perform the sign-in operation on a background thread
+            LiveData<Result<LoginResponse>> signInLiveData = repository.signIn(email, password);
+
+            // Observe the LiveData on the main thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+                signInLiveData.observeForever(result -> {
+                    if (result != null) {
+                        if (result instanceof Result.Loading) {
+                            isLoading.postValue(true);
+                            isSuccess.postValue(false);
+                        } else if (result instanceof Result.Success) {
+                            isLoading.postValue(false);
+                            isSuccess.postValue(true);
+                            Result.Success<LoginResponse> successResult = (Result.Success<LoginResponse>) result;
+                            sharedPreferencesManager.saveData("token", successResult.getData().getToken());
+                            sharedPreferencesManager.saveData("role", successResult.getData().getRole());
+                            sharedPreferencesManager.saveData("teacherId", successResult.getData().getUser_id());
+                            errorMsg.postValue("Login Berhasil");
+                        } else if (result instanceof Result.Error) {
+                            isLoading.postValue(false);
+                            isSuccess.postValue(false);
+                            Result.Error errorResult = (Result.Error) result;
+                            errorMsg.postValue(errorResult.getError());
+                        }
                     }
-                }
+                });
             });
         });
     }

@@ -5,164 +5,174 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:padding="20dp"
     tools:context=".ui.auth.SignInActivity">
 
-    <LinearLayout
-        android:id="@+id/linear1"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:padding="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linear1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/txt_sign_up"
-            android:textColor="@color/black"
-            android:textSize="32dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_sign_up"
+                android:textColor="@color/black"
+                android:textSize="32dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create your account here."
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_signup_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="56dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/rounded_input_text"
+                android:paddingTop="7dp">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_signup_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_account"
+                    android:drawablePadding="16dp"
+                    android:drawableTint="@color/md_theme_onSurface"
+                    android:hint="Username"
+                    android:imeOptions="actionGo"
+                    android:inputType="textCapWords" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_signup_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/rounded_input_text"
+                android:paddingTop="7dp">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_signup_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_alternate_email"
+                    android:drawablePadding="16dp"
+                    android:drawableTint="@color/md_theme_onSurface"
+                    android:hint="Email"
+                    android:imeOptions="actionGo"
+                    android:inputType="textEmailAddress" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_signup_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/rounded_input_text"
+                android:paddingTop="7dp">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_signup_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_lock"
+                    android:drawablePadding="16dp"
+                    android:drawableTint="@color/md_theme_onSurface"
+                    android:hint="Password"
+                    android:imeOptions="actionGo"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/rounded_input_text"
+                android:paddingTop="7dp">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/ic_locked"
+                    android:drawablePadding="16dp"
+                    android:drawableTint="@color/md_theme_onSurface"
+                    android:hint="Confirm Password"
+                    android:imeOptions="actionGo"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear1"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/button"
+            android:text="@string/txt_sign_in"
+            android:textSize="18dp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create your account here."
-            android:textColor="@color/black"
-            android:textSize="15dp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_signup_username"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_input_text"
-            android:paddingTop="7dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="56dp"
-            android:layout_marginEnd="15dp">
+            android:layout_below="@id/btnSign"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_signup_username"
-                android:layout_width="match_parent"
+            <TextView
+                style="@style/TextSemiBold"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_account"
-                android:drawablePadding="16dp"
-                android:drawableTint="@color/md_theme_onSurface"
-                android:hint="Username"
-                android:imeOptions="actionGo"
-                android:inputType="textCapWords" />
+                android:text="Already have an account ?"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_signup_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_input_text"
-            android:paddingTop="7dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="15dp">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_signup_email"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvSign"
+                style="@style/TextSemiBold"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_alternate_email"
-                android:drawablePadding="16dp"
-                android:drawableTint="@color/md_theme_onSurface"
-                android:hint="Email"
-                android:imeOptions="actionGo"
-                android:inputType="textEmailAddress" />
+                android:layout_marginLeft="5dp"
+                android:text="@string/txt_sign_in"
+                android:textColor="@color/md_theme_onPrimaryFixedVariant"
+                android:textSize="15dp" />
+        </LinearLayout>
+    </RelativeLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_signup_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_input_text"
-            android:paddingTop="7dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="15dp">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_signup_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_lock"
-                android:drawablePadding="16dp"
-                android:drawableTint="@color/md_theme_onSurface"
-                android:hint="Password"
-                android:imeOptions="actionGo"
-                android:inputType="textPassword" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_confirm_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_input_text"
-            android:paddingTop="7dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="15dp">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_confirm_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_locked"
-                android:drawablePadding="16dp"
-                android:drawableTint="@color/md_theme_onSurface"
-                android:hint="Confirm Password"
-                android:imeOptions="actionGo"
-                android:inputType="textPassword" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnSign"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linear1"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/button"
-        android:text="@string/txt_sign_in"
-        android:textSize="18dp"
-        android:textStyle="bold" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btnSign"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/TextSemiBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Already have an account ?"
-            android:textColor="@color/black"
-            android:textSize="15dp" />
-
-        <TextView
-            android:id="@+id/tvSign"
-            style="@style/TextSemiBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="@string/txt_sign_in"
-            android:textColor="@color/md_theme_onPrimaryFixedVariant"
-            android:textSize="15dp" />
-    </LinearLayout>
+    <include
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        layout="@layout/progress_bar"/>
 </RelativeLayout>
