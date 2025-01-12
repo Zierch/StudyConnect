@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.databinding.ActivitySignUpBinding;
+import com.example.studyconnect.ui.home.Drawer;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
@@ -42,6 +43,23 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
+        viewModel.getIsLoading().observe(this, isLoading -> {
+            Helper.showLoading(binding.progressBar.progressBar, isLoading);
+        });
+
+        viewModel.getIsSuccess().observe(this, isSuccess -> {
+            if (isSuccess) {
+                Helper.startFlagedActivity(Drawer.class, this);
+                finish();
+            }
+        });
+
+        viewModel.getErrorMsg().observe(this, errorMsg -> {
+            Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+            binding.btnSign.setEnabled(true);
+            binding.tvSign.setEnabled(true);
+        });
 
         initView();
     }
@@ -101,20 +119,6 @@ public class SignUpActivity extends AppCompatActivity {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-
-        viewModel.getSignUpResponse().observe(this, response -> {
-            if (response != null) {
-                sharedPreferencesManager.saveData("email", response.getEmail());
-
-                Toast.makeText(SignUpActivity.this, "Register Berhasil", Toast.LENGTH_SHORT).show();
-                new Handler().postDelayed(() -> {
-                    Helper.startFlagedActivity(SignInActivity.class, SignUpActivity.this);
-                    finish();
-                }, 1000);
-            } else {
-                Toast.makeText(SignUpActivity.this, "Email Sudah Terdaftar", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
     private void check() {
         boolean check = true;

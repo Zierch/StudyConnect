@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.example.studyconnect.databinding.FragmentHomeBinding;
 import com.example.studyconnect.ui.adapter.HomeAdapter;
 import com.example.studyconnect.ui.class_ui.ClassFragment;
 import com.example.studyconnect.ui.class_ui.FormClassActivity;
+import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -102,6 +104,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void initObserver() {
+        homeViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            Helper.showLoading(binding.progressBar.progressBar, isLoading);
+        });
+
+        homeViewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg -> {
+            Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show();
+        });
+
         homeViewModel.getClasses().observe(getViewLifecycleOwner(), classes -> {
             if (classes != null) {
                 homeAdapter.setClassList(classes); // Set data ke adapter

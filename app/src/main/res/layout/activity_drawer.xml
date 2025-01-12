@@ -22,4 +22,8 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/nav_drawer" />
+
+    <include
+        android:id="@+id/progressBar"
+        layout="@layout/progress_bar"/>
 </androidx.drawerlayout.widget.DrawerLayout>

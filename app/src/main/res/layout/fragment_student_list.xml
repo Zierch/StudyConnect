@@ -105,4 +105,8 @@
                 tools:listitem="@layout/item_siswa_list" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <include
+        android:id="@+id/progressBar"
+        layout="@layout/progress_bar" />
 </LinearLayout>

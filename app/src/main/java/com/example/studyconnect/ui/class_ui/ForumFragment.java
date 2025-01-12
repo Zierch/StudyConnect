@@ -55,16 +55,16 @@ public class ForumFragment extends Fragment {
     }
 
     private void initObserver(){
-        viewModel.getClassResult().observe(getViewLifecycleOwner(), classes -> {
-            if (classes != null) {
-                binding.namaKelas.setText(classes.getName());
-                binding.deskripsi.setText(classes.getDescription());
-
-                viewModel.getTeacher(classes.getTeacher_id()).observe(getViewLifecycleOwner(), teacher -> {
-                    binding.namaGuru.setText(teacher.getName());
-                });
-            }
-        });
+//        viewModel.getClassResult().observe(getViewLifecycleOwner(), classes -> {
+//            if (classes != null) {
+//                binding.namaKelas.setText(classes.getName());
+//                binding.deskripsi.setText(classes.getDescription());
+//
+//                viewModel.getTeacher(classes.getTeacher_id()).observe(getViewLifecycleOwner(), teacher -> {
+//                    binding.namaGuru.setText(teacher.getName());
+//                });
+//            }
+//        });
     }
 
     @Override

@@ -2,9 +2,7 @@ package com.example.studyconnect.ui.class_ui;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
+import com.example.studyconnect.utils.Result;
 
 import java.util.List;
 
@@ -20,15 +19,10 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 @HiltViewModel
 public class ClassAssignmentViewModel extends ViewModel {
     private final StudyRepository repository;
-    private final MutableLiveData<List<ClassAssignmentResponse>> classAssignment = new MutableLiveData<>();
-    private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
 
     @Inject
     @ApplicationContext
@@ -39,86 +33,84 @@ public class ClassAssignmentViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public LiveData<List<ClassAssignmentResponse>> getClassAssignment(int classId) {
-        fetchClassAssignment(classId);
+    private final MutableLiveData<List<ClassAssignmentResponse>> classAssignment = new MutableLiveData<>();
+    private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
+
+    public LiveData<List<ClassAssignmentResponse>> getClassAssignment() {
         return classAssignment;
     }
 
-    public LiveData<RegisterResponse> getUser(int id) {
-        fetchUser(id);
+    public LiveData<RegisterResponse> getUser() {
         return user;
     }
 
-    public void fetchClassAssignment(int classId) {
-        repository.getClassAssignment(classId).enqueue(new Callback<List<ClassAssignmentResponse>>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<ClassAssignmentResponse>> call,
-                    @NonNull Response<List<ClassAssignmentResponse>> response
-            ) {
-                if (response.isSuccessful()) {
-                    classAssignment.postValue(response.body());
-                    Log.d("KELAS_ASSIGNMENT", "onResponse: " + response.body());
-                }
-            }
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
 
-            @Override
-            public void onFailure(
-                    @NonNull Call<List<ClassAssignmentResponse>> call,
-                    @NonNull Throwable t
-            ) {
-                Toast.makeText(
-                        context,
-                        "Failed to fetch classAssignment: " + t.getMessage(),
-                        Toast.LENGTH_SHORT
-                ).show();
+    public LiveData<String> getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void fetchClassAssignment(int classId) {
+        isLoading.postValue(true);
+        LiveData<Result<List<ClassAssignmentResponse>>> classAssignmentLiveData = repository.getClassAssignment(classId);
+        classAssignmentLiveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+                } else if (result instanceof Result.Success) {
+                    isLoading.postValue(false);
+                    Result.Success<List<ClassAssignmentResponse>> successResult = (Result.Success<List<ClassAssignmentResponse>>) result;
+                    classAssignment.postValue(successResult.getData());
+                    Log.d("KELAS_ASSIGNMENT", "onResponse: " + successResult.getData());
+                } else if (result instanceof Result.Error<?>) {
+                    isLoading.postValue(false);
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue(errorResult.getError());
+                }
             }
         });
     }
 
-    private void fetchUser(int id) {
-        repository.getUser(id).enqueue(new Callback<RegisterResponse>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<RegisterResponse> call,
-                    @NonNull Response<RegisterResponse> response
-            ) {
-                if (response.isSuccessful()) {
-                    user.postValue(response.body());
+    public void fetchUser(int id) {
+        isLoading.postValue(true);
+        LiveData<Result<RegisterResponse>> userLiveData = repository.getUser(id);
+        userLiveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+                } else if (result instanceof Result.Success) {
+                    isLoading.postValue(false);
+                    Result.Success<RegisterResponse> successResult = (Result.Success<RegisterResponse>) result;
+                    user.postValue(successResult.getData());
+                } else if (result instanceof Result.Error<?>) {
+                    isLoading.postValue(false);
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue(errorResult.getError());
                 }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<RegisterResponse> call,
-                    @NonNull Throwable t
-            ) {
-                Toast.makeText(context, "Failed to fetch user: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void deleteAssignment(int id, int classId) {
-        repository.deleteAssignment(id).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<ResponseBody> call,
-                    @NonNull Response<ResponseBody> response
-            ) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(
-                            context,
-                            "Tugas berhasil dihapus",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    fetchClassAssignment(classId);
+        isLoading.postValue(true);
+        LiveData<Result<ResponseBody>> deleteAssignmentLiveData = repository.deleteAssignment(id);
+        deleteAssignmentLiveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+                } else if (result instanceof Result.Success) {
+                    isLoading.postValue(false);
+                    errorMsg.postValue("Tugas berhasil dihapus");
+                    fetchClassAssignment(classId); // Refresh the list of assignments
+                } else if (result instanceof Result.Error<?>) {
+                    isLoading.postValue(false);
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue("Gagal menghapus tugas: " + errorResult.getError());
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.d("deleteAssignment", "onFailure: " + t.getMessage());
-                Toast.makeText(context, "Gagal menghapus tugas", Toast.LENGTH_SHORT).show();
             }
         });
     }

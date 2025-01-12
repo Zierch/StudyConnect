@@ -26,6 +26,7 @@ import com.example.studyconnect.databinding.ActivityDrawerBinding;
 import com.example.studyconnect.ui.archieved.ArchivedFragment;
 import com.example.studyconnect.ui.auth.AuthViewModel;
 import com.example.studyconnect.ui.auth.SignInActivity;
+import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.navigation.NavigationView;
 
@@ -62,6 +63,19 @@ public class Drawer extends AppCompatActivity {
                 this, drawerLayout, binding.appBar.toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        viewModel.getIsLoading().observe(this, isLoading -> {
+            Helper.showLoading(binding.progressBar.progressBar, isLoading);
+        });
+
+        viewModel.getIsSuccess().observe(this, isSuccess -> {
+            Helper.startFlagedActivity(SignInActivity.class, this);
+            finish();
+        });
+
+        viewModel.getErrorMsg().observe(this, errorMsg -> {
+            Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+        });
 
         initView();
     }

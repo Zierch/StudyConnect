@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.databinding.FormKelasBinding;
+import com.example.studyconnect.ui.home.Drawer;
+import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
 import javax.inject.Inject;
@@ -36,6 +38,21 @@ public class FormClassActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(ClassViewModel.class);
         isUpdate = getIntent().getBooleanExtra("isUpdate", false);
 
+        viewModel.getIsLoading().observe(this, isLoading -> {
+            Helper.showLoading(binding.progressBar.progressBar, isLoading);
+        });
+
+        viewModel.getIsSuccess().observe(this, isSuccess -> {
+            if (isSuccess) {
+                finish();
+            }
+        });
+
+        viewModel.getErrorMsg().observe(this, errorMsg -> {
+            Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+            binding.btnSimpan.setEnabled(true);
+        });
+
         initView();
     }
 
@@ -44,26 +61,12 @@ public class FormClassActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        // Observasi hasil create class
-        viewModel.getCreateClassResult().observe(this, isSuccess -> {
-            if (isSuccess) {
-                finish(); // Selesai setelah berhasil
-            }
-        });
-
-        // Observasi hasil update class
-        viewModel.getUpdateClassResult().observe(this, isSuccess -> {
-            if (isSuccess) {
-                finish();
-            }
-        });
-
         if (isUpdate) {
             binding.toolbar.setTitle("Update Kelas");
             binding.btnSimpan.setText("Update");
 
             int classId = sharedPreferencesManager.getData("classId", 0);
-            viewModel.getClass(classId).observe(this, classResponse -> {
+            viewModel.getClassData(classId).observe(this, classResponse -> {
                 if (classResponse != null) {
                     binding.namaKelas.setText(classResponse.getName());
                     binding.mataPelajaran.setText(classResponse.getSubject());
@@ -120,8 +123,6 @@ public class FormClassActivity extends AppCompatActivity {
             } else {
                 viewModel.createClass(namaKelas, mataPelajaran, deskripsiKelas, teacherId);
             }
-        } else {
-            binding.btnSimpan.setEnabled(true);
         }
     }
 

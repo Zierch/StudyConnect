@@ -1,9 +1,11 @@
 package com.example.studyconnect.ui.archieved;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +18,9 @@ import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.FragmentArsipBinding;
 import com.example.studyconnect.ui.adapter.ArchiveAdapter;
 import com.example.studyconnect.ui.class_ui.ClassFragment;
+import com.example.studyconnect.ui.home.Drawer;
 import com.example.studyconnect.ui.home.HomeViewModel;
+import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
 import javax.inject.Inject;
@@ -26,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class ArchivedFragment extends Fragment {
     private FragmentArsipBinding binding;
-    private HomeViewModel homeViewModel;
+    private HomeViewModel viewModel;
     private ArchiveAdapter adapter;
 
     @Inject
@@ -37,7 +41,7 @@ public class ArchivedFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentArsipBinding.inflate(inflater, container, false);
 
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         initObserver();
         initView();
@@ -67,14 +71,22 @@ public class ArchivedFragment extends Fragment {
                     .replace(R.id.fragment_host, classFragment)
                     .addToBackStack("ClassFragment")
                     .commit();
-        }, homeViewModel);
+        }, viewModel);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(adapter);
     }
 
     private void initObserver() {
-        homeViewModel.getArchivedClasses().observe(getViewLifecycleOwner(), classes -> {
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            Helper.showLoading(binding.progressBar.progressBar, isLoading);
+        });
+
+        viewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg -> {
+            Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show();
+        });
+
+        viewModel.getArchivedClasses().observe(getViewLifecycleOwner(), classes -> {
             if (classes != null) {
                 adapter.setClassList(classes); // Set data ke adapter
             } else {
@@ -82,10 +94,11 @@ public class ArchivedFragment extends Fragment {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onResume() {
         super.onResume();
-        homeViewModel.fetchArchivedClasses();
+        viewModel.fetchArchivedClasses();
         adapter.notifyDataSetChanged();
     }
 }

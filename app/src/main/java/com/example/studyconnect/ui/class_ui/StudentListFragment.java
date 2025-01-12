@@ -59,17 +59,17 @@ public class StudentListFragment extends Fragment {
     }
 
     private void initObserver() {
-        classViewModel.getClassResult().observe(getViewLifecycleOwner(), classResponse -> {
-            if (classResponse != null) {
-                int teacherId = classResponse.getTeacher_id();
-
-                classViewModel.getTeacher(teacherId).observe(getViewLifecycleOwner(), teacher -> {
-                    if (teacher != null) {
-                        binding.includeGuruList.tvNamaGuru.setText(teacher.getName());
-                    }
-                });
-            }
-        });
+//        classViewModel.getClassResult().observe(getViewLifecycleOwner(), classResponse -> {
+//            if (classResponse != null) {
+//                int teacherId = classResponse.getTeacher_id();
+//
+//                classViewModel.getTeacher(teacherId).observe(getViewLifecycleOwner(), teacher -> {
+//                    if (teacher != null) {
+//                        binding.includeGuruList.tvNamaGuru.setText(teacher.getName());
+//                    }
+//                });
+//            }
+//        });
     }
 
     @Override

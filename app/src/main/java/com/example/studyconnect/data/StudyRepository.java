@@ -10,7 +10,6 @@ import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.utils.Result;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,7 +42,7 @@ public class StudyRepository {
         Call<LoginResponse> call = apiService.signIn(body);
         call.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     // Success case
                     resultLiveData.postValue(new Result.Success<>(response.body()));
@@ -55,7 +54,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                 // Handle network-level failures (e.g., no internet connection)
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
@@ -78,7 +77,7 @@ public class StudyRepository {
         Call<RegisterResponse> call = apiService.signUp(body);
         call.enqueue(new Callback<RegisterResponse>() {
             @Override
-            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+            public void onResponse(@NonNull Call<RegisterResponse> call, @NonNull Response<RegisterResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     // Success case
                     resultLiveData.postValue(new Result.Success<>(response.body()));
@@ -90,7 +89,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
                 // Handle network-level failures (e.g., no internet connection)
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
@@ -106,7 +105,7 @@ public class StudyRepository {
         Call<ResponseBody> call = apiService.logout();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -115,7 +114,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -130,7 +129,7 @@ public class StudyRepository {
         Call<RegisterResponse> call = apiService.getUser(id);
         call.enqueue(new Callback<RegisterResponse>() {
             @Override
-            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+            public void onResponse(@NonNull Call<RegisterResponse> call, @NonNull Response<RegisterResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -139,7 +138,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -154,7 +153,7 @@ public class StudyRepository {
         Call<List<ClassResponse>> call = apiService.getClasses();
         call.enqueue(new Callback<List<ClassResponse>>() {
             @Override
-            public void onResponse(Call<List<ClassResponse>> call, Response<List<ClassResponse>> response) {
+            public void onResponse(@NonNull Call<List<ClassResponse>> call, @NonNull Response<List<ClassResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -163,7 +162,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<List<ClassResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<ClassResponse>> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -178,7 +177,7 @@ public class StudyRepository {
         Call<ClassResponse> call = apiService.getClass(id);
         call.enqueue(new Callback<ClassResponse>() {
             @Override
-            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+            public void onResponse(@NonNull Call<ClassResponse> call, @NonNull Response<ClassResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -187,7 +186,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ClassResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ClassResponse> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -202,7 +201,7 @@ public class StudyRepository {
         Call<ClassResponse> call = apiService.createClass(body);
         call.enqueue(new Callback<ClassResponse>() {
             @Override
-            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+            public void onResponse(@NonNull Call<ClassResponse> call, @NonNull Response<ClassResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -211,7 +210,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ClassResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ClassResponse> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -226,7 +225,7 @@ public class StudyRepository {
         Call<ClassResponse> call = apiService.updateClass(id, body);
         call.enqueue(new Callback<ClassResponse>() {
             @Override
-            public void onResponse(Call<ClassResponse> call, Response<ClassResponse> response) {
+            public void onResponse(@NonNull Call<ClassResponse> call, @NonNull Response<ClassResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -235,7 +234,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ClassResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ClassResponse> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -250,7 +249,7 @@ public class StudyRepository {
         Call<ResponseBody> call = apiService.deleteClass(id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -259,7 +258,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -274,7 +273,7 @@ public class StudyRepository {
         Call<List<RegisterResponse>> call = apiService.getClassStudents(id);
         call.enqueue(new Callback<List<RegisterResponse>>() {
             @Override
-            public void onResponse(Call<List<RegisterResponse>> call, Response<List<RegisterResponse>> response) {
+            public void onResponse(@NonNull Call<List<RegisterResponse>> call, @NonNull Response<List<RegisterResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -283,7 +282,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<List<RegisterResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<RegisterResponse>> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -298,7 +297,7 @@ public class StudyRepository {
         Call<ResponseBody> call = apiService.joinClass(id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -307,7 +306,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -322,7 +321,7 @@ public class StudyRepository {
         Call<ResponseBody> call = apiService.leaveClass(id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -331,7 +330,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -346,7 +345,7 @@ public class StudyRepository {
         Call<ResponseBody> call = apiService.archiveClass(id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -355,7 +354,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -370,7 +369,7 @@ public class StudyRepository {
         Call<ResponseBody> call = apiService.restoreClass(id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -379,7 +378,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -394,7 +393,7 @@ public class StudyRepository {
         Call<List<ClassResponse>> call = apiService.getArchivedClasses();
         call.enqueue(new Callback<List<ClassResponse>>() {
             @Override
-            public void onResponse(Call<List<ClassResponse>> call, Response<List<ClassResponse>> response) {
+            public void onResponse(@NonNull Call<List<ClassResponse>> call, @NonNull Response<List<ClassResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -403,7 +402,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<List<ClassResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<ClassResponse>> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -418,7 +417,7 @@ public class StudyRepository {
         Call<List<ClassAssignmentResponse>> call = apiService.getClassAssignment(classId);
         call.enqueue(new Callback<List<ClassAssignmentResponse>>() {
             @Override
-            public void onResponse(Call<List<ClassAssignmentResponse>> call, Response<List<ClassAssignmentResponse>> response) {
+            public void onResponse(@NonNull Call<List<ClassAssignmentResponse>> call, @NonNull Response<List<ClassAssignmentResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -427,7 +426,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<List<ClassAssignmentResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<ClassAssignmentResponse>> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });
@@ -442,7 +441,7 @@ public class StudyRepository {
         Call<ResponseBody> call = apiService.deleteAssignment(id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -451,7 +450,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });

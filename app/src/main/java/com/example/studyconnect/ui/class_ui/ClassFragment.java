@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.FragmentClassBinding;
+import com.example.studyconnect.utils.Helper;
 
 public class ClassFragment extends Fragment {
 
@@ -25,6 +27,19 @@ public class ClassFragment extends Fragment {
 
         binding = FragmentClassBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ClassViewModel.class);
+
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            Helper.showLoading(binding.progressBar.progressBar, isLoading);
+        });
+
+        viewModel.getIsSuccess().observe(getViewLifecycleOwner(), isSuccess -> {
+            getParentFragmentManager().popBackStack();
+        });
+
+        viewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg -> {
+            Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show();
+            binding.restore.setClickable(true);
+        });
 
         return binding.getRoot();
     }
@@ -82,14 +97,6 @@ public class ClassFragment extends Fragment {
         if (savedInstanceState == null) {
             binding.bottomNavFragmentClass.setSelectedItemId(R.id.navigation_forum);
         }
-
-        viewModel.getRestoreClassResult().observe(getViewLifecycleOwner(), isSuccess -> {
-            if (isSuccess) {
-                getParentFragmentManager().popBackStack();
-            } else {
-                binding.restore.setClickable(true);
-            }
-        });
     }
 
     @Override
