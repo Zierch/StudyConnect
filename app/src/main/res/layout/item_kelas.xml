@@ -33,6 +33,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_nama_kelas"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -41,6 +43,9 @@
                     style="@style/TextSemiBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:text="@string/text_mapel"
                     android:textColor="@color/white"
                     android:textSize="12sp" />

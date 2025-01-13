@@ -39,7 +39,6 @@ public class Drawer extends AppCompatActivity {
     private ActivityDrawerBinding binding;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private ActionBarDrawerToggle toggle;
     private boolean backPressedOnce = false;
     private Toast backToast;
     private AuthViewModel viewModel;
@@ -59,7 +58,7 @@ public class Drawer extends AppCompatActivity {
         navigationView = binding.navDrawer;
 
         // Inisialisasi ActionBarDrawerToggle
-        toggle = new ActionBarDrawerToggle(
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, binding.appBar.toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -81,7 +80,7 @@ public class Drawer extends AppCompatActivity {
     }
 
     private void initView() {
-        if (sharedPreferencesManager.getData("role", "").equals("siswa")) {
+        if (sharedPreferencesManager.getData("role", "").equals("student")) {
             binding.navDrawer.getMenu().findItem(R.id.archived).setVisible(false);
         }
 
@@ -140,5 +139,10 @@ public class Drawer extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_host, fragment);
         fragmentTransaction.commit();
+    }
+
+    // Method untuk mengembalikan Toolbar
+    public Toolbar getToolbar() {
+        return binding.appBar.toolbar;
     }
 }

@@ -2,15 +2,15 @@ package com.example.studyconnect.ui.adapter;
 
 
 import android.annotation.SuppressLint;
-import android.view.LayoutInflater;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.studyconnect.R;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.databinding.BottomItemKelasDialogBinding;
@@ -26,27 +26,16 @@ import java.util.List;
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     private final List<ClassResponse> classList = new ArrayList<>();
     private final HomeViewModel viewModel;
+    private LifecycleOwner lifecycleOwner;
     private final OnItemClickListener onItemClickListener;
     private final SharedPreferencesManager sharedPreferencesManager;
-    private RegisterResponse user;
 
     // Constructor untuk menerima listener
-    public HomeAdapter(OnItemClickListener onItemClickListener, HomeViewModel viewModel, SharedPreferencesManager sharedPreferencesManager) {
+    public HomeAdapter(OnItemClickListener onItemClickListener, HomeViewModel viewModel, SharedPreferencesManager sharedPreferencesManager, LifecycleOwner lifecycleOwner) {
         this.onItemClickListener = onItemClickListener;
         this.viewModel = viewModel;
         this.sharedPreferencesManager = sharedPreferencesManager;
-    }
-
-    // Interface untuk click listener
-    public interface OnItemClickListener {
-        void onItemClick(ClassResponse classItem);
-    }
-
-    // Set data user
-    @SuppressLint("NotifyDataSetChanged")
-    public void setUser(RegisterResponse user) {
-        this.user = user;
-        notifyDataSetChanged();
+        this.lifecycleOwner = lifecycleOwner;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -65,9 +54,20 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ClassResponse classItem = classList.get(position);
+        String role = sharedPreferencesManager.getData("role", null);
 
         holder.binding.namaKelas.setText(classItem.getName());
         holder.binding.mapel.setText(classItem.getSubject());
+
+        viewModel.getUser(classItem.getTeacher_id()).observe(lifecycleOwner, user -> {
+            if (user != null) {
+                if (role.equals("student")) {
+                    holder.binding.namaGuru.setText(user.getName());
+                } else {
+                    holder.binding.namaGuru.setVisibility(View.GONE);
+                }
+            }
+        });
 
         // Set listener untuk more button
         holder.binding.more.setOnClickListener(v -> {
@@ -75,7 +75,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(holder.itemView.getContext());
             BottomItemKelasDialogBinding bottomSheetBinding = BottomItemKelasDialogBinding.inflate(LayoutInflater.from(holder.itemView.getContext()));
 
-            if (user.getRole().equals("siswa")) {
+            if (role.equals("student")) {
                 bottomSheetBinding.editKelas.setVisibility(View.GONE);
                 bottomSheetBinding.arsipkanKelas.setVisibility(View.GONE);
             } else {
@@ -83,8 +83,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             }
 
             bottomSheetBinding.batalkanPendaftaran.setOnClickListener(view -> {
-                viewModel.leaveClass(classItem.getId());
-
+                viewModel.leaveClass(classItem.getCode());
                 bottomSheetDialog.dismiss();
             });
 
@@ -94,25 +93,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 Intent intent = new Intent(holder.itemView.getContext(), FormClassActivity.class);
                 intent.putExtra("isUpdate", true);
                 holder.itemView.getContext().startActivity(intent);
-
                 bottomSheetDialog.dismiss();
             });
 
             bottomSheetBinding.arsipkanKelas.setOnClickListener(view -> {
                 viewModel.archiveClass(classItem.getId());
-
                 bottomSheetDialog.dismiss();
             });
 
             bottomSheetDialog.setContentView(bottomSheetBinding.getRoot());
             bottomSheetDialog.show();
         });
-
-        if (sharedPreferencesManager.getData("role", "").equals("siswa")) {
-            holder.binding.namaGuru.setText(user.getName());
-        } else {
-            holder.binding.namaGuru.setVisibility(View.GONE);
-        }
 
         // Set onClickListener
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(classItem));
@@ -121,6 +112,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return classList.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(ClassResponse classItem);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

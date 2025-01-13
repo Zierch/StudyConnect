@@ -19,18 +19,24 @@
         android:theme="@style/Theme.StudyConnect"
         tools:targetApi="31">
         <activity
+            android:name=".ui.class_ui.InfoClassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.class_ui.JoinClassActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.home.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Aktivitas lainnya -->
-        <activity android:name="com.example.studyconnect.ui.home.Drawer" />
-        <activity android:name="com.example.studyconnect.ui.auth.SignInActivity" />
-        <activity android:name="com.example.studyconnect.ui.auth.SignUpActivity" />
-        <activity android:name="com.example.studyconnect.ui.class_ui.FormClassActivity" />
+        </activity> <!-- Aktivitas lainnya -->
+        <activity android:name=".ui.home.Drawer" />
+        <activity android:name=".ui.auth.SignInActivity" />
+        <activity android:name=".ui.auth.SignUpActivity" />
+        <activity android:name=".ui.class_ui.FormClassActivity" />
     </application>
+
 </manifest>

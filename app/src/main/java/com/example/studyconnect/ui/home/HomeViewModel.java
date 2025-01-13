@@ -1,7 +1,9 @@
 package com.example.studyconnect.ui.home;
 
 import android.content.Context;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,7 +12,9 @@ import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.utils.Result;
+import com.example.studyconnect.utils.SharedPreferencesManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,6 +22,9 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @HiltViewModel
 public class HomeViewModel extends ViewModel {
@@ -26,6 +33,9 @@ public class HomeViewModel extends ViewModel {
     @Inject
     @ApplicationContext
     Context context;
+
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
 
     @Inject
     public HomeViewModel(StudyRepository repository) {
@@ -39,10 +49,12 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
 
     public LiveData<List<ClassResponse>> getClasses() {
+        fetchActiveClasses();
         return classes;
     }
 
     public LiveData<List<ClassResponse>> getArchivedClasses() {
+        fetchArchivedClasses();
         return archivedClasses;
     }
 
@@ -106,55 +118,27 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void fetchUser(int id) {
-        isLoading.postValue(true);
-
         LiveData<Result<RegisterResponse>> userLiveData = repository.getUser(id);
         userLiveData.observeForever(result -> {
             if (result != null) {
-                if (result instanceof Result.Loading) {
-                    isLoading.postValue(true);
-                } else if (result instanceof Result.Success) {
+                if (result instanceof Result.Success) {
                     Result.Success<RegisterResponse> successResult = (Result.Success<RegisterResponse>) result;
+
                     user.postValue(successResult.getData());
 
                     isLoading.postValue(false);
                 } else if (result instanceof Result.Error<?>) {
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue(errorResult.getError());
-
-                    isLoading.postValue(false);
                 }
             }
         });
     }
 
-    public void joinClass(int id) {
+    public void leaveClass(String code) {
         isLoading.postValue(true);
 
-        LiveData<Result<ResponseBody>> joinClassLiveData = repository.joinClass(id);
-        joinClassLiveData.observeForever(result -> {
-            if (result != null) {
-                if (result instanceof Result.Loading) {
-                    isLoading.postValue(true);
-                } else if (result instanceof Result.Success) {
-                    errorMsg.postValue("Berhasil bergabung ke kelas");
-                    fetchActiveClasses();
-
-                    isLoading.postValue(false);
-                } else if (result instanceof Result.Error<?>) {
-                    Result.Error<?> errorResult = (Result.Error<?>) result;
-                    errorMsg.postValue("Gagal bergabung ke kelas: " + errorResult.getError());
-
-                    isLoading.postValue(false);
-                }
-            }
-        });
-    }
-
-    public void leaveClass(int id) {
-        isLoading.postValue(true);
-
-        LiveData<Result<ResponseBody>> leaveClassLiveData = repository.leaveClass(id);
+        LiveData<Result<ResponseBody>> leaveClassLiveData = repository.leaveClass(code);
         leaveClassLiveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Loading) {

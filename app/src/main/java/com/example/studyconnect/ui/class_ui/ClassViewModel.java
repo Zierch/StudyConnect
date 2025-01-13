@@ -149,6 +149,29 @@ public class ClassViewModel extends ViewModel {
         });
     }
 
+    public void joinClass(String code) {
+        isLoading.postValue(true);
+        isSuccess.postValue(false);
+
+        LiveData<Result<ResponseBody>> joinClassLiveData = repository.joinClass(code);
+        joinClassLiveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+                } else if (result instanceof Result.Success) {
+                    errorMsg.postValue("Berhasil bergabung ke kelas");
+                    isSuccess.postValue(true);
+                    isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue("Gagal bergabung ke kelas: " + errorResult.getError());
+
+                    isLoading.postValue(false);
+                }
+            }
+        });
+    }
+
     public void fetchStudents(int classId) {
         isLoading.postValue(true);
         LiveData<Result<List<RegisterResponse>>> studentsLiveData = repository.getClassStudents(classId);

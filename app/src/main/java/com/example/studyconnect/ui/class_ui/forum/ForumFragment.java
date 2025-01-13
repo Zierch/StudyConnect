@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.FragmentForumBinding;
 import com.example.studyconnect.utils.Helper;
 
@@ -57,6 +58,7 @@ public class ForumFragment extends Fragment {
 
         viewModel.getClassData().observe(getViewLifecycleOwner(), classes -> {
             if (classes != null) {
+                binding.cardLinear.setBackgroundResource(R.drawable.gradient_light_blue_background);
                 binding.namaKelas.setText(classes.getName());
                 binding.deskripsi.setText(classes.getDescription());
 

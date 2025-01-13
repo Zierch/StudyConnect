@@ -77,7 +77,7 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
         String formattedDate = Helper.formatDate(inputDate);
         holder.binding.tvDiposting.setText(formattedDate);
 
-        if (user.getRole().equals("siswa"))
+        if (user.getRole().equals("student"))
             holder.binding.settingTugas.setVisibility(View.GONE);
 
         holder.binding.settingTugas.setOnClickListener(v -> {
@@ -93,7 +93,7 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
             bottomSheetBinding.option1.setText(R.string.text_edit);
             bottomSheetBinding.option2.setText(R.string.text_hapus);
 
-            if (user.getRole().equals("siswa")) {
+            if (user.getRole().equals("student")) {
                 bottomSheetBinding.option1.setVisibility(View.GONE);
                 bottomSheetBinding.option2.setVisibility(View.GONE);
             }

@@ -49,11 +49,11 @@ public interface ApiService {
     @GET("classes/{id}/students")
     Call<List<RegisterResponse>> getClassStudents(@Path("id") int id);
 
-    @POST("classes/{id}/join")
-    Call<ResponseBody> joinClass(@Path("id") int id);
+    @POST("classes/{code}/join")
+    Call<ResponseBody> joinClass(@Path("code") String code);
 
-    @POST("classes/{id}/leave")
-    Call<ResponseBody> leaveClass(@Path("id") int id);
+    @POST("classes/{code}/leave")
+    Call<ResponseBody> leaveClass(@Path("code") String code);
 
     @POST("archive/{id}")
     Call<ResponseBody> archiveClass(@Path("id") int id);

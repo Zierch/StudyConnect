@@ -3,6 +3,7 @@ package com.example.studyconnect.ui.home;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.example.studyconnect.databinding.FragmentHomeBinding;
 import com.example.studyconnect.ui.adapter.HomeAdapter;
 import com.example.studyconnect.ui.class_ui.ClassFragment;
 import com.example.studyconnect.ui.class_ui.FormClassActivity;
+import com.example.studyconnect.ui.class_ui.JoinClassActivity;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -30,13 +32,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
     private HomeAdapter homeAdapter;
-
-    @Inject
-    SharedPreferencesManager sharedPreferencesManager;
-    private int teacherId;
+    private String userRole;
 
     @Nullable
     @Override
@@ -44,16 +45,16 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        teacherId = sharedPreferencesManager.getData("teacherId", 0);
+        userRole = sharedPreferencesManager.getData("role", null);
 
-        initObserver();
         initView();
+        initObserver();
 
         return binding.getRoot();
     }
 
     private void initView() {
-        if (teacherId != 0) {
+        if (userRole.equals("teacher")) {
             binding.joinClass.setVisibility(View.GONE);
         } else {
             binding.createClass.setVisibility(View.GONE);
@@ -64,9 +65,12 @@ public class HomeFragment extends Fragment {
             BottomHomeDialogBinding bottomBinding = BottomHomeDialogBinding.inflate(getLayoutInflater());
             bottomSheetDialog.setContentView(bottomBinding.getRoot());
 
-            // Menyembunyikan tombol sesuai dengan kondisi teacherId
-            bottomBinding.createClass.setVisibility(teacherId == 0 ? View.GONE : View.VISIBLE);
-            bottomBinding.joinClass.setVisibility(teacherId != 0 ? View.GONE : View.VISIBLE);
+            // Menyembunyikan tombol sesuai dengan role
+            if (userRole.equals("teacher")) {
+                bottomBinding.joinClass.setVisibility(View.GONE);
+            } else {
+                bottomBinding.createClass.setVisibility(View.GONE);
+            }
 
             bottomBinding.createClass.setOnClickListener(v1 -> {
                 Intent intent = new Intent(requireContext(), FormClassActivity.class);
@@ -76,8 +80,7 @@ public class HomeFragment extends Fragment {
             });
 
             bottomBinding.joinClass.setOnClickListener(v1 -> {
-//                Intent intent = new Intent(requireContext(), );
-//                startActivity(intent);
+                Helper.startActivity(JoinClassActivity.class, requireContext());
                 bottomSheetDialog.dismiss();
             });
 
@@ -85,6 +88,7 @@ public class HomeFragment extends Fragment {
         });
 
         homeAdapter = new HomeAdapter(classItem -> {
+            sharedPreferencesManager.saveData("classTeacherId", classItem.getTeacher_id());
             Bundle bundle = new Bundle();
             bundle.putInt("classId", classItem.getId());
             bundle.putString("className", classItem.getName());
@@ -97,7 +101,7 @@ public class HomeFragment extends Fragment {
                     .replace(R.id.fragment_host, classFragment)
                     .addToBackStack("ClassFragment")
                     .commit();
-        }, homeViewModel, sharedPreferencesManager);
+        }, homeViewModel, sharedPreferencesManager, getViewLifecycleOwner());
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(homeAdapter);
@@ -114,16 +118,10 @@ public class HomeFragment extends Fragment {
 
         homeViewModel.getClasses().observe(getViewLifecycleOwner(), classes -> {
             if (classes != null) {
-                homeAdapter.setClassList(classes); // Set data ke adapter
+                homeAdapter.setClassList(classes);
                 binding.linearButton.setVisibility(View.GONE);
             } else {
                 binding.linearButton.setVisibility(View.VISIBLE);
-            }
-        });
-
-        homeViewModel.getUser(teacherId).observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                homeAdapter.setUser(user);
             }
         });
     }

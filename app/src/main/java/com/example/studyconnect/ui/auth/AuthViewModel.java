@@ -77,7 +77,9 @@ public class AuthViewModel extends ViewModel {
                             Result.Success<LoginResponse> successResult = (Result.Success<LoginResponse>) result;
                             sharedPreferencesManager.saveData("token", successResult.getData().getToken());
                             sharedPreferencesManager.saveData("role", successResult.getData().getRole());
-                            sharedPreferencesManager.saveData("teacherId", successResult.getData().getUser_id());
+                            if (successResult.getData().getRole().equals("teacher")) {
+                                sharedPreferencesManager.saveData("teacherId", successResult.getData().getUser_id());
+                            }
                             errorMsg.postValue("Login Berhasil");
                         } else if (result instanceof Result.Error<?>) {
                             isLoading.postValue(false);

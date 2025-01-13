@@ -291,10 +291,10 @@ public class StudyRepository {
     }
 
     // Method join class
-    public LiveData<Result<ResponseBody>> joinClass(int id) {
+    public LiveData<Result<ResponseBody>> joinClass(String code) {
         MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
 
-        Call<ResponseBody> call = apiService.joinClass(id);
+        Call<ResponseBody> call = apiService.joinClass(code);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -315,10 +315,10 @@ public class StudyRepository {
     }
 
     // Method leave class
-    public LiveData<Result<ResponseBody>> leaveClass(int id) {
+    public LiveData<Result<ResponseBody>> leaveClass(String code) {
         MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
 
-        Call<ResponseBody> call = apiService.leaveClass(id);
+        Call<ResponseBody> call = apiService.leaveClass(code);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

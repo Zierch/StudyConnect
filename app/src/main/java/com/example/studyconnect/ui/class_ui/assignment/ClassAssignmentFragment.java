@@ -1,6 +1,7 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ public class ClassAssignmentFragment extends Fragment {
         binding = FragmentClassAssignmentBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
 
-        teacherId = sharedPreferencesManager.getData("teacherId", 0);
+        teacherId = sharedPreferencesManager.getData("classTeacherId", 0);
 
         initObserver();
         initView();
@@ -148,6 +149,7 @@ public class ClassAssignmentFragment extends Fragment {
 
         viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
+                Log.d("TAG", "initObserver: "+user);
                 tugasAdapter.setUser(user);
             }
         });

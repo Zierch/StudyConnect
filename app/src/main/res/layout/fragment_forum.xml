@@ -28,9 +28,10 @@
                 app:cardElevation="4dp">
 
                 <LinearLayout
+                    android:id="@+id/cardLinear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/md_theme_onPrimaryFixedVariant"
+                    android:background="@drawable/gradient_blue_background"
                     android:orientation="vertical"
                     android:padding="15dp">
 
