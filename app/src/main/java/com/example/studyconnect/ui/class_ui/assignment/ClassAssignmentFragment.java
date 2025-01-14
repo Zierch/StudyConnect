@@ -1,7 +1,6 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,7 @@ public class ClassAssignmentFragment extends Fragment {
     private FragmentClassAssignmentBinding binding;
     private ClassAssignmentViewModel viewModel;
     private TugasAdapter tugasAdapter;
-    private int teacherId;
+    private int userId;
     private int classId;
     private boolean isArchived;
 
@@ -63,11 +62,16 @@ public class ClassAssignmentFragment extends Fragment {
         binding = FragmentClassAssignmentBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
 
-        teacherId = sharedPreferencesManager.getData("classTeacherId", 0);
+//        teacherId = sharedPreferencesManager.getData("classTeacherId", 0);
+        userId = sharedPreferencesManager.getData("userId", 0);
+        String userRole = sharedPreferencesManager.getData("role", null);
 
         initObserver();
         initView();
 
+        if (userRole.equals("student")){
+            binding.fabAddTugas.setVisibility(View.GONE);
+        }
         binding.fabAddTugas.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
             AddTugasDialogBinding bottomBinding = AddTugasDialogBinding.inflate(getLayoutInflater());
@@ -127,7 +131,7 @@ public class ClassAssignmentFragment extends Fragment {
 
     private void initObserver() {
         viewModel.fetchClassAssignment(classId);
-        viewModel.fetchUser(teacherId);
+        viewModel.fetchUser(userId);
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading ->
                 Helper.showLoading(binding.progressBar.progressBar, isLoading)
@@ -149,7 +153,6 @@ public class ClassAssignmentFragment extends Fragment {
 
         viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
-                Log.d("TAG", "initObserver: "+user);
                 tugasAdapter.setUser(user);
             }
         });

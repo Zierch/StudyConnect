@@ -2,19 +2,16 @@ package com.example.studyconnect.ui.home;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -42,6 +39,7 @@ public class Drawer extends AppCompatActivity {
     private boolean backPressedOnce = false;
     private Toast backToast;
     private AuthViewModel viewModel;
+    private int selectedItemId = R.id.home;
 
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
@@ -110,26 +108,58 @@ public class Drawer extends AppCompatActivity {
 //        Default fragment
         replaceFragment(new HomeFragment());
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int selected = item.getItemId();
+        // Gunakan post() untuk memastikan NavigationView sudah di-render
+        navigationView.post(() -> {
+            // Set latar belakang untuk item yang aktif secara default
+            View defaultItemView = navigationView.findViewById(R.id.home);
+            if (defaultItemView != null) {
+                defaultItemView.setBackground(ContextCompat.getDrawable(this, R.drawable.background_nav));
+            }
+            selectedItemId = R.id.home;
+        });
 
-                if (selected == R.id.home) {
-                    replaceFragment(new HomeFragment());
-                } else if (selected == R.id.notification) {
-                    Toast.makeText(Drawer.this, "404 Not Found", Toast.LENGTH_SHORT).show();
-                } else if (selected == R.id.archived) {
-                    replaceFragment(new ArchivedFragment());
-                } else if (selected == R.id.setting) {
-                    Toast.makeText(Drawer.this, "404 Not Found", Toast.LENGTH_SHORT).show();
-                } else if (selected == R.id.logout) {
-                    viewModel.logout();
-                }
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int selected = item.getItemId();
 
+            // Jika item yang dipilih sama dengan item yang sedang aktif, tutup drawer dan kembalikan true
+            if (selected == selectedItemId) {
                 drawerLayout.closeDrawer(navigationView);
                 return true;
             }
+
+            // Reset latar belakang item sebelumnya
+            if (selectedItemId != -1) {
+                MenuItem previousItem = navigationView.getMenu().findItem(selectedItemId);
+                if (previousItem != null) {
+                    // Dapatkan View dari MenuItem sebelumnya
+                    View previousItemView = navigationView.findViewById(selectedItemId);
+                    if (previousItemView != null) {
+                        previousItemView.setBackground(null); // Hapus latar belakang item sebelumnya
+                    }
+                }
+            }
+
+            // Set latar belakang untuk item yang baru dipilih
+            View selectedItemView = navigationView.findViewById(selected);
+            if (selectedItemView != null) {
+                selectedItemView.setBackground(ContextCompat.getDrawable(Drawer.this, R.drawable.background_nav));
+            }
+
+            if (selected == R.id.home) {
+                replaceFragment(new HomeFragment());
+            } else if (selected == R.id.notification) {
+                Toast.makeText(Drawer.this, "404 Not Found", Toast.LENGTH_SHORT).show();
+            } else if (selected == R.id.archived) {
+                replaceFragment(new ArchivedFragment());
+            } else if (selected == R.id.setting) {
+                Toast.makeText(Drawer.this, "404 Not Found", Toast.LENGTH_SHORT).show();
+            } else if (selected == R.id.logout) {
+                viewModel.logout();
+            }
+
+            selectedItemId = selected;
+            drawerLayout.closeDrawer(navigationView);
+            return true;
         });
     }
 
@@ -139,6 +169,18 @@ public class Drawer extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_host, fragment);
         fragmentTransaction.commit();
+
+        // Reset latar belakang item yang aktif di NavigationView
+        if (selectedItemId != -1) {
+            MenuItem previousItem = navigationView.getMenu().findItem(selectedItemId);
+            if (previousItem != null) {
+                View previousItemView = navigationView.findViewById(selectedItemId);
+                if (previousItemView != null) {
+                    previousItemView.setBackground(null); // Hapus latar belakang item sebelumnya
+                }
+            }
+        }
+        selectedItemId = -1;
     }
 
     // Method untuk mengembalikan Toolbar

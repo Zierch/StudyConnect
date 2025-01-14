@@ -2,6 +2,7 @@ package com.example.studyconnect.ui.adapter;
 
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,8 +78,12 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
         String formattedDate = Helper.formatDate(inputDate);
         holder.binding.tvDiposting.setText(formattedDate);
 
-        if (user.getRole().equals("student"))
-            holder.binding.settingTugas.setVisibility(View.GONE);
+        if (user != null) {
+            if (user.getRole().equals("student")) {
+                Log.d("TAG", "onBindViewHolder: " + user.getRole());
+                holder.binding.settingTugas.setVisibility(View.GONE);
+            }
+        }
 
         holder.binding.settingTugas.setOnClickListener(v -> {
             // Tampilkan BottomSheet
@@ -93,10 +98,6 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
             bottomSheetBinding.option1.setText(R.string.text_edit);
             bottomSheetBinding.option2.setText(R.string.text_hapus);
 
-            if (user.getRole().equals("student")) {
-                bottomSheetBinding.option1.setVisibility(View.GONE);
-                bottomSheetBinding.option2.setVisibility(View.GONE);
-            }
 
             bottomSheetBinding.option1.setOnClickListener(view -> {
 //                int classId = classItem.getId();

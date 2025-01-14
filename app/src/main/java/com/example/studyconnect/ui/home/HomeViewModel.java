@@ -1,9 +1,7 @@
 package com.example.studyconnect.ui.home;
 
 import android.content.Context;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -14,7 +12,6 @@ import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.utils.Result;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,9 +19,6 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 @HiltViewModel
 public class HomeViewModel extends ViewModel {
@@ -125,8 +119,6 @@ public class HomeViewModel extends ViewModel {
                     Result.Success<RegisterResponse> successResult = (Result.Success<RegisterResponse>) result;
 
                     user.postValue(successResult.getData());
-
-                    isLoading.postValue(false);
                 } else if (result instanceof Result.Error<?>) {
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue(errorResult.getError());

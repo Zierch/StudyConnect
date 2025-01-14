@@ -35,6 +35,7 @@ public class ClassFragment extends Fragment {
     SharedPreferencesManager sharedPreferencesManager;
     private FragmentClassBinding binding;
     private ClassViewModel viewModel;
+    private int selectedItemId;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -109,6 +110,11 @@ public class ClassFragment extends Fragment {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
+            // Jika item yang dipilih sama dengan item yang sedang aktif, kembalikan true
+            if (itemId == selectedItemId) {
+                return true;
+            }
+
             if (itemId == R.id.navigation_forum) {
                 selectedFragment = ForumFragment.newInstance(classId);
             } else if (itemId == R.id.navigation_class_assignment) {
@@ -121,6 +127,7 @@ public class ClassFragment extends Fragment {
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.nav_host_fragment_fragment_class, selectedFragment)
                         .commit();
+                selectedItemId = itemId;
             }
 
             return true;
@@ -128,6 +135,7 @@ public class ClassFragment extends Fragment {
 
         if (savedInstanceState == null) {
             binding.bottomNavFragmentClass.setSelectedItemId(R.id.navigation_forum);
+            selectedItemId = R.id.navigation_forum;
         }
     }
 

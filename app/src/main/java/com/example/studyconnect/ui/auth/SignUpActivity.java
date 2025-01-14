@@ -1,7 +1,6 @@
 package com.example.studyconnect.ui.auth;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -14,11 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.databinding.ActivitySignUpBinding;
-import com.example.studyconnect.ui.home.Drawer;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
-
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -50,7 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         viewModel.getIsSuccess().observe(this, isSuccess -> {
             if (isSuccess) {
-                Helper.startFlagedActivity(Drawer.class, this);
+                Helper.startFlagedActivity(SignInActivity.class, this);
                 finish();
             }
         });

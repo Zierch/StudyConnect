@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
-import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.Result;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
@@ -27,22 +26,18 @@ import okhttp3.ResponseBody;
 @HiltViewModel
 public class AuthViewModel extends ViewModel {
     private final StudyRepository repository;
-
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
     @Inject
     @ApplicationContext
     Context context;
-
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
-
     @Inject
     public AuthViewModel(StudyRepository repository) {
         this.repository = repository;
     }
-
-    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
-    private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
 
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
@@ -80,6 +75,7 @@ public class AuthViewModel extends ViewModel {
                             if (successResult.getData().getRole().equals("teacher")) {
                                 sharedPreferencesManager.saveData("teacherId", successResult.getData().getUser_id());
                             }
+                            sharedPreferencesManager.saveData("userId", successResult.getData().getUser_id());
                             errorMsg.postValue("Login Berhasil");
                         } else if (result instanceof Result.Error<?>) {
                             isLoading.postValue(false);
@@ -135,11 +131,10 @@ public class AuthViewModel extends ViewModel {
                 if (result instanceof Result.Loading) {
                     isLoading.postValue(true);
                 } else if (result instanceof Result.Success) {
-                    isLoading.postValue(false);
                     isSuccess.postValue(true);
                     sharedPreferencesManager.removeData();
+                    isLoading.postValue(false);
                     errorMsg.postValue("Logout Berhasil");
-                    Helper.startFlagedActivity(SignInActivity.class, context);
                 } else if (result instanceof Result.Error<?>) {
                     isLoading.postValue(false);
                     Result.Error<?> errorResult = (Result.Error<?>) result;
