@@ -66,7 +66,8 @@ public class ForumViewModel extends ViewModel {
         return announcements;
     }
 
-    public LiveData<AnnouncementResponse> getAnnouncementData() {
+    public LiveData<AnnouncementResponse> getAnnouncementData(int announcementId) {
+        fetchAnnouncementById(announcementId);
         return announcementData;
     }
 
@@ -148,8 +149,9 @@ public class ForumViewModel extends ViewModel {
         createAnnouncementLiveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Success) {
-                    isLoading.postValue(false);
                     isSuccess.postValue(true);
+                    errorMsg.postValue("Pengumuman berhasil dibuat");
+                    isLoading.postValue(false);
                 } else if (result instanceof Result.Error<?>) {
                     isLoading.postValue(false);
                     Result.Error<?> errorResult = (Result.Error<?>) result;
@@ -178,12 +180,13 @@ public class ForumViewModel extends ViewModel {
         updateAnnouncementLiveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Success) {
-                    isLoading.postValue(false);
                     isSuccess.postValue(true);
-                } else if (result instanceof Result.Error<?>) {
+                    errorMsg.postValue("Pengumuman berhasil diperbarui");
                     isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue(errorResult.getError());
+                    isLoading.postValue(false);
                 }
             }
         });
@@ -197,12 +200,13 @@ public class ForumViewModel extends ViewModel {
         deleteAnnouncementLiveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Success) {
+                    errorMsg.postValue("Pengumuman berhasil dihapus");
+
                     isLoading.postValue(false);
-                    isSuccess.postValue(true);
                 } else if (result instanceof Result.Error<?>) {
-                    isLoading.postValue(false);
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue(errorResult.getError());
+                    isLoading.postValue(false);
                 }
             }
         });
@@ -216,13 +220,13 @@ public class ForumViewModel extends ViewModel {
         announcementLiveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Success) {
-                    isLoading.postValue(false);
                     Result.Success<List<AnnouncementResponse>> successResult = (Result.Success<List<AnnouncementResponse>>) result;
                     announcements.postValue(successResult.getData());
-                } else if (result instanceof Result.Error<?>) {
                     isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue(errorResult.getError());
+                    isLoading.postValue(false);
                 }
             }
         });

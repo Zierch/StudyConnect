@@ -91,7 +91,7 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ViewHolder> 
         if (announcementItem.getAttachment_path() == null){
             holder.binding.fileCard.setVisibility(View.GONE);
         } else {
-
+//            preview file e piye
         }
 
         holder.binding.ivEditForum.setOnClickListener(v -> {

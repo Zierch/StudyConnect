@@ -1,6 +1,8 @@
 package com.example.studyconnect.ui.class_ui.forum;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -29,9 +31,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicReference;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -45,8 +50,7 @@ public class FormForumActivity extends AppCompatActivity {
     private ForumViewModel viewModel;
     private boolean isUpdate = false;
     private int classId, announcementId;
-    private String content, scheduledAt;
-    private Uri fileUri;
+    private String scheduledAt;
     private File photoFile, file;
 
     @Override
@@ -86,7 +90,33 @@ public class FormForumActivity extends AppCompatActivity {
 
         if (isUpdate) {
             binding.btnSettings.setVisibility(View.GONE);
-//            viewModel.fetchAnnouncementById();
+            viewModel.getAnnouncementData(announcementId).observe(this, announcementResponse -> {
+                binding.edtDeskripsiForum.setText(announcementResponse.getContent());
+
+                if (announcementResponse.getAttachment_path() != null) {
+                    String attachmentPath = announcementResponse.getAttachment_path();
+                    String fileName = attachmentPath.substring(attachmentPath.lastIndexOf("_") + 1);
+
+                    // Tampilkan nama file di UI
+                    binding.namaFile.setText(fileName);
+                    binding.btnAddFile.setEnabled(false);
+                    binding.btnRemove.setVisibility(View.VISIBLE);
+                }
+
+                if (announcementResponse.getStatus().equals("scheduled")){
+                    TimeZone wibTimeZone = TimeZone.getTimeZone("GMT+7");
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    sdf.setTimeZone(wibTimeZone);
+
+                    String formattedDate = sdf.format(new Date());
+                    System.out.println("Waktu WIB: " + formattedDate);
+
+                    // Tampilkan tanggal yang sudah diformat ke UI
+                    binding.viewJadwal.setVisibility(View.VISIBLE);
+                    binding.waktuJadwal.setText("Dijadwalkan : " + formattedDate);
+                    binding.btnRemoveJadwal.setVisibility(View.GONE);
+                }
+            });
         }
 
         binding.btnRemove.setVisibility(View.GONE);
@@ -165,7 +195,55 @@ public class FormForumActivity extends AppCompatActivity {
 
             bottomSheetBinding.option1.setText("Jadwalkan");
             bottomSheetBinding.option1.setOnClickListener(v1 -> {
+                // Tampilkan DatePickerDialog untuk memilih tanggal
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        this,
+                        (view, selectedYear, selectedMonth, selectedDay) -> {
+                            // Setelah tanggal dipilih, tampilkan TimePickerDialog
+                            Calendar timeCalendar = Calendar.getInstance();
+                            int hour = timeCalendar.get(Calendar.HOUR_OF_DAY);
+                            int minute = timeCalendar.get(Calendar.MINUTE);
+
+                            TimePickerDialog timePickerDialog = new TimePickerDialog(
+                                    this,
+                                    (timeView, selectedHour, selectedMinute) -> {
+                                        // Gabungkan tanggal dan waktu yang dipilih
+                                        AtomicReference<String> scheduledAt = new AtomicReference<>(String.format(
+                                                Locale.getDefault(),
+                                                "%04d-%02d-%02d %02d:%02d", // Format: Y-m-d H:i
+                                                selectedYear, selectedMonth + 1, selectedDay, selectedHour, selectedMinute
+                                        ));
+
+                                        this.scheduledAt = scheduledAt.get();
+
+                                        // Tampilkan nilai yang dipilih ke UI (opsional)
+                                        binding.viewJadwal.setVisibility(View.VISIBLE);
+                                        binding.waktuJadwal.setText("Dijadwalkan : "+ scheduledAt);
+                                        binding.btnRemoveJadwal.setOnClickListener(v2 -> {
+                                            // Reset variabel scheduledAt
+                                            scheduledAt.set(null);
+
+                                            // Update UI
+                                            binding.viewJadwal.setVisibility(View.GONE);
+
+                                            Toast.makeText(this, "Jadwal dihapus", Toast.LENGTH_SHORT).show();
+                                        });
+                                    },
+                                    hour, minute, true // true untuk format 24 jam
+                            );
+                            timePickerDialog.show();
+                        },
+                        year, month, day
+                );
+                datePickerDialog.show();
+
+                // Tutup BottomSheet setelah memilih tanggal dan waktu
+                bottomSheetDialog.dismiss();
             });
 
 
@@ -179,7 +257,7 @@ public class FormForumActivity extends AppCompatActivity {
         boolean check = true;
 
 //        get variabel
-        content = binding.edtDeskripsiForum.getText().toString();
+        String content = binding.edtDeskripsiForum.getText().toString();
 
         if (content.isEmpty()) {
             Toast.makeText(this, "Isi Pengumuman Kosong!", Toast.LENGTH_SHORT).show();
@@ -205,7 +283,7 @@ public class FormForumActivity extends AppCompatActivity {
                 case REQUEST_CODE_PICK_FILE:
                 case REQUEST_CODE_PICK_IMAGE:
                     if (data != null) {
-                        fileUri = data.getData();
+                        Uri fileUri = data.getData();
                         file = copyFileToAppDirectory(fileUri);
                         if (file != null) {
                             binding.namaFile.setText(file.getName());
