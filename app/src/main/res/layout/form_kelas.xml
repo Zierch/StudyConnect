@@ -13,9 +13,22 @@
         android:layout_height="wrap_content"
         android:background="@color/md_theme_background"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        app:navigationIcon="@drawable/baseline_arrow_back_24"
+        app:navigationIcon="@drawable/baseline_close_24"
         app:title="Buat Kelas"
-        tools:ignore="RtlSymmetry"/>
+        tools:ignore="RtlSymmetry">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSimpan"
+            style="@style/ShapeAppearanceOverlay.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:textAllCaps="false"
+            android:background="@color/md_theme_primary"
+            android:text="Simpan"
+            android:textColor="@color/md_theme_onPrimary" />
+    </androidx.appcompat.widget.Toolbar>
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
@@ -35,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="Detail Kelas :"
-            android:textColor="@color/black"
+            android:textColor="@color/md_theme_primary"
             android:textSize="17dp" />
 
         <LinearLayout
@@ -53,7 +66,8 @@
             app:boxCornerRadiusBottomEnd="5dp"
             app:boxCornerRadiusBottomStart="5dp"
             app:boxCornerRadiusTopEnd="5dp"
-            app:boxCornerRadiusTopStart="5dp">
+            app:boxCornerRadiusTopStart="5dp"
+            app:endIconMode="clear_text">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nama_kelas"
@@ -75,7 +89,8 @@
             app:boxCornerRadiusBottomEnd="5dp"
             app:boxCornerRadiusBottomStart="5dp"
             app:boxCornerRadiusTopEnd="5dp"
-            app:boxCornerRadiusTopStart="5dp">
+            app:boxCornerRadiusTopStart="5dp"
+            app:endIconMode="clear_text">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/mata_pelajaran"
@@ -97,7 +112,8 @@
             app:boxCornerRadiusBottomEnd="5dp"
             app:boxCornerRadiusBottomStart="5dp"
             app:boxCornerRadiusTopEnd="5dp"
-            app:boxCornerRadiusTopStart="5dp">
+            app:boxCornerRadiusTopStart="5dp"
+            app:endIconMode="clear_text">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/deskripsi_kelas"
@@ -109,38 +125,36 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:boxBackgroundColor="@color/white"
-            app:boxBackgroundMode="filled"
-            app:boxCollapsedPaddingTop="0dp"
-            android:layout_marginTop="5dp"
-            app:boxCornerRadiusBottomEnd="5dp"
-            app:boxCornerRadiusBottomStart="5dp"
-            app:boxCornerRadiusTopEnd="5dp"
-            app:boxCornerRadiusTopStart="5dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/kode_kelas"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tiCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Kode Kelas"
-                android:inputType="text"
-                android:padding="15dp" />
+                app:boxBackgroundColor="@color/white"
+                app:boxBackgroundMode="filled"
+                app:boxCollapsedPaddingTop="0dp"
+                android:layout_marginTop="5dp"
+                app:boxCornerRadiusBottomEnd="5dp"
+                app:boxCornerRadiusBottomStart="5dp"
+                app:boxCornerRadiusTopEnd="5dp"
+                app:boxCornerRadiusTopStart="5dp"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_refresh"
+                app:endIconContentDescription="Reset"
+                android:clickable="true"
+                android:focusable="true">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/kode_kelas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Kode Kelas"
+                    android:inputType="text"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:padding="15dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnSimpan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/button"
-            android:text="Simpan"
-            android:textSize="18dp"
-            android:textStyle="bold" />
 
     </LinearLayout>
 

@@ -11,24 +11,16 @@
         android:layout_height="wrap_content"
         android:background="@color/md_theme_background"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        app:navigationIcon="@drawable/baseline_close_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry">
 
         <ImageView
-            android:id="@+id/btnClose"
+            android:id="@+id/btnSettings"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="start"
-            android:background="@drawable/baseline_close_24"
-            android:backgroundTint="@color/black"
-            android:contentDescription="@string/close" />
-
-        <ImageView
-            android:id="@+id/btnSettings"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
             android:background="@drawable/ic_more"
@@ -42,6 +34,7 @@
             android:layout_height="40dp"
             android:layout_gravity="end"
             android:layout_marginEnd="20dp"
+            android:textAllCaps="false"
             android:background="@color/md_theme_primary"
             android:text="@string/text_posting"
             android:textColor="@color/md_theme_onPrimary" />
@@ -50,51 +43,19 @@
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black"
+        android:layout_height="3dp"
+        android:layout_below="@id/toolbar"
+        android:background="@drawable/toolbar_shadow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="20dp"
-        android:background="@drawable/baseline_description_24"
-        android:contentDescription="@string/text_deskripsi"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edtDeskripsiForum"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:background="@color/white"
-        android:hint="@string/text_umumkan_sesuatu"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edtDeskripsiForum" />
-
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/btn_add_file"
+        android:id="@+id/contentCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/view2">
+        app:cardCornerRadius="0dp"
+        app:layout_constraintTop_toBottomOf="@id/view">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -103,31 +64,82 @@
             android:padding="10dp">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:id="@+id/imageView2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/baseline_attachment_24"
-                android:backgroundTint="@color/black"
-                android:contentDescription="@string/lampiran" />
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_align_justified"
+                android:backgroundTint="@color/md_theme_outline_mediumContrast"
+                android:contentDescription="@string/text_deskripsi" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edtDeskripsiForum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="20dp"
-                android:text="@string/text_tambahkan_lampiran" />
+                android:layout_marginEnd="5dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:background="@android:color/transparent"
+                android:hint="@string/text_umumkan_sesuatu"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <View
-        android:id="@+id/view3"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/btn_add_file"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/materialCardView" />
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:layout_constraintTop_toBottomOf="@id/contentCard">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/baseline_attachment_24"
+                android:backgroundTint="@color/md_theme_outline_mediumContrast"
+                android:contentDescription="@string/lampiran" />
+
+            <TextView
+                android:id="@+id/namaFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:padding="10dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginEnd="10dp"
+                android:text="@string/text_tambahkan_lampiran"/>
+
+            <ImageView
+                android:id="@+id/btnRemove"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="5dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/baseline_close_24"
+                android:backgroundTint="@color/md_theme_outline_mediumContrast"
+                android:contentDescription="@string/lampiran" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <include
+        android:id="@+id/progressBar"
+        layout="@layout/progress_bar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

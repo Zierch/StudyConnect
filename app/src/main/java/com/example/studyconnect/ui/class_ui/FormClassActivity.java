@@ -1,7 +1,9 @@
 package com.example.studyconnect.ui.class_ui;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -9,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.databinding.FormKelasBinding;
-import com.example.studyconnect.ui.home.Drawer;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
@@ -23,7 +24,7 @@ public class FormClassActivity extends AppCompatActivity {
     SharedPreferencesManager sharedPreferencesManager;
     private FormKelasBinding binding;
     private ClassViewModel viewModel;
-    private String namaKelas, mataPelajaran, deskripsiKelas, kodeKelas;
+    private String kodeKelas;
     private boolean isUpdate = false; // Defaultnya create, bisa diganti saat update
     private int teacherId, classId;
 
@@ -62,8 +63,7 @@ public class FormClassActivity extends AppCompatActivity {
         binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         if (isUpdate) {
-            binding.toolbar.setTitle("Update Kelas");
-            binding.btnSimpan.setText("Update");
+            binding.toolbar.setTitle("Setting Kelas");
 
             int classId = sharedPreferencesManager.getData("classId", 0);
             viewModel.getClassData(classId).observe(this, classResponse -> {
@@ -74,12 +74,29 @@ public class FormClassActivity extends AppCompatActivity {
                     binding.kodeKelas.setText(classResponse.getCode());
                 }
             });
-        } else {
-            binding.toolbar.setTitle("Create Kelas");
 
+            binding.tiCode.setEndIconOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String randomCode = Helper.generateRandomString();
+                    binding.kodeKelas.setText(randomCode);
+                }
+            });
+        } else {
             binding.label.setVisibility(View.GONE);
             binding.kodeKelas.setVisibility(View.GONE);
         }
+
+        binding.kodeKelas.setOnLongClickListener(v -> {
+            // Salin teks ke clipboard
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Kode Kelas", binding.kodeKelas.getText().toString());
+            clipboard.setPrimaryClip(clip);
+
+            Toast.makeText(this, "Kode Kelas disalin", Toast.LENGTH_SHORT).show();
+
+            return true;
+        });
 
         binding.btnSimpan.setOnClickListener(v -> {
             binding.btnSimpan.setEnabled(false);
@@ -91,9 +108,9 @@ public class FormClassActivity extends AppCompatActivity {
         boolean check = true;
 
         // Mendapatkan variabel inputan
-        namaKelas = binding.namaKelas.getText().toString();
-        mataPelajaran = binding.mataPelajaran.getText().toString();
-        deskripsiKelas = binding.deskripsiKelas.getText().toString();
+        String namaKelas = binding.namaKelas.getText().toString();
+        String mataPelajaran = binding.mataPelajaran.getText().toString();
+        String deskripsiKelas = binding.deskripsiKelas.getText().toString();
 
         if (isUpdate) {
             kodeKelas = binding.kodeKelas.getText().toString();

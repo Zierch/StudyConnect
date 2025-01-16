@@ -1,5 +1,6 @@
 package com.example.studyconnect.data;
 
+import com.example.studyconnect.data.response.AnnouncementResponse;
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
@@ -8,17 +9,20 @@ import com.example.studyconnect.data.response.UserResponse;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface ApiService {
-//    Auth
+    //    Auth
     @POST("login")
     Call<LoginResponse> signIn(@Body RequestBody body);
 
@@ -31,7 +35,7 @@ public interface ApiService {
     @GET("user/{id}")
     Call<RegisterResponse> getUser(@Path("id") int id);
 
-//    Class
+    //    Class
     @GET("classes")
     Call<List<ClassResponse>> getClasses();
 
@@ -65,11 +69,39 @@ public interface ApiService {
     @GET("archived-classes")
     Call<List<ClassResponse>> getArchivedClasses();
 
-//    Class Assignment
+    //    Class Assignment
     @GET("assignment/{classId}")
     Call<List<ClassAssignmentResponse>> getClassAssignment(@Path("classId") int classId);
 
     @DELETE("assignment/{id}")
     Call<ResponseBody> deleteAssignment(@Path("id") int id);
+
+    //    Announcement
+    @Multipart
+    @POST("announcement/{classId}")
+    Call<ResponseBody> createAnnouncement(
+            @Path("classId") int classId,
+            @Part("content") RequestBody content,
+            @Part("scheduled_at") RequestBody scheduledAt,
+            @Part MultipartBody.Part attachment
+    );
+
+    @Multipart
+    @POST("announcement/{id}?_method=PUT")
+    Call<ResponseBody> updateAnnouncement(
+            @Path("id") int id,
+            @Part("content") RequestBody content,
+            @Part MultipartBody.Part attachment
+    );
+
+    @DELETE("announcement/{id}")
+    Call<ResponseBody> deleteAnnouncement(@Path("id") int id);
+
+    @GET("announcement/{classId}")
+    Call<List<AnnouncementResponse>> getAnnouncements(@Path("classId") int classId);
+
+    @GET("announcement/{id}/get")
+    Call<AnnouncementResponse> getAnnouncementById(@Path("id") int id);
+
 }
 

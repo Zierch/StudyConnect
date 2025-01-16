@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_upload_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:padding="15dp"
+        android:text="Upload file"
+        android:textAlignment="textStart"
+        android:textColor="@color/md_theme_outline"
+        android:textSize="17sp"
+        app:cornerRadius="0dp"
+        app:icon="@drawable/ic_file_upload"
+        app:iconPadding="20dp"
+        app:iconSize="25sp"
+        app:iconTint="@color/black" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_upload_foto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:padding="15dp"
+        android:text="Pilih foto"
+        android:textAlignment="textStart"
+        android:textColor="@color/md_theme_outline"
+        android:textSize="17sp"
+        app:cornerRadius="0dp"
+        app:icon="@drawable/ic_insert_photo"
+        app:iconPadding="20dp"
+        app:iconSize="25sp"
+        app:iconTint="@color/black" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_upload_cam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:padding="15dp"
+        android:text="Ambil foto"
+        android:textAlignment="textStart"
+        android:textColor="@color/md_theme_outline"
+        android:textSize="17sp"
+        app:cornerRadius="0dp"
+        app:icon="@drawable/ic_photo_camera"
+        app:iconPadding="20dp"
+        app:iconSize="25sp"
+        app:iconTint="@color/black" />
+
+</LinearLayout>

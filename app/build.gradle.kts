@@ -72,4 +72,5 @@ dependencies {
 
 //    Preference
     implementation(libs.preference)
+    implementation(libs.glide);
 }

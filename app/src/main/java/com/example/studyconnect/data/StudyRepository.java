@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.studyconnect.R;
+import com.example.studyconnect.data.response.AnnouncementResponse;
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
@@ -19,6 +20,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -472,6 +474,135 @@ public class StudyRepository {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method create announcement
+    public LiveData<Result<ResponseBody>> createAnnouncement(
+            int classId,
+            RequestBody content,
+            RequestBody scheduledAt,
+            MultipartBody.Part attachment) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.createAnnouncement(classId, content, scheduledAt, attachment);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to create announcement"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method update announcement
+    public LiveData<Result<ResponseBody>> updateAnnouncement(
+            int id,
+            RequestBody content,
+            MultipartBody.Part attachment
+    ) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        // Panggil API service
+        Call<ResponseBody> call = apiService.updateAnnouncement(id, content, attachment);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to update announcement"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method delete announcement
+    public LiveData<Result<ResponseBody>> deleteAnnouncement(int id) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.deleteAnnouncement(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to delete announcement"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method get announcement
+    public LiveData<Result<List<AnnouncementResponse>>> getAnnouncements(int classId) {
+        MutableLiveData<Result<List<AnnouncementResponse>>> resultLiveData = new MutableLiveData<>();
+
+        Call<List<AnnouncementResponse>> call = apiService.getAnnouncements(classId);
+        call.enqueue(new Callback<List<AnnouncementResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<AnnouncementResponse>> call, @NonNull Response<List<AnnouncementResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get announcement"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<AnnouncementResponse>> call, Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method get announcementById
+    public LiveData<Result<AnnouncementResponse>> getAnnouncementById(int id) {
+        MutableLiveData<Result<AnnouncementResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<AnnouncementResponse> call = apiService.getAnnouncementById(id);
+        call.enqueue(new Callback<AnnouncementResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<AnnouncementResponse> call, @NonNull Response<AnnouncementResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get announcement"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<AnnouncementResponse> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });

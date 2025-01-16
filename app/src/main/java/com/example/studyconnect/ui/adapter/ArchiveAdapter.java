@@ -65,7 +65,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                 bottomSheetDialog.dismiss();
             });
 
-            bottomSheetBinding.option2.setText("Hapus");
+            bottomSheetBinding.option2.setText(R.string.text_hapus);
             bottomSheetBinding.option2.setOnClickListener(view -> {
                 viewModel.deleteClass(classItem.getId());
 

@@ -32,7 +32,7 @@
         app:cornerRadius="0dp"
         app:icon="@drawable/baseline_description_24"
         app:iconPadding="20dp"
-        app:iconSize="20sp"
+        app:iconSize="25sp"
         app:iconTint="@color/black" />
 
     <com.google.android.material.button.MaterialButton
@@ -48,7 +48,7 @@
         app:cornerRadius="0dp"
         app:icon="@drawable/baseline_question_mark_24"
         app:iconPadding="20dp"
-        app:iconSize="20sp"
+        app:iconSize="25sp"
         app:iconTint="@color/black" />
 
     <com.google.android.material.button.MaterialButton
@@ -64,6 +64,6 @@
         app:cornerRadius="0dp"
         app:icon="@drawable/baseline_book_24"
         app:iconPadding="20dp"
-        app:iconSize="20sp"
+        app:iconSize="25sp"
         app:iconTint="@color/black" />
 </LinearLayout>

@@ -1,6 +1,7 @@
 [versions]
 #noinspection AndroidGradlePluginVersion
 agp = "8.6.0"
+glide = "4.16.0"
 hiltAndroid = "2.51.1"
 jetbrainsKotlinxCoroutinesCore = "1.7.3"
 junit = "4.13.2"
@@ -22,6 +23,7 @@ retrofit = "2.9.0"
 
 [libraries]
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

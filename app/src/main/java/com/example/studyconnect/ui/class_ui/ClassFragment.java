@@ -74,6 +74,7 @@ public class ClassFragment extends Fragment {
             Toolbar toolbar = activity.getToolbar();
             toolbar.setTitle(className);
             ImageView imageView = toolbar.findViewById(R.id.optionalItem);
+            imageView.setVisibility(View.VISIBLE);
             if (userRole.equals("student")) {
                 imageView.setImageResource(R.drawable.ic_info_outline);
                 imageView.setOnClickListener(v -> {
@@ -147,7 +148,7 @@ public class ClassFragment extends Fragment {
             Drawer activity = (Drawer) requireActivity();
             ImageView imageView = activity.getToolbar().findViewById(R.id.optionalItem);
             imageView.setImageResource(R.drawable.ic_setting);
-
+            imageView.setVisibility(View.GONE);
         }
         binding = null;
     }
