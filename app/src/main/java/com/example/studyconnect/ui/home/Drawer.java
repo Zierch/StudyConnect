@@ -61,18 +61,18 @@ public class Drawer extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        viewModel.getIsLoading().observe(this, isLoading -> {
-            Helper.showLoading(binding.progressBar.progressBar, isLoading);
-        });
+        viewModel.getIsLoading().observe(this, isLoading ->
+                Helper.showLoading(binding.progressBar.progressBar, isLoading)
+        );
 
         viewModel.getIsSuccess().observe(this, isSuccess -> {
             Helper.startFlagedActivity(SignInActivity.class, this);
             finish();
         });
 
-        viewModel.getErrorMsg().observe(this, errorMsg -> {
-            Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
-        });
+        viewModel.getErrorMsg().observe(this, errorMsg ->
+                Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show()
+        );
 
         initView();
     }

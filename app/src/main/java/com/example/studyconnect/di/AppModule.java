@@ -77,8 +77,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public StudyRepository provideMyRepository(ApiService apiService) {
-        return new StudyRepository(apiService);
+    public StudyRepository provideMyRepository(ApiService apiService, @ApplicationContext Context context) {
+        return new StudyRepository(apiService, context);
     }
 
     @Provides

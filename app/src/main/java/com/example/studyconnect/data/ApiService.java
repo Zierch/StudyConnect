@@ -4,6 +4,7 @@ import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
+import com.example.studyconnect.data.response.UserResponse;
 
 import java.util.List;
 
@@ -46,8 +47,8 @@ public interface ApiService {
     @DELETE("classes/{id}")
     Call<ResponseBody> deleteClass(@Path("id") int id);
 
-    @GET("classes/{id}/students")
-    Call<List<RegisterResponse>> getClassStudents(@Path("id") int id);
+    @GET("classes/{classId}/students")
+    Call<List<UserResponse>> getClassStudents(@Path("classId") int classId);
 
     @POST("classes/{code}/join")
     Call<ResponseBody> joinClass(@Path("code") String code);

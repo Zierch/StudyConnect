@@ -68,5 +68,9 @@
     <string name="text_hapus">Hapus</string>
     <string name="text_diarsipkan">Kelas ini telah diarsipkan</string>
     <string name="text_pulihkan">Pulihkan</string>
-
+    <string name="text_kick">Keluarkan</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="end_session">Sesi login anda telah berakhir, harap login kembali!</string>
+    <string name="text_title_empty_arsip">Disinilah Anda akan menemukan kelas yang diarsipkan</string>
+    <string name="text_desc_empty_arsip">Anda dapat menemukan kelas yang diarsipkan di sini untuk diakses kembali, dipulihkan atau dihapus.</string>
 </resources>

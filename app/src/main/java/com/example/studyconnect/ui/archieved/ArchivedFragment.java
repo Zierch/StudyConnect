@@ -18,7 +18,6 @@ import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.FragmentArsipBinding;
 import com.example.studyconnect.ui.adapter.ArchiveAdapter;
 import com.example.studyconnect.ui.class_ui.ClassFragment;
-import com.example.studyconnect.ui.home.Drawer;
 import com.example.studyconnect.ui.home.HomeViewModel;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
@@ -58,6 +57,9 @@ public class ArchivedFragment extends Fragment {
             }
         }
 
+        binding.arsipEmptyList.tvTitleEmptyList.setText(R.string.text_title_empty_arsip);
+        binding.arsipEmptyList.tvDescEmptyList.setText(R.string.text_desc_empty_arsip);
+
         adapter = new ArchiveAdapter(classItem -> {
             Bundle bundle = new Bundle();
             bundle.putInt("classId", classItem.getId());
@@ -78,18 +80,22 @@ public class ArchivedFragment extends Fragment {
     }
 
     private void initObserver() {
-        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
-            Helper.showLoading(binding.progressBar.progressBar, isLoading);
-        });
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading ->
+                Helper.showLoading(binding.progressBar.progressBar, isLoading)
+        );
 
-        viewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg -> {
-            Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show();
-        });
+        viewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg ->
+                Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show()
+        );
 
         viewModel.getArchivedClasses().observe(getViewLifecycleOwner(), classes -> {
-            if (classes != null) {
-                adapter.setClassList(classes); // Set data ke adapter
+            if (classes != null && !classes.isEmpty()) {
+                binding.arsipEmptyList.emptyList.setVisibility(View.GONE);
+                adapter.setClassList(classes);
+                binding.recyclerView.setVisibility(View.VISIBLE);
             } else {
+                binding.arsipEmptyList.emptyList.setVisibility(View.VISIBLE);
+                binding.recyclerView.setVisibility(View.GONE);
             }
         });
     }

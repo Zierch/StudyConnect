@@ -36,8 +36,7 @@
                 layout="@layout/tugas_empty_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:visibility="gone" />
+                android:padding="5dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_list_tugas_kelas"
@@ -56,5 +55,5 @@
 
     <include
         android:id="@+id/progressBar"
-        layout="@layout/progress_bar"/>
+        layout="@layout/progress_bar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

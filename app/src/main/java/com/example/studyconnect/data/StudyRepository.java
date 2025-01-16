@@ -1,13 +1,17 @@
 package com.example.studyconnect.data;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.studyconnect.R;
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
+import com.example.studyconnect.data.response.UserResponse;
 import com.example.studyconnect.utils.Result;
 
 import java.util.List;
@@ -23,10 +27,15 @@ import retrofit2.Response;
 
 public class StudyRepository {
     private final ApiService apiService;
+    private final Context myApp;
 
     @Inject
-    public StudyRepository(ApiService apiService) {
+    public StudyRepository(
+            ApiService apiService,
+            Context myApp
+    ) {
         this.apiService = apiService;
+        this.myApp = myApp;
     }
 
     // method login
@@ -153,11 +162,20 @@ public class StudyRepository {
         Call<List<ClassResponse>> call = apiService.getClasses();
         call.enqueue(new Callback<List<ClassResponse>>() {
             @Override
-            public void onResponse(@NonNull Call<List<ClassResponse>> call, @NonNull Response<List<ClassResponse>> response) {
+            public void onResponse(
+                    @NonNull Call<List<ClassResponse>> call,
+                    @NonNull Response<List<ClassResponse>> response
+            ) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
-                    resultLiveData.postValue(new Result.Error<>("Failed to get classes"));
+                    if (response.code() == 500) {
+                        resultLiveData.postValue(
+                                new Result.Error<>(
+                                        myApp.getString(R.string.unauthorized)
+                                )
+                        );
+                    } else resultLiveData.postValue(new Result.Error<>("Failed to get classes"));
                 }
             }
 
@@ -267,13 +285,16 @@ public class StudyRepository {
     }
 
     // Method get class students
-    public LiveData<Result<List<RegisterResponse>>> getClassStudents(int id) {
-        MutableLiveData<Result<List<RegisterResponse>>> resultLiveData = new MutableLiveData<>();
+    public LiveData<Result<List<UserResponse>>> getClassStudents(int classId) {
+        MutableLiveData<Result<List<UserResponse>>> resultLiveData = new MutableLiveData<>();
 
-        Call<List<RegisterResponse>> call = apiService.getClassStudents(id);
-        call.enqueue(new Callback<List<RegisterResponse>>() {
+        Call<List<UserResponse>> call = apiService.getClassStudents(classId);
+        call.enqueue(new Callback<List<UserResponse>>() {
             @Override
-            public void onResponse(@NonNull Call<List<RegisterResponse>> call, @NonNull Response<List<RegisterResponse>> response) {
+            public void onResponse(
+                    @NonNull Call<List<UserResponse>> call,
+                    @NonNull Response<List<UserResponse>> response
+            ) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -282,7 +303,7 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<RegisterResponse>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<UserResponse>> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });

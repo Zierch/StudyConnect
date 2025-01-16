@@ -8,7 +8,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.data.response.RegisterResponse;
+import com.example.studyconnect.data.response.UserResponse;
 import com.example.studyconnect.utils.Result;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -29,11 +32,16 @@ public class StudentListViewModel extends ViewModel {
     }
 
     private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
+    private final MutableLiveData<List<UserResponse>> students = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
 
     public LiveData<RegisterResponse> getUser() {
         return user;
+    }
+
+    public LiveData<List<UserResponse>> getStudents() {
+        return students;
     }
 
     public LiveData<Boolean> getIsLoading() {
@@ -55,6 +63,31 @@ public class StudentListViewModel extends ViewModel {
                 } else if (result instanceof Result.Success) {
                     Result.Success<RegisterResponse> successResult = (Result.Success<RegisterResponse>) result;
                     user.postValue(successResult.getData());
+
+                    isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue(errorResult.getError());
+
+                    isLoading.postValue(false);
+                }
+            }
+        });
+    }
+
+    public void fetchStudents(int classId) {
+        isLoading.postValue(true);
+
+        LiveData<Result<List<UserResponse>>> liveData = repository.getClassStudents(classId);
+        liveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+
+                } else if (result instanceof Result.Success) {
+                    Result.Success<List<UserResponse>> successResult =
+                            (Result.Success<List<UserResponse>>) result;
+                    students.postValue(successResult.getData());
 
                     isLoading.postValue(false);
                 } else if (result instanceof Result.Error<?>) {

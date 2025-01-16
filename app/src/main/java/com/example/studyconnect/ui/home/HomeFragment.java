@@ -3,7 +3,6 @@ package com.example.studyconnect.ui.home;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,15 @@ import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.BottomHomeDialogBinding;
 import com.example.studyconnect.databinding.FragmentHomeBinding;
 import com.example.studyconnect.ui.adapter.HomeAdapter;
+import com.example.studyconnect.ui.auth.SignInActivity;
 import com.example.studyconnect.ui.class_ui.ClassFragment;
 import com.example.studyconnect.ui.class_ui.FormClassActivity;
 import com.example.studyconnect.ui.class_ui.JoinClassActivity;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -47,8 +49,8 @@ public class HomeFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         userRole = sharedPreferencesManager.getData("role", null);
 
-        initView();
         initObserver();
+        initView();
 
         return binding.getRoot();
     }
@@ -112,9 +114,17 @@ public class HomeFragment extends Fragment {
                 Helper.showLoading(binding.progressBarIncl.progressBar, isLoading)
         );
 
-        homeViewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg ->
-                Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show()
-        );
+        homeViewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg -> {
+            if (Objects.equals(errorMsg, requireActivity().getString(R.string.unauthorized))){
+                sharedPreferencesManager.removeData();
+                String endSession = requireActivity().getString(R.string.end_session);
+                Toast.makeText(requireActivity(), endSession, Toast.LENGTH_SHORT).show();
+                Helper.startActivity(SignInActivity.class, requireActivity());
+                requireActivity().finish();
+            }else {
+                Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         homeViewModel.getClasses().observe(getViewLifecycleOwner(), classes -> {
             if (classes != null) {

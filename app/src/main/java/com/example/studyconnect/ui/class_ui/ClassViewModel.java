@@ -12,8 +12,6 @@ import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.utils.Result;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -38,7 +36,6 @@ public class ClassViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    private final MutableLiveData<List<RegisterResponse>> students = new MutableLiveData<>();
     private final MutableLiveData<ClassResponse> classData = new MutableLiveData<>();
     private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
@@ -47,10 +44,6 @@ public class ClassViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsSuccess() {
         return isSuccess;
-    }
-
-    public LiveData<List<RegisterResponse>> getStudents() {
-        return students;
     }
 
     public LiveData<ClassResponse> getClassData(int classId) {
@@ -167,26 +160,6 @@ public class ClassViewModel extends ViewModel {
                     errorMsg.postValue("Gagal bergabung ke kelas: " + errorResult.getError());
 
                     isLoading.postValue(false);
-                }
-            }
-        });
-    }
-
-    public void fetchStudents(int classId) {
-        isLoading.postValue(true);
-        LiveData<Result<List<RegisterResponse>>> studentsLiveData = repository.getClassStudents(classId);
-        studentsLiveData.observeForever(result -> {
-            if (result != null) {
-                if (result instanceof Result.Loading) {
-                    isLoading.postValue(true);
-                } else if (result instanceof Result.Success) {
-                    isLoading.postValue(false);
-                    Result.Success<List<RegisterResponse>> successResult = (Result.Success<List<RegisterResponse>>) result;
-                    students.postValue(successResult.getData());
-                } else if (result instanceof Result.Error<?>) {
-                    isLoading.postValue(false);
-                    Result.Error<?> errorResult = (Result.Error<?>) result;
-                    errorMsg.postValue(errorResult.getError());
                 }
             }
         });

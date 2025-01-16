@@ -76,6 +76,7 @@ public class ClassResponse {
         this.status = status;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "ClassResponse{" +

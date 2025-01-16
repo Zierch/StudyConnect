@@ -69,7 +69,7 @@ public class ClassAssignmentFragment extends Fragment {
         initObserver();
         initView();
 
-        if (userRole.equals("student")){
+        if (userRole.equals("student")) {
             binding.fabAddTugas.setVisibility(View.GONE);
         }
         binding.fabAddTugas.setOnClickListener(v -> {
@@ -146,8 +146,13 @@ public class ClassAssignmentFragment extends Fragment {
         );
 
         viewModel.getClassAssignment().observe(getViewLifecycleOwner(), classAssignment -> {
-            if (classAssignment != null) {
+            if (classAssignment != null && !classAssignment.isEmpty()) {
+                binding.rvListTugasKelas.setVisibility(View.VISIBLE);
+                binding.includeTugasEmptyList.emptyList.setVisibility(View.GONE);
                 tugasAdapter.setClassAssignmentList(classAssignment);
+            } else {
+                binding.rvListTugasKelas.setVisibility(View.GONE);
+                binding.includeTugasEmptyList.emptyList.setVisibility(View.VISIBLE);
             }
         });
 

@@ -11,6 +11,7 @@
         android:layout_height="50dp"
         android:layout_margin="15dp"
         app:cardCornerRadius="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -23,6 +24,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
+        android:id="@+id/tv_student_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -32,6 +34,7 @@
         app:layout_constraintTop_toTopOf="@+id/materialCardView3" />
 
     <ImageView
+        android:id="@+id/iv_settings_student"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="15dp"
