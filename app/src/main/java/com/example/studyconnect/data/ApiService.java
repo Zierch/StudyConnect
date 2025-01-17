@@ -73,8 +73,23 @@ public interface ApiService {
     @GET("assignment/{classId}")
     Call<List<ClassAssignmentResponse>> getClassAssignment(@Path("classId") int classId);
 
-    @DELETE("assignment/{id}")
-    Call<ResponseBody> deleteAssignment(@Path("id") int id);
+    @GET("assignment/{id}/get")
+    Call<ClassAssignmentResponse> getAssignmentById(@Path("id") int id);
+
+    @DELETE("assignment/{classId}")
+    Call<ResponseBody> deleteAssignment(@Path("classId") int classId);
+
+    @POST("assignment/{classId}")
+    Call<ClassAssignmentResponse> createAssignment(
+            @Path("classId") int classId,
+            @Body RequestBody body
+    );
+
+    @POST("assignment/{id}?_method=PUT")
+    Call<ClassAssignmentResponse> updateAssignment(
+            @Path("id") int id,
+            @Body RequestBody body
+    );
 
     //    Announcement
     @Multipart

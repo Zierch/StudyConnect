@@ -3,7 +3,6 @@ package com.example.studyconnect.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import com.example.studyconnect.data.response.AnnouncementResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.databinding.BottomTwoDialogBinding;
 import com.example.studyconnect.databinding.ItemForumGambarBinding;
-import com.example.studyconnect.databinding.ItemTugasListBinding;
-import com.example.studyconnect.ui.class_ui.FormClassActivity;
 import com.example.studyconnect.ui.class_ui.forum.FormForumActivity;
 import com.example.studyconnect.ui.class_ui.forum.ForumViewModel;
 import com.example.studyconnect.utils.Helper;
@@ -71,24 +68,26 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AnnouncementResponse announcementItem = announcementList.get(position);
 
-        if (announcementItem.getStatus().equals("published")){
-            String inputDate = announcementItem.getCreated_at();
-            String formattedDate = Helper.formatDate(inputDate);
+        String inputDate = announcementItem.getCreated_at();
+
+        if (announcementItem.getStatus().equals("published")) {
+            String formattedDate = Helper.formatDate("Diposting ", inputDate);
             holder.binding.tvJamUpload.setText(formattedDate);
         } else {
-            holder.binding.tvJamUpload.setText("Dijadwalkan");
+            String formattedDate = Helper.formatDate("Dijadwalkan ", inputDate);
+            holder.binding.tvJamUpload.setText(formattedDate);
         }
 
         holder.binding.tvDeskripsiForum.setText(announcementItem.getContent());
 
         if (user != null) {
-        holder.binding.tvProfileName.setText(user.getName());
+            holder.binding.tvProfileName.setText(user.getName());
             if (user.getRole().equals("student")) {
                 holder.binding.ivEditForum.setVisibility(View.GONE);
             }
         }
 
-        if (announcementItem.getAttachment_path() == null){
+        if (announcementItem.getAttachment_path() == null) {
             holder.binding.fileCard.setVisibility(View.GONE);
         } else {
 //            preview file e piye

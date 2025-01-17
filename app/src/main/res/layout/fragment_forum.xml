@@ -107,15 +107,14 @@
             </com.google.android.material.card.MaterialCardView>
 
             <include
-                layout="@layout/forum_empty_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:id="@+id/forum_empty_list"
+                layout="@layout/tugas_empty_list" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
                 android:paddingBottom="120dp"
                 tools:listitem="@layout/item_forum_text" />
         </LinearLayout>

@@ -457,6 +457,98 @@ public class StudyRepository {
         return resultLiveData;
     }
 
+    // Method get assignment by id
+    public LiveData<Result<ClassAssignmentResponse>> getAssignmentById(int id) {
+        MutableLiveData<Result<ClassAssignmentResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<ClassAssignmentResponse> call = apiService.getAssignmentById(id);
+        call.enqueue(new Callback<ClassAssignmentResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<ClassAssignmentResponse> call,
+                    @NonNull Response<ClassAssignmentResponse> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get assignments"));
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<ClassAssignmentResponse> call,
+                    @NonNull Throwable t
+            ) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method create assignment
+    public LiveData<Result<ClassAssignmentResponse>> createAssignment(
+            int classId, RequestBody body
+    ) {
+        MutableLiveData<Result<ClassAssignmentResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<ClassAssignmentResponse> call = apiService.createAssignment(classId, body);
+        call.enqueue(new Callback<ClassAssignmentResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<ClassAssignmentResponse> call,
+                    @NonNull Response<ClassAssignmentResponse> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to create assignment"));
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<ClassAssignmentResponse> call,
+                    @NonNull Throwable t
+            ) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method update assignment
+    public LiveData<Result<ClassAssignmentResponse>> updateAssignment(int id, RequestBody body) {
+        MutableLiveData<Result<ClassAssignmentResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<ClassAssignmentResponse> call = apiService.updateAssignment(id, body);
+        call.enqueue(new Callback<ClassAssignmentResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<ClassAssignmentResponse> call,
+                    @NonNull Response<ClassAssignmentResponse> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to update assignment"));
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<ClassAssignmentResponse> call,
+                    @NonNull Throwable t
+            ) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
     // Method delete assignment
     public LiveData<Result<ResponseBody>> deleteAssignment(int id) {
         MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
@@ -569,7 +661,10 @@ public class StudyRepository {
         Call<List<AnnouncementResponse>> call = apiService.getAnnouncements(classId);
         call.enqueue(new Callback<List<AnnouncementResponse>>() {
             @Override
-            public void onResponse(@NonNull Call<List<AnnouncementResponse>> call, @NonNull Response<List<AnnouncementResponse>> response) {
+            public void onResponse(
+                    @NonNull Call<List<AnnouncementResponse>> call,
+                    @NonNull Response<List<AnnouncementResponse>> response
+            ) {
                 if (response.isSuccessful() && response.body() != null) {
                     resultLiveData.postValue(new Result.Success<>(response.body()));
                 } else {
@@ -578,7 +673,10 @@ public class StudyRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<AnnouncementResponse>> call, Throwable t) {
+            public void onFailure(
+                    @NonNull Call<List<AnnouncementResponse>> call,
+                    @NonNull Throwable t
+            ) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });

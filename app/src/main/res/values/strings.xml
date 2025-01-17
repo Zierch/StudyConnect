@@ -18,8 +18,8 @@
     <string name="text_deskripsi">Deskripsi</string>
     <string name="text_nama_guru">Nama Guru</string>
     <string name="text_umumkan">Umumkan sesuatu kepada kelas anda</string>
-    <string name="text_deskripsi1">Di sinilah Anda dapat berbicara dengan kelas Anda</string>
-    <string name="text_deskripsi2">Gunakan forum untuk membagikan pengumuman, tugas, dan menjawab pertanyaan</string>
+    <string name="text_title_empty_forum">Di sinilah Anda dapat berbicara dengan kelas Anda</string>
+    <string name="text_desc_empty_forum">Gunakan forum untuk membagikan pengumuman, tugas, dan menjawab pertanyaan</string>
     <string name="text_nama_anda">Nama Guru</string>
     <string name="text_jam">21.00</string>
     <string name="text_deskripsi_pengumuman">Deskripsi pengumuman</string>
@@ -73,4 +73,14 @@
     <string name="end_session">Sesi login anda telah berakhir, harap login kembali!</string>
     <string name="text_title_empty_arsip">Disinilah Anda akan menemukan kelas yang diarsipkan</string>
     <string name="text_desc_empty_arsip">Anda dapat menemukan kelas yang diarsipkan di sini untuk diakses kembali, dipulihkan atau dihapus.</string>
+    <string name="text_judul_tugas_wajib">Judul tugas (Wajib diisi)</string>
+    <string name="icon">icon</string>
+    <string name="text_tetapkan_point">Tetapkan point total</string>
+    <string name="text_100">100</string>
+    <string name="poin">Poin</string>
+    <string name="text_batas_waktu">Tetapkan batas waktu</string>
+    <string name="jadwalkan">Jadwalkan tugas</string>
+    <string name="text_time">time</string>
+    <string name="text_jadwal">Jadwal</string>
+    <string name="text_update">Simpan</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.studyconnect.ui.adapter;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.databinding.BottomTwoDialogBinding;
 import com.example.studyconnect.databinding.ItemTugasListBinding;
 import com.example.studyconnect.ui.class_ui.assignment.ClassAssignmentViewModel;
+import com.example.studyconnect.ui.class_ui.assignment.FormTugasActivity;
 import com.example.studyconnect.utils.Helper;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -75,7 +77,13 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
         holder.binding.tvJudulTugas.setText(classAssignmentItem.getTitle());
 
         String inputDate = classAssignmentItem.getCreated_at();
-        String formattedDate = Helper.formatDate(inputDate);
+
+        String formattedDate;
+        if (classAssignmentItem.getStatus().equals("published")) {
+            formattedDate = Helper.formatDate("Diposting ", inputDate);
+        } else {
+            formattedDate = Helper.formatDate("Dijadwalkan ", inputDate);
+        }
         holder.binding.tvDiposting.setText(formattedDate);
 
         if (user != null) {
@@ -98,14 +106,14 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
             bottomSheetBinding.option1.setText(R.string.text_edit);
             bottomSheetBinding.option2.setText(R.string.text_hapus);
 
-
             bottomSheetBinding.option1.setOnClickListener(view -> {
-//                int classId = classItem.getId();
-//                sharedPreferencesManager.saveData("classId", classId);
-//                Intent intent = new Intent(holder.itemView.getContext(), FormClassActivity.class);
-//                intent.putExtra("isUpdate", true);
-//                holder.itemView.getContext().startActivity(intent);
-//
+                int classId = classAssignmentItem.getClass_id();
+                Intent intent = new Intent(holder.itemView.getContext(), FormTugasActivity.class);
+                intent.putExtra("isUpdate", true);
+                intent.putExtra("classId", classId);
+                intent.putExtra("assignmentId", classAssignmentItem.getId());
+                holder.itemView.getContext().startActivity(intent);
+
                 bottomSheetDialog.dismiss();
             });
 

@@ -116,7 +116,7 @@
 
             <TextView
                 android:id="@+id/namaFile"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
@@ -158,17 +158,17 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_time"
                 android:backgroundTint="@color/md_theme_outline_mediumContrast"
-                android:contentDescription="time" />
+                android:contentDescription="@string/text_time" />
 
             <TextView
                 android:id="@+id/waktuJadwal"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:padding="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="Jadwal"/>
+                android:text="@string/text_jadwal"/>
 
             <ImageView
                 android:id="@+id/btnRemoveJadwal"

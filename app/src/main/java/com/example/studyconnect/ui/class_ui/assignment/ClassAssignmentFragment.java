@@ -1,5 +1,6 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,10 +83,11 @@ public class ClassAssignmentFragment extends Fragment {
 //            bottomBinding.joinClass.setVisibility(teacherId != 0 ? View.GONE : View.VISIBLE);
 
             bottomBinding.btnAddTugas.setOnClickListener(v1 -> {
-//                Intent intent = new Intent(requireContext(), FormClassActivity.class);
-//                intent.putExtra("isUpdate", false);
-//                startActivity(intent);
                 bottomSheetDialog.dismiss();
+
+                Intent intent = new Intent(requireContext(), FormTugasActivity.class);
+                intent.putExtra("classId", classId);
+                startActivity(intent);
             });
 
             bottomBinding.btnAddPertanyaan.setOnClickListener(v1 -> {
@@ -137,10 +139,6 @@ public class ClassAssignmentFragment extends Fragment {
                 Helper.showLoading(binding.progressBar.progressBar, isLoading)
         );
 
-//        viewModel.getIsSuccess().observe(getViewLifecycleOwner(), isSuccess -> {
-//            getParentFragmentManager().popBackStack();
-//        });
-//
         viewModel.getErrorMsg().observe(getViewLifecycleOwner(), errorMsg ->
                 Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show()
         );
@@ -161,6 +159,12 @@ public class ClassAssignmentFragment extends Fragment {
                 tugasAdapter.setUser(user);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.fetchClassAssignment(classId);
     }
 
     @Override
