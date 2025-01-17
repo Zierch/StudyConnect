@@ -58,7 +58,6 @@
     <string name="pilihan_1">Pilihan 1</string>
     <string name="pilihan_2">Pilihan 2</string>
     <string name="pilihan_3">Pilihan 3</string>
-    <string name="text_pilihan">Pilihan</string>
     <string name="text_serahkan">Serahkan</string>
     <string name="swipe_up">Swipe Up</string>
     <string name="text_mapel">Mapel</string>
@@ -83,4 +82,5 @@
     <string name="text_time">time</string>
     <string name="text_jadwal">Jadwal</string>
     <string name="text_update">Simpan</string>
+    <string name="tugas_anda">Tugas Anda</string>
 </resources>

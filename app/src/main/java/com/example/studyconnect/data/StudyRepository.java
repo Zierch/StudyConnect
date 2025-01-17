@@ -1,6 +1,7 @@
 package com.example.studyconnect.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -518,6 +519,7 @@ public class StudyRepository {
                     @NonNull Throwable t
             ) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+                Log.e("TAG", "onFailure: " + t.getMessage());
             }
         });
 

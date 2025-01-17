@@ -13,6 +13,9 @@ import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -229,5 +232,18 @@ public class Helper {
                 year, month, day
         );
         dialog.show();
+    }
+
+
+    public static void loadImageWithGlide(Context context, String imageUrl, ImageView imageView) {
+        String newImageUrl = "https://studyconnect-api-production.up.railway.app/storage/"+imageUrl;
+        Glide.with(context)
+                .load(newImageUrl)
+                .optionalCenterCrop()
+                .into(imageView);
+    }
+
+    public static String getFileNameFromPath(String attachmentPath) {
+        return attachmentPath.substring(attachmentPath.lastIndexOf("_") + 1);
     }
 }

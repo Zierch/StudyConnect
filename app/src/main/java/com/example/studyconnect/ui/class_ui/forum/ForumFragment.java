@@ -49,7 +49,9 @@ public class ForumFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ForumViewModel.class);
 
         adapter = new ForumAdapter(announcementItem -> {
-
+            Intent intent = new Intent(requireContext(), ViewForumActivity.class);
+            intent.putExtra("announcementId", announcementItem.getId());
+            startActivity(intent);
         }, viewModel);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

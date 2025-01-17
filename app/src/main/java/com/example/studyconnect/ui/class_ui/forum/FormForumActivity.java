@@ -51,7 +51,7 @@ public class FormForumActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(ForumViewModel.class);
         isUpdate = getIntent().getBooleanExtra("isUpdate", false);
         classId = getIntent().getIntExtra("AnnouncementClassId", 0);
-        announcementId = getIntent().getIntExtra("AnnouncementId", 0);
+        announcementId = getIntent().getIntExtra("announcementId", 0);
 
         viewModel.getIsLoading().observe(this, isLoading ->
                 Helper.showLoading(binding.progressBar.progressBar, isLoading)
@@ -84,7 +84,7 @@ public class FormForumActivity extends AppCompatActivity {
 
                 if (announcementResponse.getAttachment_path() != null) {
                     String attachmentPath = announcementResponse.getAttachment_path();
-                    String fileName = attachmentPath.substring(attachmentPath.lastIndexOf("_") + 1);
+                    String fileName = Helper.getFileNameFromPath(attachmentPath);
 
                     // Tampilkan nama file di UI
                     binding.namaFile.setText(fileName);

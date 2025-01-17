@@ -67,8 +67,7 @@ public class FormTugasActivity extends AppCompatActivity {
             binding.btnScheduleAt.setVisibility(View.GONE);
             binding.btnRemoveJadwal.setVisibility(View.GONE);
 
-            viewModel.fetchAssignmentById(assignmentId);
-            viewModel.getAssignment().observe(this, assignment -> {
+            viewModel.getAssignment(assignmentId).observe(this, assignment -> {
                 binding.edtTitleTugas.setText(assignment.getTitle());
                 binding.edtDeskripsiTugas.setText(assignment.getDescription());
                 binding.edtPoinTugas.setText(String.valueOf(assignment.getMax_score()));

@@ -78,10 +78,6 @@ public class ClassAssignmentFragment extends Fragment {
             AddTugasDialogBinding bottomBinding = AddTugasDialogBinding.inflate(getLayoutInflater());
             bottomSheetDialog.setContentView(bottomBinding.getRoot());
 
-            // Menyembunyikan tombol sesuai dengan kondisi teacherId
-//            bottomBinding.createClass.setVisibility(teacherId == 0 ? View.GONE : View.VISIBLE);
-//            bottomBinding.joinClass.setVisibility(teacherId != 0 ? View.GONE : View.VISIBLE);
-
             bottomBinding.btnAddTugas.setOnClickListener(v1 -> {
                 bottomSheetDialog.dismiss();
 
@@ -118,16 +114,15 @@ public class ClassAssignmentFragment extends Fragment {
         }
 
         tugasAdapter = new TugasAdapter(classAssignmentItem -> {
-            Bundle bundle = new Bundle();
-            bundle.putInt("AssignmentId", classAssignmentItem.getId());
+            String userRole = sharedPreferencesManager.getData("role", null);
 
-//            ClassFragment classFragment = new ClassFragment();
-//            classFragment.setArguments(bundle);
-
-//            getParentFragmentManager().beginTransaction()
-//                    .replace(R.id.frame_layout, classFragment)
-//                    .addToBackStack(null)
-//                    .commit();
+            if (userRole.equals("student")) {
+                Intent intent = new Intent(getContext(), ViewStudentAssignmentActivity.class);
+                intent.putExtra("assignmentId", classAssignmentItem.getId());
+                startActivity(intent);
+            } else {
+//                Gawe GUru IKI
+            }
         }, viewModel);
 
         binding.rvListTugasKelas.setLayoutManager(new LinearLayoutManager(getContext()));

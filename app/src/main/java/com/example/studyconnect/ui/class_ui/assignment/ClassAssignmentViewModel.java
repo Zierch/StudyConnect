@@ -47,7 +47,8 @@ public class ClassAssignmentViewModel extends ViewModel {
         return classAssignment;
     }
 
-    public LiveData<ClassAssignmentResponse> getAssignment() {
+    public LiveData<ClassAssignmentResponse> getAssignment(int id) {
+        fetchAssignmentById(id);
         return assignment;
     }
 

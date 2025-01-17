@@ -10,6 +10,7 @@ import com.example.studyconnect.data.StudyRepository;
 import com.example.studyconnect.utils.Helper;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
@@ -43,6 +44,9 @@ public class AppModule {
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .cache(cache)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(chain -> {
                     Request request = chain.request();
                     SharedPreferences preferences = provideSharedPreferences(context);

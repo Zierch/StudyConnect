@@ -3,6 +3,7 @@ package com.example.studyconnect.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,9 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ViewHolder> 
         if (announcementItem.getAttachment_path() == null) {
             holder.binding.fileCard.setVisibility(View.GONE);
         } else {
-//            preview file e piye
+            holder.binding.namaGambar.setText(Helper.getFileNameFromPath(announcementItem.getAttachment_path()));
+            Log.d("TAG", "onBindViewHolder: " + announcementItem.getAttachment_path());
+            Helper.loadImageWithGlide(holder.itemView.getContext(), announcementItem.getAttachment_path(), holder.binding.gambar);
         }
 
         holder.binding.ivEditForum.setOnClickListener(v -> {

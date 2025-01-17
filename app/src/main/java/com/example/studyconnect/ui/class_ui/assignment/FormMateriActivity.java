@@ -58,8 +58,7 @@ public class FormMateriActivity extends AppCompatActivity {
         if (isUpdate) {
             binding.btnPosting.setText(R.string.text_update);
 
-            viewModel.fetchAssignmentById(assignmentId);
-            viewModel.getAssignment().observe(this, assignment -> {
+            viewModel.getAssignment(assignmentId).observe(this, assignment -> {
                 binding.edtTitleTugas.setText(assignment.getTitle());
                 binding.edtDeskripsiTugas.setText(assignment.getDescription());
                 if (
