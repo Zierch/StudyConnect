@@ -4,6 +4,7 @@ import com.example.studyconnect.data.response.AnnouncementResponse;
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
+import com.example.studyconnect.data.response.MaterialResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.data.response.UserResponse;
 
@@ -76,8 +77,8 @@ public interface ApiService {
     @GET("assignment/{id}/get")
     Call<ClassAssignmentResponse> getAssignmentById(@Path("id") int id);
 
-    @DELETE("assignment/{classId}")
-    Call<ResponseBody> deleteAssignment(@Path("classId") int classId);
+    @DELETE("assignment/{id}")
+    Call<ResponseBody> deleteAssignment(@Path("id") int id);
 
     @Multipart
     @POST("assignment/{classId}")
@@ -104,6 +105,37 @@ public interface ApiService {
             @Part("max_score") RequestBody maxScore,
             @Part("type") RequestBody typeAssignment,
             @Part("options") RequestBody options
+    );
+
+    //    Materi
+    @GET("material/{classId}")
+    Call<List<MaterialResponse>> getMaterialByClassId(@Path("classId") int classId);
+
+    @GET("material/{id}/get")
+    Call<MaterialResponse> getMaterialById(@Path("id") int id);
+
+    @DELETE("material/{classId}")
+    Call<ResponseBody> deleteMaterialById(@Path("classId") int classId);
+
+    @Multipart
+    @POST("material/{classId}")
+    Call<MaterialResponse> createMaterial(
+            @Path("classId") int classId,
+            @Part("title") RequestBody title,
+            @Part("description") RequestBody description,
+            @Part MultipartBody.Part attachment,
+            @Part("teacher_id") RequestBody teacherId
+    );
+
+    @Multipart
+    @POST("material/{id}?_method=PUT")
+    Call<MaterialResponse> updateMaterial(
+            @Path("classId") int classId,
+            @Path("id") int id,
+            @Part("title") RequestBody title,
+            @Part("description") RequestBody description,
+            @Part MultipartBody.Part attachment,
+            @Part("teacher_id") RequestBody teacherId
     );
 
     //    Announcement

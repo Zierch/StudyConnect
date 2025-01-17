@@ -7,11 +7,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.studyconnect.data.StudyRepository;
+import com.example.studyconnect.data.model.ListTugasKelas;
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
+import com.example.studyconnect.data.response.MaterialResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.utils.Result;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,11 +40,17 @@ public class ClassAssignmentViewModel extends ViewModel {
     }
 
     private final MutableLiveData<List<ClassAssignmentResponse>> classAssignment = new MutableLiveData<>();
+    private final MutableLiveData<List<MaterialResponse>> materialItems = new MutableLiveData<>();
+    private final MutableLiveData<List<ListTugasKelas>> tugasClassList = new MutableLiveData<>();
     private final MutableLiveData<ClassAssignmentResponse> assignment = new MutableLiveData<>();
     private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
+
+    public void setTugasClassList(List<ListTugasKelas> tugasClassList) {
+        this.tugasClassList.postValue(tugasClassList);
+    }
 
     public LiveData<List<ClassAssignmentResponse>> getClassAssignment() {
         return classAssignment;
@@ -50,6 +59,14 @@ public class ClassAssignmentViewModel extends ViewModel {
     public LiveData<ClassAssignmentResponse> getAssignment(int id) {
         fetchAssignmentById(id);
         return assignment;
+    }
+
+    public LiveData<List<MaterialResponse>> getMaterialItems() {
+        return materialItems;
+    }
+
+    public LiveData<List<ListTugasKelas>> getTugasClassList() {
+        return tugasClassList;
     }
 
     public LiveData<RegisterResponse> getUser() {
@@ -68,6 +85,56 @@ public class ClassAssignmentViewModel extends ViewModel {
         return errorMsg;
     }
 
+    public void fetchTugasClassList(int classId) {
+        fetchMaterials(classId);
+        fetchClassAssignment(classId);
+    }
+
+    public void fetchMaterials(int classId) {
+        isLoading.postValue(true);
+
+        LiveData<Result<List<MaterialResponse>>> liveData = repository.getMaterialByClassId(classId);
+        liveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+                } else if (result instanceof Result.Success) {
+                    Result.Success<List<MaterialResponse>> successResult =
+                            (Result.Success<List<MaterialResponse>>) result;
+                    materialItems.postValue(successResult.getData());
+                    List<ListTugasKelas> combinedList = new ArrayList<>();
+                    successResult.getData().forEach(item -> {
+                        ListTugasKelas tugas = new ListTugasKelas(
+                                item.getId(),
+                                item.getTitle(),
+                                item.getClass_id(),
+                                "none", // type tidak ada di materials'
+                                item.getStatus(),
+                                item.getCreated_at(),
+                                true // isMateri = true
+                        );
+                        combinedList.add(tugas);
+                    });
+
+                    List<ListTugasKelas> tugas = tugasClassList.getValue();
+
+                    if (tugas != null) {
+                        combinedList.addAll(tugas);
+                    }
+
+                    tugasClassList.postValue(combinedList);
+
+                    isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue(errorResult.getError());
+
+                    isLoading.postValue(false);
+                }
+            }
+        });
+    }
+
     public void fetchClassAssignment(int classId) {
         isLoading.postValue(true);
 
@@ -79,6 +146,28 @@ public class ClassAssignmentViewModel extends ViewModel {
                 } else if (result instanceof Result.Success) {
                     Result.Success<List<ClassAssignmentResponse>> successResult = (Result.Success<List<ClassAssignmentResponse>>) result;
                     classAssignment.postValue(successResult.getData());
+                    List<ListTugasKelas> combinedList = new ArrayList<>();
+                    successResult.getData().forEach(item -> {
+                        ListTugasKelas tugas = new ListTugasKelas(
+                                item.getId(),
+                                item.getTitle(),
+                                item.getClass_id(),
+                                item.getType(),
+                                item.getStatus(),
+                                item.getCreated_at(),
+                                false
+                        );
+
+                        combinedList.add(tugas);
+                    });
+
+                    List<ListTugasKelas> tugas = tugasClassList.getValue();
+
+                    if (tugas != null) {
+                        combinedList.addAll(tugas);
+                    }
+
+                    tugasClassList.postValue(combinedList);
 
                     isLoading.postValue(false);
                 } else if (result instanceof Result.Error<?>) {
@@ -318,7 +407,8 @@ public class ClassAssignmentViewModel extends ViewModel {
                     isLoading.postValue(true);
                 } else if (result instanceof Result.Success) {
                     errorMsg.postValue("Tugas berhasil dihapus");
-                    fetchClassAssignment(classId);
+                    setTugasClassList(null);
+                    fetchTugasClassList(classId);
 
                     isLoading.postValue(false);
                 } else if (result instanceof Result.Error<?>) {

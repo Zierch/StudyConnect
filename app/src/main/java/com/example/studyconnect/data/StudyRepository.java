@@ -12,6 +12,7 @@ import com.example.studyconnect.data.response.AnnouncementResponse;
 import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
+import com.example.studyconnect.data.response.MaterialResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.data.response.UserResponse;
 import com.example.studyconnect.utils.Result;
@@ -579,6 +580,163 @@ public class StudyRepository {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method get class assignment by class id
+    public LiveData<Result<List<MaterialResponse>>> getMaterialByClassId(int classId) {
+        MutableLiveData<Result<List<MaterialResponse>>> resultLiveData = new MutableLiveData<>();
+
+        Call<List<MaterialResponse>> call = apiService.getMaterialByClassId(classId);
+        call.enqueue(new Callback<List<MaterialResponse>>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<MaterialResponse>> call,
+                    @NonNull Response<List<MaterialResponse>> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get materials"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<MaterialResponse>> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method get assignment by id
+    public LiveData<Result<MaterialResponse>> getMaterialById(int id) {
+        MutableLiveData<Result<MaterialResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<MaterialResponse> call = apiService.getMaterialById(id);
+        call.enqueue(new Callback<MaterialResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<MaterialResponse> call,
+                    @NonNull Response<MaterialResponse> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get material"));
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<MaterialResponse> call,
+                    @NonNull Throwable t
+            ) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method create assignment
+    public LiveData<Result<MaterialResponse>> createMaterial(
+            int classId, RequestBody title, RequestBody desc,
+            MultipartBody.Part attachment, RequestBody teacherId
+    ) {
+        MutableLiveData<Result<MaterialResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<MaterialResponse> call = apiService.createMaterial(
+                classId, title, desc, attachment, teacherId
+        );
+        call.enqueue(new Callback<MaterialResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<MaterialResponse> call,
+                    @NonNull Response<MaterialResponse> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to create material"));
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<MaterialResponse> call,
+                    @NonNull Throwable t
+            ) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method update assignment
+    public LiveData<Result<MaterialResponse>> updateMaterial(
+            int classId, int id, RequestBody title, RequestBody desc,
+            MultipartBody.Part attachment, RequestBody teacherId
+    ) {
+        MutableLiveData<Result<MaterialResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<MaterialResponse> call = apiService.updateMaterial(
+                classId, id, title, desc, attachment, teacherId
+        );
+        call.enqueue(new Callback<MaterialResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<MaterialResponse> call,
+                    @NonNull Response<MaterialResponse> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to update material"));
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<MaterialResponse> call,
+                    @NonNull Throwable t
+            ) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method delete assignment
+    public LiveData<Result<ResponseBody>> deleteMaterial(int id) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.deleteMaterialById(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Response<ResponseBody> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to delete material"));
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Throwable t
+            ) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });

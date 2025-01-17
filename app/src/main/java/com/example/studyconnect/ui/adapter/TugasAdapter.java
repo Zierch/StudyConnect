@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studyconnect.R;
-import com.example.studyconnect.data.response.ClassAssignmentResponse;
+import com.example.studyconnect.data.model.ListTugasKelas;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.databinding.BottomTwoDialogBinding;
 import com.example.studyconnect.databinding.ItemTugasListBinding;
@@ -26,12 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> {
-    private final List<ClassAssignmentResponse> classAssignmentList = new ArrayList<>();
+    private final List<ListTugasKelas> listTugasKelas = new ArrayList<>();
     private final OnItemClickListener onItemClickListener;
     private final ClassAssignmentViewModel viewModel;
     private RegisterResponse user;
 
-    // Constructor untuk menerima listener
     public TugasAdapter(
             OnItemClickListener onItemClickListener,
             ClassAssignmentViewModel viewModel
@@ -42,7 +41,7 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
 
     // Interface untuk click listener
     public interface OnItemClickListener {
-        void onItemClick(ClassAssignmentResponse classAssignmentItem);
+        void onItemClick(ListTugasKelas tugasKelasItem);
     }
 
     // Set data user
@@ -53,11 +52,11 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setClassAssignmentList(
-            List<ClassAssignmentResponse> newClassAssignmentList
+    public void setlistTugasKelas(
+            List<ListTugasKelas> newlistTugasKelas
     ) {
-        classAssignmentList.clear();
-        classAssignmentList.addAll(newClassAssignmentList);
+        listTugasKelas.clear();
+        listTugasKelas.addAll(newlistTugasKelas);
         notifyDataSetChanged();
     }
 
@@ -73,26 +72,29 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ClassAssignmentResponse classAssignmentItem = classAssignmentList.get(position);
+        ListTugasKelas tugasKelasItem = listTugasKelas.get(position);
 
-        holder.binding.tvJudulTugas.setText(classAssignmentItem.getTitle());
+        holder.binding.tvJudulTugas.setText(tugasKelasItem.getTitle());
 
-        String inputDate = classAssignmentItem.getCreated_at();
+        String inputDate = tugasKelasItem.getCreated_at();
 
-        switch (classAssignmentItem.getType()) {
+        switch (tugasKelasItem.getType()) {
             case "multiple_choice":
                 holder.binding.ivIconItem.setImageResource(R.drawable.ic_multiple_choice);
                 break;
             case "file_upload":
-                holder.binding.ivIconItem.setImageResource(R.drawable.ic_materi_circle);
+                holder.binding.ivIconItem.setImageResource(R.drawable.ic_file_upload_circle);
+                break;
+            case "essay":
+                holder.binding.ivIconItem.setImageResource(R.drawable.ic_tugas_circle);
                 break;
             default:
-                holder.binding.ivIconItem.setImageResource(R.drawable.ic_tugas_circle);
+                holder.binding.ivIconItem.setImageResource(R.drawable.ic_materi_circle);
                 break;
         }
 
         String formattedDate;
-        if (classAssignmentItem.getStatus().equals("published")) {
+        if (tugasKelasItem.getStatus().equals("published")) {
             formattedDate = Helper.formatDate("Diposting ", inputDate);
         } else {
             formattedDate = Helper.formatDate("Dijadwalkan ", inputDate);
@@ -120,24 +122,25 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
             bottomSheetBinding.option2.setText(R.string.text_hapus);
 
             bottomSheetBinding.option1.setOnClickListener(view -> {
-                int classId = classAssignmentItem.getClass_id();
+                int classId = tugasKelasItem.getClass_id();
                 Intent intent = null;
 
-                switch (classAssignmentItem.getType()) {
+                switch (tugasKelasItem.getType()) {
                     case "multiple_choice":
                         break;
                     case "file_upload":
-                        intent = new Intent(holder.itemView.getContext(), FormMateriActivity.class);
+                    case "essay":
+                        intent = new Intent(holder.itemView.getContext(), FormTugasActivity.class);
                         break;
                     default:
-                        intent = new Intent(holder.itemView.getContext(), FormTugasActivity.class);
+                        intent = new Intent(holder.itemView.getContext(), FormMateriActivity.class);
                         break;
                 }
 
                 assert intent != null;
                 intent.putExtra("isUpdate", true);
                 intent.putExtra("classId", classId);
-                intent.putExtra("assignmentId", classAssignmentItem.getId());
+                intent.putExtra("assignmentId", tugasKelasItem.getId());
                 holder.itemView.getContext().startActivity(intent);
 
                 bottomSheetDialog.dismiss();
@@ -145,8 +148,8 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
 
             bottomSheetBinding.option2.setOnClickListener(view -> {
                 viewModel.deleteAssignment(
-                        classAssignmentItem.getId(),
-                        classAssignmentItem.getClass_id()
+                        tugasKelasItem.getId(),
+                        tugasKelasItem.getClass_id()
                 );
 
                 bottomSheetDialog.dismiss();
@@ -158,13 +161,13 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
 
         // Set onClickListener
         holder.itemView.setOnClickListener(v ->
-                onItemClickListener.onItemClick(classAssignmentItem)
+                onItemClickListener.onItemClick(tugasKelasItem)
         );
     }
 
     @Override
     public int getItemCount() {
-        return classAssignmentList.size();
+        return listTugasKelas.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

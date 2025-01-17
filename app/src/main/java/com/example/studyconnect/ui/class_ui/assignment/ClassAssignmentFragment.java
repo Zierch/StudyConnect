@@ -1,5 +1,6 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -130,7 +131,7 @@ public class ClassAssignmentFragment extends Fragment {
     }
 
     private void initObserver() {
-        viewModel.fetchClassAssignment(classId);
+//        viewModel.fetchTugasClassList(classId);
         viewModel.fetchUser(userId);
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading ->
@@ -141,12 +142,12 @@ public class ClassAssignmentFragment extends Fragment {
                 Toast.makeText(requireActivity(), errorMsg, Toast.LENGTH_SHORT).show()
         );
 
-        viewModel.getClassAssignment().observe(getViewLifecycleOwner(), classAssignment -> {
-            if (classAssignment != null && !classAssignment.isEmpty()) {
+        viewModel.getTugasClassList().observe(getViewLifecycleOwner(), tugasClassList -> {
+            if (tugasClassList != null && !tugasClassList.isEmpty()) {
                 binding.rvListTugasKelas.setVisibility(View.VISIBLE);
                 binding.includeTugasEmptyList.emptyList.setVisibility(View.GONE);
-                tugasAdapter.setClassAssignmentList(classAssignment);
-            } else {
+                tugasAdapter.setlistTugasKelas(tugasClassList);
+            }else {
                 binding.rvListTugasKelas.setVisibility(View.GONE);
                 binding.includeTugasEmptyList.emptyList.setVisibility(View.VISIBLE);
             }
@@ -159,10 +160,14 @@ public class ClassAssignmentFragment extends Fragment {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.fetchClassAssignment(classId);
+        Toast.makeText(requireContext(), "onResumeStart", Toast.LENGTH_SHORT).show();
+        viewModel.setTugasClassList(null);
+        viewModel.fetchTugasClassList(classId);
+        tugasAdapter.notifyDataSetChanged();
     }
 
     @Override
