@@ -161,7 +161,7 @@ public class ClassAssignmentViewModel extends ViewModel {
                 typeAssignment = "multiple_choice";
                 break;
             case 3:
-                typeAssignment = "with_file";
+                typeAssignment = "file_upload";
                 options = "";
                 break;
             default:
@@ -247,7 +247,7 @@ public class ClassAssignmentViewModel extends ViewModel {
                 typeAssignment = "multiple_choice";
                 break;
             case 3:
-                typeAssignment = "with_file";
+                typeAssignment = "file_upload";
                 options = "";
                 break;
             default:

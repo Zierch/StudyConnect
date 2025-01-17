@@ -28,6 +28,9 @@ import java.util.Random;
 import java.util.TimeZone;
 
 public class Helper {
+    public static final int REQUEST_CODE_PICK_FILE = 1001;
+    public static final int REQUEST_CODE_PICK_IMAGE = 1002;
+    public static final int REQUEST_CODE_CAPTURE_IMAGE = 1003;
     private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
     private static final int LENGTH = 8;
 
@@ -55,10 +58,18 @@ public class Helper {
         }
     }
 
-    public static String getFileName(String attachmenet_path) {
-        int lastSlashIndex = attachmenet_path.lastIndexOf('/');
+    public static String getFileName(String attachment_path) {
+        if (attachment_path == null || attachment_path.isEmpty()) {
+            return "";
+        }
 
-        return attachmenet_path.substring(lastSlashIndex + 1);
+        int lastSlashIndex = attachment_path.lastIndexOf('/');
+
+        if (lastSlashIndex == -1) {
+            return attachment_path;
+        }
+
+        return attachment_path.substring(lastSlashIndex + 1);
     }
 
     public static File copyFileToAppDirectory(Context context, Uri uri) {

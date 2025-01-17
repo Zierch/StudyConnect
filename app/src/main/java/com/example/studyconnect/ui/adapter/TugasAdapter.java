@@ -17,6 +17,7 @@ import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.databinding.BottomTwoDialogBinding;
 import com.example.studyconnect.databinding.ItemTugasListBinding;
 import com.example.studyconnect.ui.class_ui.assignment.ClassAssignmentViewModel;
+import com.example.studyconnect.ui.class_ui.assignment.FormMateriActivity;
 import com.example.studyconnect.ui.class_ui.assignment.FormTugasActivity;
 import com.example.studyconnect.utils.Helper;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -63,7 +64,7 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TugasAdapter.ViewHolder(ItemTugasListBinding.inflate(
+        return new ViewHolder(ItemTugasListBinding.inflate(
                 LayoutInflater.from(parent.getContext()),
                 parent,
                 false)
@@ -77,6 +78,18 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
         holder.binding.tvJudulTugas.setText(classAssignmentItem.getTitle());
 
         String inputDate = classAssignmentItem.getCreated_at();
+
+        switch (classAssignmentItem.getType()) {
+            case "multiple_choice":
+                holder.binding.ivIconItem.setImageResource(R.drawable.ic_multiple_choice);
+                break;
+            case "file_upload":
+                holder.binding.ivIconItem.setImageResource(R.drawable.ic_materi_circle);
+                break;
+            default:
+                holder.binding.ivIconItem.setImageResource(R.drawable.ic_tugas_circle);
+                break;
+        }
 
         String formattedDate;
         if (classAssignmentItem.getStatus().equals("published")) {
@@ -108,7 +121,20 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
 
             bottomSheetBinding.option1.setOnClickListener(view -> {
                 int classId = classAssignmentItem.getClass_id();
-                Intent intent = new Intent(holder.itemView.getContext(), FormTugasActivity.class);
+                Intent intent = null;
+
+                switch (classAssignmentItem.getType()) {
+                    case "multiple_choice":
+                        break;
+                    case "file_upload":
+                        intent = new Intent(holder.itemView.getContext(), FormMateriActivity.class);
+                        break;
+                    default:
+                        intent = new Intent(holder.itemView.getContext(), FormTugasActivity.class);
+                        break;
+                }
+
+                assert intent != null;
                 intent.putExtra("isUpdate", true);
                 intent.putExtra("classId", classId);
                 intent.putExtra("assignmentId", classAssignmentItem.getId());

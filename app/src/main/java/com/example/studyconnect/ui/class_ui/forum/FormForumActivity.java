@@ -1,5 +1,9 @@
 package com.example.studyconnect.ui.class_ui.forum;
 
+import static com.example.studyconnect.utils.Helper.REQUEST_CODE_CAPTURE_IMAGE;
+import static com.example.studyconnect.utils.Helper.REQUEST_CODE_PICK_FILE;
+import static com.example.studyconnect.utils.Helper.REQUEST_CODE_PICK_IMAGE;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,10 +35,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class FormForumActivity extends AppCompatActivity {
-    // Konstanta untuk request code
-    private static final int REQUEST_CODE_PICK_FILE = 1001;
-    private static final int REQUEST_CODE_PICK_IMAGE = 1002;
-    private static final int REQUEST_CODE_CAPTURE_IMAGE = 1003;
     private AddForumDialogBinding binding;
     private ForumViewModel viewModel;
     private boolean isUpdate = false;

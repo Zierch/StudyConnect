@@ -1,5 +1,9 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
+import static com.example.studyconnect.utils.Helper.REQUEST_CODE_CAPTURE_IMAGE;
+import static com.example.studyconnect.utils.Helper.REQUEST_CODE_PICK_FILE;
+import static com.example.studyconnect.utils.Helper.REQUEST_CODE_PICK_IMAGE;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,16 +32,13 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class FormTugasActivity extends AppCompatActivity {
-    private static final int REQUEST_CODE_PICK_FILE = 1001;
-    private static final int REQUEST_CODE_PICK_IMAGE = 1002;
-    private static final int REQUEST_CODE_CAPTURE_IMAGE = 1003;
     private ActivityFormTugasBinding binding;
     private ClassAssignmentViewModel viewModel;
     private int classId;
+    private int assignmentId;
+    private boolean isUpdate;
     private String scheduledAt;
     private String dueDate;
-    private Boolean isUpdate;
-    private int assignmentId;
     private File photoFile, file;
 
 
@@ -72,7 +73,13 @@ public class FormTugasActivity extends AppCompatActivity {
                 binding.edtDeskripsiTugas.setText(assignment.getDescription());
                 binding.edtPoinTugas.setText(String.valueOf(assignment.getMax_score()));
                 binding.switchDueDate.setChecked(assignment.getDue_date() != null);
-                setFileShow(assignment.getAttachment_path());
+
+                if (
+                        assignment.getAttachment_path() != null &&
+                                !assignment.getAttachment_path().isEmpty()
+                ) {
+                    setFileShow(assignment.getAttachment_path());
+                }
 
                 if (assignment.getDue_date() != null) {
                     setDueDate(Helper.formatDateYMDHI(assignment.getDue_date()));
