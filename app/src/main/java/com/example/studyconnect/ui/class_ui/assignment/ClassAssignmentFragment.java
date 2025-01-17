@@ -91,16 +91,19 @@ public class ClassAssignmentFragment extends Fragment {
             });
 
             bottomBinding.btnAddPertanyaan.setOnClickListener(v1 -> {
-//                Intent intent = new Intent(requireContext(), FormClassActivity.class);
-//                intent.putExtra("isUpdate", false);
-//                startActivity(intent);
                 bottomSheetDialog.dismiss();
+
+                Intent intent = new Intent(requireContext(), FormTugasActivity.class);
+                intent.putExtra("classId", classId);
+                startActivity(intent);
             });
 
             bottomBinding.btnAddMateri.setOnClickListener(v1 -> {
-//                Intent intent = new Intent(requireContext(), );
-//                startActivity(intent);
                 bottomSheetDialog.dismiss();
+
+                Intent intent = new Intent(requireContext(), FormMateriActivity.class);
+                intent.putExtra("classId", classId);
+                startActivity(intent);
             });
 
             bottomSheetDialog.show();

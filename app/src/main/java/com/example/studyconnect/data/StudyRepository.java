@@ -489,11 +489,16 @@ public class StudyRepository {
 
     // Method create assignment
     public LiveData<Result<ClassAssignmentResponse>> createAssignment(
-            int classId, RequestBody body
+            int classId, RequestBody title, RequestBody desc, MultipartBody.Part attachment,
+            RequestBody dueDate, RequestBody points, RequestBody typeAssignment,
+            RequestBody options, RequestBody scheduleAt
     ) {
         MutableLiveData<Result<ClassAssignmentResponse>> resultLiveData = new MutableLiveData<>();
 
-        Call<ClassAssignmentResponse> call = apiService.createAssignment(classId, body);
+        Call<ClassAssignmentResponse> call = apiService.createAssignment(
+                classId, title, desc, attachment, dueDate, points,
+                typeAssignment, options, scheduleAt
+        );
         call.enqueue(new Callback<ClassAssignmentResponse>() {
             @Override
             public void onResponse(
@@ -520,10 +525,16 @@ public class StudyRepository {
     }
 
     // Method update assignment
-    public LiveData<Result<ClassAssignmentResponse>> updateAssignment(int id, RequestBody body) {
+    public LiveData<Result<ClassAssignmentResponse>> updateAssignment(
+            int id, RequestBody title, RequestBody desc, MultipartBody.Part attachment,
+            RequestBody dueDate, RequestBody points, RequestBody typeAssignment,
+            RequestBody options
+    ) {
         MutableLiveData<Result<ClassAssignmentResponse>> resultLiveData = new MutableLiveData<>();
 
-        Call<ClassAssignmentResponse> call = apiService.updateAssignment(id, body);
+        Call<ClassAssignmentResponse> call = apiService.updateAssignment(
+                id, title, desc, attachment, dueDate, points, typeAssignment, options
+        );
         call.enqueue(new Callback<ClassAssignmentResponse>() {
             @Override
             public void onResponse(

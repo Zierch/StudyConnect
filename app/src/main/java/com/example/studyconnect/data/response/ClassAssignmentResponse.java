@@ -3,8 +3,10 @@ package com.example.studyconnect.data.response;
 import androidx.annotation.NonNull;
 
 public class ClassAssignmentResponse {
-    private Object attachment_path;
+    private int id;
     private int class_id;
+    private int max_score;
+    private String attachment_path;
     private String due_date;
     private String description;
     private String scheduled_at;
@@ -12,14 +14,14 @@ public class ClassAssignmentResponse {
     private String title;
     private String type;
     private String updated_at;
-    private int max_score;
     private String options;
-    private int id;
     private String status;
 
     public ClassAssignmentResponse(
-            Object attachment_path,
             int class_id,
+            int max_score,
+            int id,
+            String attachment_path,
             String due_date,
             String description,
             String scheduled_at,
@@ -27,9 +29,7 @@ public class ClassAssignmentResponse {
             String title,
             String type,
             String updated_at,
-            int max_score,
             String options,
-            int id,
             String status) {
         this.attachment_path = attachment_path;
         this.class_id = class_id;
@@ -46,11 +46,11 @@ public class ClassAssignmentResponse {
         this.status = status;
     }
 
-    public Object getAttachment_path() {
+    public String getAttachment_path() {
         return attachment_path;
     }
 
-    public void setAttachment_path(Object attachment_path) {
+    public void setAttachment_path(String attachment_path) {
         this.attachment_path = attachment_path;
     }
 

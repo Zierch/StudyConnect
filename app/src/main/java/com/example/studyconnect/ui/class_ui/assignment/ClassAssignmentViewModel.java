@@ -11,13 +11,15 @@ import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.utils.Result;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
@@ -137,7 +139,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
     public void createAssignment(
             int classId, String title, String description, String dueDate,
-            String scheduleAt, String points, String fileUrl, int type
+            String scheduleAt, String points, File attachmentFile, int type
     ) {
         isLoading.postValue(true);
         isSuccess.postValue(false);
@@ -153,31 +155,55 @@ public class ClassAssignmentViewModel extends ViewModel {
         switch (type) {
             case 1:
                 typeAssignment = "essay";
+                options = "";
                 break;
             case 2:
                 typeAssignment = "multiple_choice";
                 break;
             case 3:
                 typeAssignment = "with_file";
+                options = "";
                 break;
             default:
                 break;
         }
 
-        RequestBody body = new FormBody.Builder()
-                .add("title", title)
-                .add("description", description != null ? description : "")
-                .add("attachment_path", fileUrl != null ? fileUrl : "")
-                .add("due_date", dueDate != null ? dueDate : "")
-                .add("max_score", points)
-                .add("class_id", String.valueOf(classId))
-                .add("status", scheduleAt != null ? "scheduleAt" : "published")
-                .add("type", typeAssignment)
-                .add("options", options)
-                .build();
+        MultipartBody.Part filePart = null;
+        if (attachmentFile != null) {
+            RequestBody fileRequestBody = RequestBody.create(
+                    MediaType.parse("multipart/form-data"),
+                    attachmentFile
+            );
+            filePart = MultipartBody.Part.createFormData(
+                    "attachment",
+                    attachmentFile.getName(),
+                    fileRequestBody
+            );
+        }
+
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody descriptionBody = RequestBody.create(
+                MediaType.parse("text/plain"), description != null ? description : ""
+        );
+        RequestBody dueDateBody = RequestBody.create(
+                MediaType.parse("text/plain"), dueDate != null ? dueDate : ""
+        );
+        RequestBody scheduleAtBody = RequestBody.create(
+                MediaType.parse("text/plain"), scheduleAt != null ? scheduleAt : ""
+        );
+        RequestBody maxScoreBody = RequestBody.create(
+                MediaType.parse("text/plain"), String.valueOf(points)
+        );
+        RequestBody typeAssignmentBody = RequestBody.create(
+                MediaType.parse("text/plain"), typeAssignment
+        );
+        RequestBody optionsBody = RequestBody.create(MediaType.parse("text/plain"), options);
 
         LiveData<Result<ClassAssignmentResponse>> liveData =
-                repository.createAssignment(classId, body);
+                repository.createAssignment(
+                        classId, titleBody, descriptionBody, filePart, dueDateBody, maxScoreBody,
+                        typeAssignmentBody, optionsBody, scheduleAtBody
+                );
         liveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Loading) {
@@ -198,8 +224,8 @@ public class ClassAssignmentViewModel extends ViewModel {
     }
 
     public void updateAssignment(
-            int assignmentId, int classId, String title, String description, String dueDate,
-            String scheduleAt, String points, String fileUrl, int type
+            int id, String title, String description, String dueDate, String points,
+            File attachmentFile, int type
     ) {
         isLoading.postValue(true);
         isSuccess.postValue(false);
@@ -215,31 +241,53 @@ public class ClassAssignmentViewModel extends ViewModel {
         switch (type) {
             case 1:
                 typeAssignment = "essay";
+                options = "";
                 break;
             case 2:
                 typeAssignment = "multiple_choice";
                 break;
             case 3:
                 typeAssignment = "with_file";
+                options = "";
                 break;
             default:
                 break;
         }
 
-        RequestBody body = new FormBody.Builder()
-                .add("title", title)
-                .add("description", description != null ? description : "")
-                .add("attachment_path", fileUrl != null ? fileUrl : "")
-                .add("due_date", dueDate != null ? dueDate : "")
-                .add("max_score", points)
-                .add("class_id", String.valueOf(classId))
-                .add("status", scheduleAt != null ? "scheduleAt" : "published")
-                .add("type", typeAssignment)
-                .add("options", options)
-                .build();
+        MultipartBody.Part filePart = null;
+        if (attachmentFile != null) {
+            RequestBody fileRequestBody = RequestBody.create(
+                    MediaType.parse("multipart/form-data"),
+                    attachmentFile
+            );
+            filePart = MultipartBody.Part.createFormData(
+                    "attachment",
+                    attachmentFile.getName(),
+                    fileRequestBody
+            );
+        }
+
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody descriptionBody = RequestBody.create(
+                MediaType.parse("text/plain"), description != null ? description : ""
+        );
+        RequestBody dueDateBody = RequestBody.create(
+                MediaType.parse("text/plain"), dueDate != null ? dueDate : ""
+        );
+        RequestBody maxScoreBody = RequestBody.create(
+                MediaType.parse("text/plain"), String.valueOf(points)
+        );
+        RequestBody typeAssignmentBody = RequestBody.create(
+                MediaType.parse("text/plain"), typeAssignment
+        );
+        RequestBody optionsBody = RequestBody.create(MediaType.parse("text/plain"), options);
+
 
         LiveData<Result<ClassAssignmentResponse>> liveData =
-                repository.updateAssignment(assignmentId, body);
+                repository.updateAssignment(
+                        id, titleBody, descriptionBody, filePart, dueDateBody, maxScoreBody,
+                        typeAssignmentBody, optionsBody
+                );
         liveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Loading) {

@@ -79,16 +79,31 @@ public interface ApiService {
     @DELETE("assignment/{classId}")
     Call<ResponseBody> deleteAssignment(@Path("classId") int classId);
 
+    @Multipart
     @POST("assignment/{classId}")
     Call<ClassAssignmentResponse> createAssignment(
             @Path("classId") int classId,
-            @Body RequestBody body
+            @Part("title") RequestBody title,
+            @Part("description") RequestBody description,
+            @Part MultipartBody.Part attachment,
+            @Part("due_date") RequestBody dueDate,
+            @Part("max_score") RequestBody maxScore,
+            @Part("type") RequestBody typeAssignment,
+            @Part("options") RequestBody options,
+            @Part("scheduled_at") RequestBody scheduledAt
     );
 
+    @Multipart
     @POST("assignment/{id}?_method=PUT")
     Call<ClassAssignmentResponse> updateAssignment(
             @Path("id") int id,
-            @Body RequestBody body
+            @Part("title") RequestBody title,
+            @Part("description") RequestBody description,
+            @Part MultipartBody.Part attachment,
+            @Part("due_date") RequestBody dueDate,
+            @Part("max_score") RequestBody maxScore,
+            @Part("type") RequestBody typeAssignment,
+            @Part("options") RequestBody options
     );
 
     //    Announcement

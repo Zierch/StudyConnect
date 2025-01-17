@@ -145,7 +145,8 @@ public class ForumViewModel extends ViewModel {
         }
 
         // Memanggil repository
-        LiveData<Result<ResponseBody>> createAnnouncementLiveData = repository.createAnnouncement(classId, contentBody, scheduledAtBody, filePart);
+        LiveData<Result<ResponseBody>> createAnnouncementLiveData =
+                repository.createAnnouncement(classId, contentBody, scheduledAtBody, filePart);
         createAnnouncementLiveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Success) {

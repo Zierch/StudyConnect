@@ -1,26 +1,36 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.ActivityFormTugasBinding;
 import com.example.studyconnect.databinding.BottomTwoDialogBinding;
+import com.example.studyconnect.databinding.BottomUploadDialogBinding;
 import com.example.studyconnect.utils.Helper;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.io.File;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class FormTugasActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE_PICK_FILE = 1001;
+    private static final int REQUEST_CODE_PICK_IMAGE = 1002;
+    private static final int REQUEST_CODE_CAPTURE_IMAGE = 1003;
     private ActivityFormTugasBinding binding;
     private ClassAssignmentViewModel viewModel;
     private int classId;
@@ -28,6 +38,8 @@ public class FormTugasActivity extends AppCompatActivity {
     private String dueDate;
     private Boolean isUpdate;
     private int assignmentId;
+    private File photoFile, file;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +63,8 @@ public class FormTugasActivity extends AppCompatActivity {
     private void initUpdate() {
         if (isUpdate) {
             binding.btnPosting.setText(R.string.text_update);
+            binding.btnScheduleAt.setVisibility(View.GONE);
+            binding.btnRemoveJadwal.setVisibility(View.GONE);
 
             viewModel.fetchAssignmentById(assignmentId);
             viewModel.getAssignment().observe(this, assignment -> {
@@ -58,6 +72,7 @@ public class FormTugasActivity extends AppCompatActivity {
                 binding.edtDeskripsiTugas.setText(assignment.getDescription());
                 binding.edtPoinTugas.setText(String.valueOf(assignment.getMax_score()));
                 binding.switchDueDate.setChecked(assignment.getDue_date() != null);
+                setFileShow(assignment.getAttachment_path());
 
                 if (assignment.getDue_date() != null) {
                     setDueDate(Helper.formatDateYMDHI(assignment.getDue_date()));
@@ -67,7 +82,16 @@ public class FormTugasActivity extends AppCompatActivity {
                     setScheduledAt(Helper.formatDateYMDHI(assignment.getScheduled_at()));
                 }
             });
+        } else {
+            binding.btnScheduleAt.setVisibility(View.VISIBLE);
+            binding.btnRemoveJadwal.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setFileShow(String attachment_path) {
+        binding.namaFile.setText(Helper.getFileName(attachment_path));
+        binding.btnRemove.setVisibility(View.VISIBLE);
+        binding.btnAddFile.setEnabled(false);
     }
 
     private void initObserver() {
@@ -86,26 +110,96 @@ public class FormTugasActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "QueryPermissionsNeeded"})
     private void initView() {
         binding.btnPosting.setOnClickListener(v -> {
             String title = Objects.requireNonNull(binding.edtTitleTugas.getText()).toString();
             String description = Objects.requireNonNull(binding.edtDeskripsiTugas.getText()).toString();
             String points = Objects.requireNonNull(binding.edtPoinTugas.getText()).toString();
-            String fileUrl = "";
             int type = 1;
 
             if (isUpdate) {
                 viewModel.updateAssignment(
-                        assignmentId, classId, title, description, dueDate, scheduledAt,
-                        points, fileUrl, type
+                        assignmentId, title, description, dueDate,
+                        points, file, type
                 );
             } else {
                 viewModel.createAssignment(
                         classId, title, description, dueDate, scheduledAt,
-                        points, fileUrl, type
+                        points, file, type
                 );
             }
+        });
+
+        binding.btnRemove.setOnClickListener(v -> {
+            if (file != null && file.exists()) {
+                boolean deleted = file.delete();
+                if (deleted) {
+                    Toast.makeText(
+                            this,
+                            "File dihapus: " + file.getName(),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                } else {
+                    Toast.makeText(
+                            this,
+                            "Gagal menghapus file",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }
+
+            // Reset variabel file
+            file = null;
+            photoFile = null;
+
+            binding.namaFile.setText(R.string.text_tambahkan_lampiran);
+            binding.btnAddFile.setEnabled(true);
+            binding.btnRemove.setVisibility(View.GONE);
+        });
+
+        binding.btnAddFile.setOnClickListener(v -> {
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
+                    FormTugasActivity.this);
+            BottomUploadDialogBinding uploadDialog = BottomUploadDialogBinding.inflate(
+                    LayoutInflater.from(FormTugasActivity.this)
+            );
+
+            uploadDialog.btnUploadFile.setOnClickListener(v1 -> {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                startActivityForResult(intent, REQUEST_CODE_PICK_FILE);
+                bottomSheetDialog.dismiss();
+            });
+
+            uploadDialog.btnUploadFoto.setOnClickListener(v1 -> {
+                Intent intent = new Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                );
+                startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+                bottomSheetDialog.dismiss();
+            });
+
+            uploadDialog.btnUploadCam.setOnClickListener(v1 -> {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    photoFile = Helper.createImageFile(this);
+
+                    if (photoFile != null) {
+                        Uri photoURI = FileProvider.getUriForFile(this,
+                                "com.example.studyconnect.fileprovider",
+                                photoFile);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        startActivityForResult(intent, REQUEST_CODE_CAPTURE_IMAGE);
+
+                        bottomSheetDialog.dismiss();
+                    }
+                }
+            });
+
+            bottomSheetDialog.setContentView(uploadDialog.getRoot());
+            bottomSheetDialog.show();
         });
 
         binding.switchDueDate.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -188,5 +282,34 @@ public class FormTugasActivity extends AppCompatActivity {
         this.dueDate = null;
 
         binding.tvDueDate.setText(R.string.text_batas_waktu);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_PICK_FILE:
+                case REQUEST_CODE_PICK_IMAGE:
+                    if (data != null) {
+                        Uri fileUri = data.getData();
+                        file = Helper.copyFileToAppDirectory(this, fileUri);
+                        if (file != null) {
+                            setFileShow(file.getName());
+                        }
+                    }
+                    break;
+
+                case REQUEST_CODE_CAPTURE_IMAGE:
+                    if (photoFile != null) {
+                        file = photoFile;
+                        binding.namaFile.setText(file.getName());
+                        binding.btnAddFile.setEnabled(false);
+                        binding.btnRemove.setVisibility(View.VISIBLE);
+                    }
+                    break;
+            }
+        }
     }
 }

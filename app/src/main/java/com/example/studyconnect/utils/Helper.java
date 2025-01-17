@@ -1,19 +1,29 @@
 package com.example.studyconnect.utils;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -29,8 +39,81 @@ public class Helper {
         }
     }
 
+    public static File createImageFile(Context context) {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        try {
+            return File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getFileName(String attachmenet_path) {
+        int lastSlashIndex = attachmenet_path.lastIndexOf('/');
+
+        return attachmenet_path.substring(lastSlashIndex + 1);
+    }
+
+    public static File copyFileToAppDirectory(Context context, Uri uri) {
+        String fileName = getFileNameFromUri(context, uri);
+        if (fileName == null) {
+            fileName = "temp_file";
+        }
+
+        File outputFile = new File(context.getCacheDir(), fileName);
+
+        try (InputStream inputStream = context.getContentResolver().openInputStream(uri);
+             FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            if (inputStream != null) {
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
+                }
+                return outputFile;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @SuppressLint("Range")
+    public static String getFileNameFromUri(Context context, Uri uri) {
+        String fileName = null;
+
+        if (Objects.equals(uri.getScheme(), "content")) {
+            try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            }
+        }
+        if (fileName == null) {
+            String path = uri.getPath();
+
+            if (path != null) {
+                int cut = path.lastIndexOf('/');
+
+                if (cut != -1) {
+                    fileName = path.substring(cut + 1);
+                }
+            }
+        }
+
+        return fileName;
+    }
+
     public static String formatDateYMDHI(String inputDate) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        inputFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 
         SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
@@ -47,9 +130,13 @@ public class Helper {
 
     public static String formatDate(String textStartDate, String inputDate) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        inputFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 
-        SimpleDateFormat outputFormat = new SimpleDateFormat(" dd MMM 'jam' HH:mm", new Locale("id", "ID"));
+        SimpleDateFormat outputFormat =
+                new SimpleDateFormat(
+                        " dd MMM 'jam' HH:mm",
+                        new Locale("id", "ID")
+                );
 
         try {
             Date date = inputFormat.parse(inputDate);
