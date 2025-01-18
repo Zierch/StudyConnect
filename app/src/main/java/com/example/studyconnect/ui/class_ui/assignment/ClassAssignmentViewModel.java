@@ -30,9 +30,9 @@ import okhttp3.ResponseBody;
 public class ClassAssignmentViewModel extends ViewModel {
     private final StudyRepository repository;
 
-    @Inject
-    @ApplicationContext
-    Context context;
+//    @Inject
+//    @ApplicationContext
+//    Context context;
 
     @Inject
     public ClassAssignmentViewModel(StudyRepository repository) {

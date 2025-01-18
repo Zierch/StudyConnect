@@ -242,6 +242,8 @@ public class FormForumActivity extends AppCompatActivity {
             } else {
                 viewModel.createAnnouncement(classId, content, scheduledAt, file);
             }
+        } else {
+            binding.btnPosting.setEnabled(true);
         }
     }
 

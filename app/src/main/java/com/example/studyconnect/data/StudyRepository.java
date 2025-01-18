@@ -14,6 +14,7 @@ import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.MaterialResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
+import com.example.studyconnect.data.response.SubmissionResponse;
 import com.example.studyconnect.data.response.UserResponse;
 import com.example.studyconnect.utils.Result;
 
@@ -872,6 +873,102 @@ public class StudyRepository {
 
             @Override
             public void onFailure(@NonNull Call<AnnouncementResponse> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method create submission
+    public LiveData<Result<ResponseBody>> createSubmission(int assignmentId, RequestBody content, MultipartBody.Part attachment) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.createSubmission(assignmentId, content, attachment);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to create submission"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method get submissions
+    public LiveData<Result<List<SubmissionResponse>>> getSubmissions(int assignmentId) {
+        MutableLiveData<Result<List<SubmissionResponse>>> resultLiveData = new MutableLiveData<>();
+
+        Call<List<SubmissionResponse>> call = apiService.getSubmissions(assignmentId);
+        call.enqueue(new Callback<List<SubmissionResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<SubmissionResponse>> call, @NonNull Response<List<SubmissionResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get submissions"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<SubmissionResponse>> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method get submission by ID
+    public LiveData<Result<SubmissionResponse>> getSubmissionById(int id) {
+        MutableLiveData<Result<SubmissionResponse>> resultLiveData = new MutableLiveData<>();
+
+        Call<SubmissionResponse> call = apiService.getSubmissionById(id);
+        call.enqueue(new Callback<SubmissionResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<SubmissionResponse> call, @NonNull Response<SubmissionResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to get submission"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<SubmissionResponse> call, @NonNull Throwable t) {
+                resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    // Method score submission
+    public LiveData<Result<ResponseBody>> scoreSubmission(int id, RequestBody body) {
+        MutableLiveData<Result<ResponseBody>> resultLiveData = new MutableLiveData<>();
+
+        Call<ResponseBody> call = apiService.scoreSubmission(id, body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    resultLiveData.postValue(new Result.Success<>(response.body()));
+                } else {
+                    resultLiveData.postValue(new Result.Error<>("Failed to score submission"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 resultLiveData.postValue(new Result.Error<>("Network error: " + t.getMessage()));
             }
         });

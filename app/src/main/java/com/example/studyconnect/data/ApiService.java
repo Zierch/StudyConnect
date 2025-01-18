@@ -6,6 +6,7 @@ import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.LoginResponse;
 import com.example.studyconnect.data.response.MaterialResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
+import com.example.studyconnect.data.response.SubmissionResponse;
 import com.example.studyconnect.data.response.UserResponse;
 
 import java.util.List;
@@ -164,6 +165,25 @@ public interface ApiService {
 
     @GET("announcement/{id}/get")
     Call<AnnouncementResponse> getAnnouncementById(@Path("id") int id);
+
+
+    //    Submission
+    @Multipart
+    @POST("assignment/{assignmentId}/submission")
+    Call<ResponseBody> createSubmission(
+            @Path("assignmentId") int assignmentId,
+            @Part("answer") RequestBody content,
+            @Part MultipartBody.Part attachment
+    );
+
+    @GET("assignment/{assignmentId}/submission")
+    Call<List<SubmissionResponse>> getSubmissions(@Path("assignmentId") int assignmentId);
+
+    @GET("submission/{id}/get")
+    Call<SubmissionResponse> getSubmissionById(@Path("id") int id);
+
+    @POST("submission/{id}?_method=PUT")
+    Call<ResponseBody> scoreSubmission(@Path("id") int id, @Body RequestBody body);
 
 }
 

@@ -107,7 +107,6 @@
                     android:id="@+id/gambar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
                     android:contentDescription="Gambar"
                     android:src="@drawable/powder_smoke" />
 

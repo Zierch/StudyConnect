@@ -116,12 +116,17 @@ public class ClassAssignmentFragment extends Fragment {
         tugasAdapter = new TugasAdapter(classAssignmentItem -> {
             String userRole = sharedPreferencesManager.getData("role", null);
 
-            if (userRole.equals("student")) {
-                Intent intent = new Intent(getContext(), ViewStudentAssignmentActivity.class);
-                intent.putExtra("assignmentId", classAssignmentItem.getId());
-                startActivity(intent);
-            } else {
+            if (!classAssignmentItem.isMateri()) {
+                if (userRole.equals("student")) {
+                    Intent intent = new Intent(getContext(), ViewStudentAssignmentActivity.class);
+                    intent.putExtra("assignmentId", classAssignmentItem.getId());
+                    intent.putExtra("type", classAssignmentItem.getType());
+                    startActivity(intent);
+                } else {
 //                Gawe GUru IKI
+                }
+            } else {
+                Toast.makeText(requireContext(), "Materi belum dibuat banh", Toast.LENGTH_SHORT).show();
             }
         }, viewModel);
 

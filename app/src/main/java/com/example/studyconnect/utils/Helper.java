@@ -12,10 +12,18 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
+import com.example.studyconnect.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -162,6 +170,27 @@ public class Helper {
             return "Format tanggal tidak valid";
         }
     }
+    
+    public static String formatDateYMDHI(String textStartDate, String inputDate) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        inputFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+
+        SimpleDateFormat outputFormat =
+                new SimpleDateFormat(
+                        " dd MMM 'jam' HH:mm",
+                        new Locale("id", "ID")
+                );
+
+        try {
+            Date date = inputFormat.parse(inputDate);
+
+            assert date != null;
+            return textStartDate + outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "Format tanggal tidak valid";
+        }
+    }
 
     public static boolean hasNetworkConnection(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -234,7 +263,6 @@ public class Helper {
         dialog.show();
     }
 
-
     public static void loadImageWithGlide(Context context, String imageUrl, ImageView imageView) {
         String newImageUrl = "https://studyconnect-api-production.up.railway.app/storage/"+imageUrl;
         Glide.with(context)
@@ -243,7 +271,40 @@ public class Helper {
                 .into(imageView);
     }
 
+    public static void loadImageWithGlide(Context context, File imageFile, ImageView imageView) {
+        Glide.with(context)
+                .load(imageFile)
+                .fitCenter()
+                .into(imageView);
+    }
+
     public static String getFileNameFromPath(String attachmentPath) {
         return attachmentPath.substring(attachmentPath.lastIndexOf("_") + 1);
+    }
+
+    public static void addRadioButtonsFromJsonArray(Context context, RadioGroup radioGroup, String jsonArrayString) {
+        try {
+            // Parsing JSON array
+            JSONArray optionsArray = new JSONArray(jsonArrayString);
+
+            // Menambahkan RadioButton ke RadioGroup
+            for (int i = 0; i < optionsArray.length(); i++) {
+                String option = optionsArray.getString(i);
+
+                // Membuat RadioButton baru
+                RadioButton radioButton = new RadioButton(context);
+                radioButton.setText(option);
+                radioButton.setTextColor(context.getResources().getColor(R.color.black));
+                radioButton.setPadding(10, 0, 0, 0);
+                radioButton.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                radioButton.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                // Menambahkan RadioButton ke RadioGroup
+                radioGroup.addView(radioButton);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

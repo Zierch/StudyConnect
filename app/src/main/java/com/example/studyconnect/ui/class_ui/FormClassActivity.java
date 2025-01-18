@@ -140,6 +140,8 @@ public class FormClassActivity extends AppCompatActivity {
             } else {
                 viewModel.createClass(namaKelas, mataPelajaran, deskripsiKelas, teacherId);
             }
+        } else {
+            binding.btnSimpan.setEnabled(true);
         }
     }
 

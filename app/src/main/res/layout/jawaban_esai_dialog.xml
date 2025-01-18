@@ -10,52 +10,70 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_theme_background"
-        android:paddingStart="20dp"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/baseline_arrow_back_24"
         tools:ignore="RtlSymmetry">
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/baseline_arrow_back_24"
-            android:backgroundTint="@color/black"
-            android:contentDescription="@string/back" />
-
-        <ImageView
-            android:id="@+id/settings_esai"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/btnSettings"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="end"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/ic_more"
             android:backgroundTint="@color/black"
-            android:contentDescription="@string/text_settings" />
-
+            android:contentDescription="@string/text_settings"
+            android:visibility="gone" />
     </androidx.appcompat.widget.Toolbar>
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@id/toolbar"
+        android:background="@drawable/toolbar_shadow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/due_date"
+        android:layout_weight="1"
+        android:textAlignment="textEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/tak_ada_batas_waktu"
+        android:textSize="15sp"
         android:layout_margin="20dp"
-        android:text="@string/esai"
-        android:textColor="@color/md_theme_primary"
-        android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/judulTugas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/esai"
+        android:textColor="@color/md_theme_primary"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/due_date" />
+
+    <TextView
+        android:id="@+id/maxScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="@string/text_poin"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toStartOf="@+id/judulTugas"
+        app:layout_constraintTop_toBottomOf="@+id/judulTugas" />
 
     <View
         android:id="@+id/divider1"
@@ -65,7 +83,7 @@
         android:background="@color/md_theme_outline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/maxScore" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -118,6 +136,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -132,4 +151,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <include
+        android:id="@+id/progressBar"
+        layout="@layout/progress_bar" />
 </androidx.constraintlayout.widget.ConstraintLayout>
