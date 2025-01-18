@@ -43,6 +43,7 @@ public class ClassAssignmentViewModel extends ViewModel {
     private final MutableLiveData<List<MaterialResponse>> materialItems = new MutableLiveData<>();
     private final MutableLiveData<List<ListTugasKelas>> tugasClassList = new MutableLiveData<>();
     private final MutableLiveData<ClassAssignmentResponse> assignment = new MutableLiveData<>();
+    private final MutableLiveData<MaterialResponse> material = new MutableLiveData<>();
     private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
@@ -65,6 +66,11 @@ public class ClassAssignmentViewModel extends ViewModel {
         return materialItems;
     }
 
+    public LiveData<MaterialResponse> getMaterial(int id) {
+        fetchMaterialById(id);
+        return material;
+    }
+
     public LiveData<List<ListTugasKelas>> getTugasClassList() {
         return tugasClassList;
     }
@@ -85,9 +91,130 @@ public class ClassAssignmentViewModel extends ViewModel {
         return errorMsg;
     }
 
-    public void fetchTugasClassList(int classId) {
-        fetchMaterials(classId);
-        fetchClassAssignment(classId);
+    public void fetchMaterialById(int id) {
+        isLoading.postValue(true);
+
+        LiveData<Result<MaterialResponse>> liveData = repository.getMaterialById(id);
+        liveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+                } else if (result instanceof Result.Success) {
+                    Result.Success<MaterialResponse> successResult =
+                            (Result.Success<MaterialResponse>) result;
+                    material.postValue(successResult.getData());
+
+                    isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue(errorResult.getError());
+
+                    isLoading.postValue(false);
+                }
+            }
+        });
+    }
+
+    public void createMaterial(
+            int classId, String title, String description, File attachmentFile,
+            String teacherId
+    ) {
+        isLoading.postValue(true);
+        isSuccess.postValue(false);
+
+        MultipartBody.Part filePart = null;
+        if (attachmentFile != null) {
+            RequestBody fileRequestBody = RequestBody.create(
+                    MediaType.parse("multipart/form-data"),
+                    attachmentFile
+            );
+            filePart = MultipartBody.Part.createFormData(
+                    "attachment",
+                    attachmentFile.getName(),
+                    fileRequestBody
+            );
+        }
+
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody descriptionBody = RequestBody.create(
+                MediaType.parse("text/plain"), description != null ? description : ""
+        );
+        RequestBody teacherIdBody = RequestBody.create(
+                MediaType.parse("text/plain"), teacherId
+        );
+
+        LiveData<Result<MaterialResponse>> liveData =
+                repository.createMaterial(
+                        classId, titleBody, descriptionBody, filePart, teacherIdBody
+                );
+        liveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+                } else if (result instanceof Result.Success) {
+                    errorMsg.postValue("Materi berhasil dibuat");
+
+                    isSuccess.postValue(true);
+                    isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue("Gagal membuat materi: " + errorResult.getError());
+
+                    isLoading.postValue(false);
+                }
+            }
+        });
+    }
+
+    public void updateMaterial(
+            int classId, int id, String title, String description, File attachmentFile,
+            String teacherId
+    ) {
+        isLoading.postValue(true);
+        isSuccess.postValue(false);
+
+        MultipartBody.Part filePart = null;
+        if (attachmentFile != null) {
+            RequestBody fileRequestBody = RequestBody.create(
+                    MediaType.parse("multipart/form-data"),
+                    attachmentFile
+            );
+            filePart = MultipartBody.Part.createFormData(
+                    "attachment",
+                    attachmentFile.getName(),
+                    fileRequestBody
+            );
+        }
+
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody descriptionBody = RequestBody.create(
+                MediaType.parse("text/plain"), description != null ? description : ""
+        );
+        RequestBody teacherIdBody = RequestBody.create(
+                MediaType.parse("text/plain"), teacherId
+        );
+
+        LiveData<Result<MaterialResponse>> liveData =
+                repository.updateMaterial(
+                        classId, id, titleBody, descriptionBody, filePart, teacherIdBody
+                );
+        liveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+                } else if (result instanceof Result.Success) {
+                    errorMsg.postValue("Materi berhasil diubah");
+
+                    isSuccess.postValue(true);
+                    isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue("Gagal mengubah materi: " + errorResult.getError());
+
+                    isLoading.postValue(false);
+                }
+            }
+        });
     }
 
     public void fetchMaterials(int classId) {
@@ -229,34 +356,11 @@ public class ClassAssignmentViewModel extends ViewModel {
 
     public void createAssignment(
             int classId, String title, String description, String dueDate,
-            String scheduleAt, String points, File attachmentFile, int type
+            String scheduleAt, String points, File attachmentFile, String type,
+            String options
     ) {
         isLoading.postValue(true);
         isSuccess.postValue(false);
-
-        String typeAssignment = "";
-        String options = "[\n" +
-                "  \"A\",\n" +
-                "  \"B\",\n" +
-                "  \"C\",\n" +
-                "  \"D\"\n" +
-                "]";
-
-        switch (type) {
-            case 1:
-                typeAssignment = "essay";
-                options = "";
-                break;
-            case 2:
-                typeAssignment = "multiple_choice";
-                break;
-            case 3:
-                typeAssignment = "file_upload";
-                options = "";
-                break;
-            default:
-                break;
-        }
 
         MultipartBody.Part filePart = null;
         if (attachmentFile != null) {
@@ -285,7 +389,7 @@ public class ClassAssignmentViewModel extends ViewModel {
                 MediaType.parse("text/plain"), String.valueOf(points)
         );
         RequestBody typeAssignmentBody = RequestBody.create(
-                MediaType.parse("text/plain"), typeAssignment
+                MediaType.parse("text/plain"), type
         );
         RequestBody optionsBody = RequestBody.create(MediaType.parse("text/plain"), options);
 
@@ -315,34 +419,10 @@ public class ClassAssignmentViewModel extends ViewModel {
 
     public void updateAssignment(
             int id, String title, String description, String dueDate, String points,
-            File attachmentFile, int type
+            File attachmentFile, String type, String options
     ) {
         isLoading.postValue(true);
         isSuccess.postValue(false);
-
-        String typeAssignment = "";
-        String options = "[\n" +
-                "  \"A\",\n" +
-                "  \"B\",\n" +
-                "  \"C\",\n" +
-                "  \"D\"\n" +
-                "]";
-
-        switch (type) {
-            case 1:
-                typeAssignment = "essay";
-                options = "";
-                break;
-            case 2:
-                typeAssignment = "multiple_choice";
-                break;
-            case 3:
-                typeAssignment = "file_upload";
-                options = "";
-                break;
-            default:
-                break;
-        }
 
         MultipartBody.Part filePart = null;
         if (attachmentFile != null) {
@@ -368,10 +448,9 @@ public class ClassAssignmentViewModel extends ViewModel {
                 MediaType.parse("text/plain"), String.valueOf(points)
         );
         RequestBody typeAssignmentBody = RequestBody.create(
-                MediaType.parse("text/plain"), typeAssignment
+                MediaType.parse("text/plain"), type
         );
         RequestBody optionsBody = RequestBody.create(MediaType.parse("text/plain"), options);
-
 
         LiveData<Result<ClassAssignmentResponse>> liveData =
                 repository.updateAssignment(
@@ -408,12 +487,38 @@ public class ClassAssignmentViewModel extends ViewModel {
                 } else if (result instanceof Result.Success) {
                     errorMsg.postValue("Tugas berhasil dihapus");
                     setTugasClassList(null);
-                    fetchTugasClassList(classId);
+                    fetchMaterials(classId);
+                    fetchClassAssignment(classId);
 
                     isLoading.postValue(false);
                 } else if (result instanceof Result.Error<?>) {
                     Result.Error<?> errorResult = (Result.Error<?>) result;
                     errorMsg.postValue("Gagal menghapus tugas: " + errorResult.getError());
+
+                    isLoading.postValue(false);
+                }
+            }
+        });
+    }
+
+    public void deleteMaterial(int id, int classId) {
+        isLoading.postValue(true);
+
+        LiveData<Result<ResponseBody>> liveData = repository.deleteMaterial(id);
+        liveData.observeForever(result -> {
+            if (result != null) {
+                if (result instanceof Result.Loading) {
+                    isLoading.postValue(true);
+                } else if (result instanceof Result.Success) {
+                    errorMsg.postValue("Materi berhasil dihapus");
+                    setTugasClassList(null);
+                    fetchMaterials(classId);
+                    fetchClassAssignment(classId);
+
+                    isLoading.postValue(false);
+                } else if (result instanceof Result.Error<?>) {
+                    Result.Error<?> errorResult = (Result.Error<?>) result;
+                    errorMsg.postValue("Gagal menghapus materi: " + errorResult.getError());
 
                     isLoading.postValue(false);
                 }

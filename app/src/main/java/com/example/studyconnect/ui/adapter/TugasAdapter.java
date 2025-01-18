@@ -3,7 +3,6 @@ package com.example.studyconnect.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> {
     private final List<ListTugasKelas> listTugasKelas = new ArrayList<>();
@@ -103,13 +103,11 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
 
         if (user != null) {
             if (user.getRole().equals("student")) {
-                Log.d("TAG", "onBindViewHolder: " + user.getRole());
                 holder.binding.settingTugas.setVisibility(View.GONE);
             }
         }
 
         holder.binding.settingTugas.setOnClickListener(v -> {
-            // Tampilkan BottomSheet
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
                     holder.itemView.getContext()
             );
@@ -123,34 +121,41 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
 
             bottomSheetBinding.option1.setOnClickListener(view -> {
                 int classId = tugasKelasItem.getClass_id();
-                Intent intent = null;
-
-                switch (tugasKelasItem.getType()) {
-                    case "multiple_choice":
-                        break;
-                    case "file_upload":
-                    case "essay":
-                        intent = new Intent(holder.itemView.getContext(), FormTugasActivity.class);
-                        break;
-                    default:
-                        intent = new Intent(holder.itemView.getContext(), FormMateriActivity.class);
-                        break;
-                }
-
-                assert intent != null;
+                Intent intent = getIntent(holder, tugasKelasItem);
                 intent.putExtra("isUpdate", true);
                 intent.putExtra("classId", classId);
-                intent.putExtra("assignmentId", tugasKelasItem.getId());
+
+                if (
+                        !Objects.equals(tugasKelasItem.getType(), "essay") &&
+                                !Objects.equals(tugasKelasItem.getType(), "file_upload") &&
+                                !Objects.equals(tugasKelasItem.getType(), "multiple_choice")
+                ) {
+                    intent.putExtra("materialId", tugasKelasItem.getId());
+                }else {
+                    intent.putExtra("assignmentId", tugasKelasItem.getId());
+                }
+
                 holder.itemView.getContext().startActivity(intent);
 
                 bottomSheetDialog.dismiss();
             });
 
             bottomSheetBinding.option2.setOnClickListener(view -> {
-                viewModel.deleteAssignment(
-                        tugasKelasItem.getId(),
-                        tugasKelasItem.getClass_id()
-                );
+                if (
+                        !Objects.equals(tugasKelasItem.getType(), "essay") &&
+                                !Objects.equals(tugasKelasItem.getType(), "file_upload") &&
+                                !Objects.equals(tugasKelasItem.getType(), "multiple_choice")
+                ) {
+                    viewModel.deleteMaterial(
+                            tugasKelasItem.getId(),
+                            tugasKelasItem.getClass_id()
+                    );
+                }else {
+                    viewModel.deleteAssignment(
+                            tugasKelasItem.getId(),
+                            tugasKelasItem.getClass_id()
+                    );
+                }
 
                 bottomSheetDialog.dismiss();
             });
@@ -163,6 +168,28 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
         holder.itemView.setOnClickListener(v ->
                 onItemClickListener.onItemClick(tugasKelasItem)
         );
+    }
+
+    private static @NonNull Intent getIntent(
+            @NonNull ViewHolder holder,
+            ListTugasKelas tugasKelasItem
+    ) {
+        Intent intent = null;
+
+        switch (tugasKelasItem.getType()) {
+            case "multiple_choice":
+                break;
+            case "file_upload":
+            case "essay":
+                intent = new Intent(holder.itemView.getContext(), FormTugasActivity.class);
+                break;
+            default:
+                intent = new Intent(holder.itemView.getContext(), FormMateriActivity.class);
+                break;
+        }
+
+        assert intent != null;
+        return intent;
     }
 
     @Override

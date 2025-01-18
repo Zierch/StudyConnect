@@ -64,7 +64,6 @@ public class ClassAssignmentFragment extends Fragment {
         binding = FragmentClassAssignmentBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
 
-//        teacherId = sharedPreferencesManager.getData("classTeacherId", 0);
         userId = sharedPreferencesManager.getData("userId", 0);
         String userRole = sharedPreferencesManager.getData("role", null);
 
@@ -131,7 +130,6 @@ public class ClassAssignmentFragment extends Fragment {
     }
 
     private void initObserver() {
-//        viewModel.fetchTugasClassList(classId);
         viewModel.fetchUser(userId);
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading ->
@@ -144,10 +142,11 @@ public class ClassAssignmentFragment extends Fragment {
 
         viewModel.getTugasClassList().observe(getViewLifecycleOwner(), tugasClassList -> {
             if (tugasClassList != null && !tugasClassList.isEmpty()) {
-                binding.rvListTugasKelas.setVisibility(View.VISIBLE);
+                tugasClassList.sort((t1, t2) -> t2.getCreated_at().compareTo(t1.getCreated_at()));
                 binding.includeTugasEmptyList.emptyList.setVisibility(View.GONE);
+                binding.rvListTugasKelas.setVisibility(View.VISIBLE);
                 tugasAdapter.setlistTugasKelas(tugasClassList);
-            }else {
+            } else {
                 binding.rvListTugasKelas.setVisibility(View.GONE);
                 binding.includeTugasEmptyList.emptyList.setVisibility(View.VISIBLE);
             }
@@ -164,9 +163,9 @@ public class ClassAssignmentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(requireContext(), "onResumeStart", Toast.LENGTH_SHORT).show();
         viewModel.setTugasClassList(null);
-        viewModel.fetchTugasClassList(classId);
+        viewModel.fetchMaterials(classId);
+        viewModel.fetchClassAssignment(classId);
         tugasAdapter.notifyDataSetChanged();
     }
 

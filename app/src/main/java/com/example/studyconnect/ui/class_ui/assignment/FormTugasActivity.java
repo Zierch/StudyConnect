@@ -39,8 +39,8 @@ public class FormTugasActivity extends AppCompatActivity {
     private boolean isUpdate;
     private String scheduledAt;
     private String dueDate;
-    private File photoFile, file;
-
+    private File photoFile, file = null;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +72,11 @@ public class FormTugasActivity extends AppCompatActivity {
                 binding.edtDeskripsiTugas.setText(assignment.getDescription());
                 binding.edtPoinTugas.setText(String.valueOf(assignment.getMax_score()));
                 binding.switchDueDate.setChecked(assignment.getDue_date() != null);
+                type = assignment.getType();
 
-                if (
-                        assignment.getAttachment_path() != null &&
-                                !assignment.getAttachment_path().isEmpty()
-                ) {
+                if (!Objects.equals(type, "file_upload")) {
+                    binding.btnAddFile.setVisibility(View.GONE);
+                } else {
                     setFileShow(assignment.getAttachment_path());
                 }
 
@@ -122,17 +122,22 @@ public class FormTugasActivity extends AppCompatActivity {
             String title = Objects.requireNonNull(binding.edtTitleTugas.getText()).toString();
             String description = Objects.requireNonNull(binding.edtDeskripsiTugas.getText()).toString();
             String points = Objects.requireNonNull(binding.edtPoinTugas.getText()).toString();
-            int type = 1;
+
+            if (file != null) {
+                type = "file_upload";
+            } else {
+                type = "essay";
+            }
 
             if (isUpdate) {
                 viewModel.updateAssignment(
                         assignmentId, title, description, dueDate,
-                        points, file, type
+                        points, file, type, ""
                 );
             } else {
                 viewModel.createAssignment(
                         classId, title, description, dueDate, scheduledAt,
-                        points, file, type
+                        points, file, type, ""
                 );
             }
         });
@@ -155,7 +160,6 @@ public class FormTugasActivity extends AppCompatActivity {
                 }
             }
 
-            // Reset variabel file
             file = null;
             photoFile = null;
 
@@ -262,7 +266,6 @@ public class FormTugasActivity extends AppCompatActivity {
     private void setScheduledAt(String getDate) {
         this.scheduledAt = getDate;
 
-        // Update UI
         binding.viewJadwal.setVisibility(View.VISIBLE);
         binding.waktuJadwal.setText("Jadwal : " + scheduledAt);
     }
@@ -279,7 +282,6 @@ public class FormTugasActivity extends AppCompatActivity {
     private void setDueDate(String getDate) {
         this.dueDate = getDate;
 
-        // Update UI
         binding.tvDueDate.setText("Batas Waktu : " + dueDate);
         binding.switchDueDate.setChecked(true);
     }

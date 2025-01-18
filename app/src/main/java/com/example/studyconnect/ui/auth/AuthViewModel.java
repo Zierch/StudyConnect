@@ -34,6 +34,7 @@ public class AuthViewModel extends ViewModel {
     Context context;
     @Inject
     SharedPreferencesManager sharedPreferencesManager;
+
     @Inject
     public AuthViewModel(StudyRepository repository) {
         this.repository = repository;
@@ -61,30 +62,31 @@ public class AuthViewModel extends ViewModel {
             LiveData<Result<LoginResponse>> signInLiveData = repository.signIn(email, password);
 
             // Observe the LiveData on the main thread
-            new Handler(Looper.getMainLooper()).post(() -> {
-                signInLiveData.observeForever(result -> {
-                    if (result != null) {
-                        if (result instanceof Result.Loading) {
-                            isLoading.postValue(true);
-                        } else if (result instanceof Result.Success) {
-                            isLoading.postValue(false);
-                            isSuccess.postValue(true);
-                            Result.Success<LoginResponse> successResult = (Result.Success<LoginResponse>) result;
-                            sharedPreferencesManager.saveData("token", successResult.getData().getToken());
-                            sharedPreferencesManager.saveData("role", successResult.getData().getRole());
-                            if (successResult.getData().getRole().equals("teacher")) {
-                                sharedPreferencesManager.saveData("teacherId", successResult.getData().getUser_id());
-                            }
-                            sharedPreferencesManager.saveData("userId", successResult.getData().getUser_id());
-                            errorMsg.postValue("Login Berhasil");
-                        } else if (result instanceof Result.Error<?>) {
-                            isLoading.postValue(false);
-                            Result.Error<?> errorResult = (Result.Error<?>) result;
-                            errorMsg.postValue(errorResult.getError());
+            new Handler(Looper.getMainLooper()).post(() ->
+                    signInLiveData.observeForever(result -> {
+                if (result != null) {
+                    if (result instanceof Result.Loading) {
+                        isLoading.postValue(true);
+                    } else if (result instanceof Result.Success) {
+                        isLoading.postValue(false);
+                        isSuccess.postValue(true);
+                        Result.Success<LoginResponse> successResult = (Result.Success<LoginResponse>) result;
+                        sharedPreferencesManager.saveData("token", successResult.getData().getToken());
+                        sharedPreferencesManager.saveData("role", successResult.getData().getRole());
+                        if (successResult.getData().getRole().equals("teacher")) {
+                            sharedPreferencesManager.saveData("teacherId", successResult.getData().getUser_id());
+                        } else {
+                            sharedPreferencesManager.saveData("teacherId", 0);
                         }
+                        sharedPreferencesManager.saveData("userId", successResult.getData().getUser_id());
+                        errorMsg.postValue("Login Berhasil");
+                    } else if (result instanceof Result.Error<?>) {
+                        isLoading.postValue(false);
+                        Result.Error<?> errorResult = (Result.Error<?>) result;
+                        errorMsg.postValue(errorResult.getError());
                     }
-                });
-            });
+                }
+            }));
         });
     }
 
@@ -98,25 +100,24 @@ public class AuthViewModel extends ViewModel {
             LiveData<Result<RegisterResponse>> signUpLiveData = repository.signUp(name, email, role, password);
 
             // Observe the LiveData on the main thread
-            new Handler(Looper.getMainLooper()).post(() -> {
-                signUpLiveData.observeForever(result -> {
-                    if (result != null) {
-                        if (result instanceof Result.Loading) {
-                            isLoading.postValue(true);
-                        } else if (result instanceof Result.Success) {
-                            isLoading.postValue(false);
-                            isSuccess.postValue(true);
-                            Result.Success<RegisterResponse> successResult = (Result.Success<RegisterResponse>) result;
-                            sharedPreferencesManager.saveData("email", successResult.getData().getEmail());
-                            errorMsg.postValue("Register Berhasil");
-                        } else if (result instanceof Result.Error<?>) {
-                            isLoading.postValue(false);
-                            Result.Error<?> errorResult = (Result.Error<?>) result;
-                            errorMsg.postValue(errorResult.getError());
-                        }
+            new Handler(Looper.getMainLooper()).post(() ->
+                    signUpLiveData.observeForever(result -> {
+                if (result != null) {
+                    if (result instanceof Result.Loading) {
+                        isLoading.postValue(true);
+                    } else if (result instanceof Result.Success) {
+                        isLoading.postValue(false);
+                        isSuccess.postValue(true);
+                        Result.Success<RegisterResponse> successResult = (Result.Success<RegisterResponse>) result;
+                        sharedPreferencesManager.saveData("email", successResult.getData().getEmail());
+                        errorMsg.postValue("Register Berhasil");
+                    } else if (result instanceof Result.Error<?>) {
+                        isLoading.postValue(false);
+                        Result.Error<?> errorResult = (Result.Error<?>) result;
+                        errorMsg.postValue(errorResult.getError());
                     }
-                });
-            });
+                }
+            }));
         });
     }
 

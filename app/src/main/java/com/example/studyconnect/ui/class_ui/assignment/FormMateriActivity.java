@@ -22,19 +22,25 @@ import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.ActivityFormMateriBinding;
 import com.example.studyconnect.databinding.BottomUploadDialogBinding;
 import com.example.studyconnect.utils.Helper;
+import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.File;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class FormMateriActivity extends AppCompatActivity {
+
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
+
     ActivityFormMateriBinding binding;
     private ClassAssignmentViewModel viewModel;
-    private int classId;
-    private int assignmentId;
+    private int classId, materialId, teacherId;
     private boolean isUpdate;
     private File photoFile, file = null;
 
@@ -47,7 +53,8 @@ public class FormMateriActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
         classId = getIntent().getIntExtra("classId", 0);
         isUpdate = getIntent().getBooleanExtra("isUpdate", false);
-        assignmentId = getIntent().getIntExtra("assignmentId", 0);
+        materialId = getIntent().getIntExtra("materialId", 0);
+        teacherId = sharedPreferencesManager.getData("teacherId", 0);
 
         initUpdate();
         initObserver();
@@ -58,15 +65,10 @@ public class FormMateriActivity extends AppCompatActivity {
         if (isUpdate) {
             binding.btnPosting.setText(R.string.text_update);
 
-            viewModel.getAssignment(assignmentId).observe(this, assignment -> {
-                binding.edtTitleTugas.setText(assignment.getTitle());
-                binding.edtDeskripsiTugas.setText(assignment.getDescription());
-                if (
-                        assignment.getAttachment_path() != null &&
-                                !assignment.getAttachment_path().isEmpty()
-                ) {
-                    setFileShow(assignment.getAttachment_path());
-                }
+            viewModel.getMaterial(materialId).observe(this, material -> {
+                binding.edtTitleTugas.setText(material.getTitle());
+                binding.edtDeskripsiTugas.setText(material.getDescription());
+                setFileShow(material.getAttachment_path());
             });
         }
     }
@@ -98,20 +100,14 @@ public class FormMateriActivity extends AppCompatActivity {
         binding.btnPosting.setOnClickListener(v -> {
             String title = Objects.requireNonNull(binding.edtTitleTugas.getText()).toString();
             String description = Objects.requireNonNull(binding.edtDeskripsiTugas.getText()).toString();
-            String points = "100";
-            String dueDate = "";
-            String scheduledAt = "";
-            int type = 3;
 
             if (isUpdate) {
-                viewModel.updateAssignment(
-                        assignmentId, title, description, dueDate,
-                        points, file, type
+                viewModel.updateMaterial(
+                        classId, materialId, title, description, file, String.valueOf(teacherId)
                 );
             } else {
-                viewModel.createAssignment(
-                        classId, title, description, dueDate, scheduledAt,
-                        points, file, type
+                viewModel.createMaterial(
+                        classId, title, description, file, String.valueOf(teacherId)
                 );
             }
         });
