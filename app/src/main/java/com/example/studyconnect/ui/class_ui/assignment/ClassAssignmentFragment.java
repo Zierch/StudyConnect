@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.studyconnect.FormPertanyaanActivity;
 import com.example.studyconnect.databinding.AddTugasDialogBinding;
 import com.example.studyconnect.databinding.FragmentClassAssignmentBinding;
 import com.example.studyconnect.ui.adapter.TugasAdapter;
@@ -89,7 +90,7 @@ public class ClassAssignmentFragment extends Fragment {
             bottomBinding.btnAddPertanyaan.setOnClickListener(v1 -> {
                 bottomSheetDialog.dismiss();
 
-                Intent intent = new Intent(requireContext(), FormTugasActivity.class);
+                Intent intent = new Intent(requireContext(), FormPertanyaanActivity.class);
                 intent.putExtra("classId", classId);
                 startActivity(intent);
             });

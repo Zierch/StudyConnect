@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.studyconnect.FormPertanyaanActivity;
 import com.example.studyconnect.R;
 import com.example.studyconnect.data.model.ListTugasKelas;
 import com.example.studyconnect.data.response.RegisterResponse;
@@ -174,10 +175,11 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
             @NonNull ViewHolder holder,
             ListTugasKelas tugasKelasItem
     ) {
-        Intent intent = null;
+        Intent intent;
 
         switch (tugasKelasItem.getType()) {
             case "multiple_choice":
+                intent = new Intent(holder.itemView.getContext(), FormPertanyaanActivity.class);
                 break;
             case "file_upload":
             case "essay":
@@ -188,7 +190,6 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
                 break;
         }
 
-        assert intent != null;
         return intent;
     }
 

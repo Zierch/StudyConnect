@@ -74,9 +74,7 @@ public class FormTugasActivity extends AppCompatActivity {
                 binding.switchDueDate.setChecked(assignment.getDue_date() != null);
                 type = assignment.getType();
 
-                if (!Objects.equals(type, "file_upload")) {
-                    binding.btnAddFile.setVisibility(View.GONE);
-                } else {
+                if (assignment.getAttachment_path() != null) {
                     setFileShow(assignment.getAttachment_path());
                 }
 
@@ -122,12 +120,7 @@ public class FormTugasActivity extends AppCompatActivity {
             String title = Objects.requireNonNull(binding.edtTitleTugas.getText()).toString();
             String description = Objects.requireNonNull(binding.edtDeskripsiTugas.getText()).toString();
             String points = Objects.requireNonNull(binding.edtPoinTugas.getText()).toString();
-
-            if (file != null) {
-                type = "file_upload";
-            } else {
-                type = "essay";
-            }
+            type = "file_upload";
 
             if (isUpdate) {
                 viewModel.updateAssignment(

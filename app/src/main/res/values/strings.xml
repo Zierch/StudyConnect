@@ -73,6 +73,7 @@
     <string name="text_title_empty_arsip">Disinilah Anda akan menemukan kelas yang diarsipkan</string>
     <string name="text_desc_empty_arsip">Anda dapat menemukan kelas yang diarsipkan di sini untuk diakses kembali, dipulihkan atau dihapus.</string>
     <string name="text_judul_tugas_wajib">Judul tugas (Wajib diisi)</string>
+    <string name="text_judul_pertanyaan_wajib">Judul pertanyaan (Wajib diisi)</string>
     <string name="icon">icon</string>
     <string name="text_tetapkan_point">Tetapkan point total</string>
     <string name="text_100">100</string>
@@ -83,4 +84,7 @@
     <string name="text_jadwal">Jadwal</string>
     <string name="text_update">Simpan</string>
     <string name="tugas_anda">Tugas Anda</string>
+    <string name="text_pilihan_ganda">Pilihan Ganda</string>
+    <string name="text_jawaban_singkat">Jawaban Singkat</string>
+    <string name="text_tambahkan_pilihan">Tambahkan Pilihan</string>
 </resources>

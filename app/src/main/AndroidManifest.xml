@@ -24,6 +24,9 @@
         android:theme="@style/Theme.StudyConnect"
         tools:targetApi="31">
         <activity
+            android:name=".FormPertanyaanActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.class_ui.forum.ViewForumActivity"
             android:exported="false" />
         <activity

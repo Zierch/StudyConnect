@@ -50,6 +50,9 @@ public class FormMateriActivity extends AppCompatActivity {
         binding = ActivityFormMateriBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setSupportActionBar(binding.toolbar);
+        binding.toolbar.setNavigationOnClickListener(view -> finish());
+
         viewModel = new ViewModelProvider(this).get(ClassAssignmentViewModel.class);
         classId = getIntent().getIntExtra("classId", 0);
         isUpdate = getIntent().getBooleanExtra("isUpdate", false);
@@ -68,7 +71,9 @@ public class FormMateriActivity extends AppCompatActivity {
             viewModel.getMaterial(materialId).observe(this, material -> {
                 binding.edtTitleTugas.setText(material.getTitle());
                 binding.edtDeskripsiTugas.setText(material.getDescription());
-                setFileShow(material.getAttachment_path());
+                if (material.getAttachment_path() != null) {
+                    setFileShow(material.getAttachment_path());
+                }
             });
         }
     }
