@@ -9,8 +9,10 @@ import com.example.studyconnect.data.response.AnnouncementResponse;
 import com.example.studyconnect.data.response.ClassResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.utils.Result;
+import com.example.studyconnect.utils.SharedPreferencesManager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,12 +26,6 @@ import okhttp3.ResponseBody;
 @HiltViewModel
 public class ForumViewModel extends ViewModel {
     private final StudyRepository repository;
-
-    @Inject
-    public ForumViewModel(StudyRepository repository) {
-        this.repository = repository;
-    }
-
     // LiveData untuk class, user, dan status loading/success/error
     private final MutableLiveData<ClassResponse> classData = new MutableLiveData<>();
     private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
@@ -38,6 +34,12 @@ public class ForumViewModel extends ViewModel {
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
     private final MutableLiveData<List<AnnouncementResponse>> announcements = new MutableLiveData<>();
     private final MutableLiveData<AnnouncementResponse> announcementData = new MutableLiveData<>();
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
+    @Inject
+    public ForumViewModel(StudyRepository repository) {
+        this.repository = repository;
+    }
 
     // Getter untuk LiveData
     public LiveData<Boolean> getIsSuccess() {
@@ -214,15 +216,29 @@ public class ForumViewModel extends ViewModel {
     }
 
     // Method untuk mengambil pengumuman
-    public void fetchAnnouncement(int classId)   {
+    public void fetchAnnouncement(int classId) {
         isLoading.postValue(true);
 
         LiveData<Result<List<AnnouncementResponse>>> announcementLiveData = repository.getAnnouncements(classId);
         announcementLiveData.observeForever(result -> {
+            String userRole = sharedPreferencesManager.getData("role", null); // Ambil role user
             if (result != null) {
                 if (result instanceof Result.Success) {
                     Result.Success<List<AnnouncementResponse>> successResult = (Result.Success<List<AnnouncementResponse>>) result;
-                    announcements.postValue(successResult.getData());
+
+                    // Filter data jika user adalah student
+                    List<AnnouncementResponse> filteredAnnouncements = new ArrayList<>();
+                    for (AnnouncementResponse item : successResult.getData()) {
+                        // Jika user adalah student dan announcement berstatus scheduled, skip
+                        if ("student".equals(userRole) && "scheduled".equals(item.getStatus())) {
+                            continue; // Lewati announcement ini
+                        }
+                        // Tambahkan announcement ke list jika tidak memenuhi kondisi di atas
+                        filteredAnnouncements.add(item);
+                    }
+
+                    // Update LiveData dengan data yang sudah difilter
+                    announcements.postValue(filteredAnnouncements);
                     isLoading.postValue(false);
                 } else if (result instanceof Result.Error<?>) {
                     Result.Error<?> errorResult = (Result.Error<?>) result;
@@ -234,7 +250,7 @@ public class ForumViewModel extends ViewModel {
     }
 
     // Method untuk mengambil pengumuman dengan id
-    public void fetchAnnouncementById(int id)   {
+    public void fetchAnnouncementById(int id) {
         isLoading.postValue(true);
 
         LiveData<Result<AnnouncementResponse>> announcementLiveData = repository.getAnnouncementById(id);

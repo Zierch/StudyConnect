@@ -59,11 +59,6 @@
         <item name="fontFamily">@font/poppins_semi_bold</item>
     </style>
 
-    <style name="NavTitle">
-        <item name="android:fontFamily">@font/poppins_bold</item>
-        <item name="android:textSize">20sp</item>
-    </style>
-
     <style name="CustomButton" parent="Widget.Material3.Button">
         <item name="android:background">@drawable/button</item>
         <item name="backgroundTint">@null</item>
@@ -76,5 +71,4 @@
 
     <style name="Theme.StudyConnect.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.StudyConnect.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -21,19 +21,21 @@ public class ViewGuruPagerAdapter extends FragmentPagerAdapter {
             R.string.text_tugas_siswa
     };
     private final Context mContext;
+    private final int assignmentId;
 
-    public ViewGuruPagerAdapter(Context context, FragmentManager fm) {
+    public ViewGuruPagerAdapter(Context context, FragmentManager fm, int assignment_id) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mContext = context;
+        assignmentId = assignment_id;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
         if (position == 1) {
-            return new TugasSiswaFragment();
+            return TugasSiswaFragment.newInstance(assignmentId);
         }
-        return new PetunjukFragment();
+        return PetunjukFragment.newInstance(assignmentId);
     }
 
     @Nullable

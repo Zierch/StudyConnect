@@ -17,6 +17,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -174,11 +175,12 @@ public class SubmissionViewModel extends ViewModel {
 
     public void scoreSubmission(int submissionId, int score) {
         isLoading.postValue(true);
-        isSuccess.postValue(false);
 
-        RequestBody scoreBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(score));
+        RequestBody body = new FormBody.Builder()
+                .add("score", String.valueOf(score))
+                .build();
 
-        LiveData<Result<ResponseBody>> liveData = repository.scoreSubmission(submissionId, scoreBody);
+        LiveData<Result<ResponseBody>> liveData = repository.scoreSubmission(submissionId, body);
         liveData.observeForever(result -> {
             if (result != null) {
                 if (result instanceof Result.Loading) {

@@ -244,6 +244,14 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                             bindingPilihan.btnSubmitPilihan.setText(R.string.text_diserahkan);
 
                             bindingPilihan.radioGroup.setEnabled(false);
+                            for (int i = 0; i < bindingPilihan.radioGroup.getChildCount(); i++) {
+                                View child = bindingPilihan.radioGroup.getChildAt(i);
+                                if (child instanceof RadioButton) {
+                                    child.setEnabled(false);
+                                    child.setClickable(false);
+                                    child.setFocusable(false);
+                                }
+                            }
                             Helper.setSelectedRadioButton(bindingPilihan.radioGroup, submissionResponse.getAnswer());
 
                             if (submissionResponse.getStatus().equals("graded")) {
@@ -328,6 +336,7 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                     if (submissionId != 0) {
                         viewModel.getSubmissionById(submissionId).observe(this, submissionResponse -> {
                             bindingEsai.btnSubmit.setEnabled(false);
+                            bindingEsai.edtJawabanEsai.setEnabled(false);
                             bindingEsai.btnSubmit.setText(R.string.text_diserahkan);
 
                             bindingEsai.edtJawabanEsai.setText(submissionResponse.getAnswer());

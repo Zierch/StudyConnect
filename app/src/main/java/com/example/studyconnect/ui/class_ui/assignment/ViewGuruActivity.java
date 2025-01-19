@@ -24,12 +24,18 @@ public class ViewGuruActivity extends AppCompatActivity {
         binding = ActivityViewGuruBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        int assignmentId = getIntent().getIntExtra("assignmentId", 0);
+
         ViewGuruPagerAdapter viewGuruPagerAdapter = new ViewGuruPagerAdapter(
-                this, getSupportFragmentManager()
+                this, getSupportFragmentManager(), assignmentId
         );
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(viewGuruPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
+
+        // Set up the toolbar with back button functionality
+        setSupportActionBar(binding.toolbar);
+        binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 }

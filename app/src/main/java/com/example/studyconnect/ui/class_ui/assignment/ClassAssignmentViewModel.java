@@ -12,6 +12,7 @@ import com.example.studyconnect.data.response.ClassAssignmentResponse;
 import com.example.studyconnect.data.response.MaterialResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.utils.Result;
+import com.example.studyconnect.utils.SharedPreferencesManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,9 +31,8 @@ import okhttp3.ResponseBody;
 public class ClassAssignmentViewModel extends ViewModel {
     private final StudyRepository repository;
 
-//    @Inject
-//    @ApplicationContext
-//    Context context;
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
 
     @Inject
     public ClassAssignmentViewModel(StudyRepository repository) {
@@ -222,6 +222,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
         LiveData<Result<List<MaterialResponse>>> liveData = repository.getMaterialByClassId(classId);
         liveData.observeForever(result -> {
+            String userRole = sharedPreferencesManager.getData("role", null);
             if (result != null) {
                 if (result instanceof Result.Loading) {
                     isLoading.postValue(true);
@@ -231,14 +232,19 @@ public class ClassAssignmentViewModel extends ViewModel {
                     materialItems.postValue(successResult.getData());
                     List<ListTugasKelas> combinedList = new ArrayList<>();
                     successResult.getData().forEach(item -> {
+                        // Jika user adalah student dan material berstatus scheduled, skip
+                        if ("student".equals(userRole) && "scheduled".equals(item.getStatus())) {
+                            return; // Lewati material ini
+                        }
+                        // Tambahkan material ke list jika tidak memenuhi kondisi di atas
                         ListTugasKelas tugas = new ListTugasKelas(
                                 item.getId(),
                                 item.getTitle(),
                                 item.getClass_id(),
-                                "none", // type tidak ada di materials'
+                                "none",
                                 item.getStatus(),
                                 item.getCreated_at(),
-                                true // isMateri = true
+                                true
                         );
                         combinedList.add(tugas);
                     });
@@ -267,6 +273,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
         LiveData<Result<List<ClassAssignmentResponse>>> classAssignmentLiveData = repository.getClassAssignment(classId);
         classAssignmentLiveData.observeForever(result -> {
+            String userRole = sharedPreferencesManager.getData("role", null); // Ambil role user
             if (result != null) {
                 if (result instanceof Result.Loading) {
                     isLoading.postValue(true);
@@ -275,6 +282,11 @@ public class ClassAssignmentViewModel extends ViewModel {
                     classAssignment.postValue(successResult.getData());
                     List<ListTugasKelas> combinedList = new ArrayList<>();
                     successResult.getData().forEach(item -> {
+                        // Jika user adalah student dan assignment berstatus scheduled, skip
+                        if ("student".equals(userRole) && "scheduled".equals(item.getStatus())) {
+                            return; // Lewati assignment ini
+                        }
+                        // Tambahkan assignment ke list jika tidak memenuhi kondisi di atas
                         ListTugasKelas tugas = new ListTugasKelas(
                                 item.getId(),
                                 item.getTitle(),
@@ -284,7 +296,6 @@ public class ClassAssignmentViewModel extends ViewModel {
                                 item.getCreated_at(),
                                 false
                         );
-
                         combinedList.add(tugas);
                     });
 
