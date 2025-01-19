@@ -104,4 +104,18 @@ public class SubmissionResponse {
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
     }
+
+    @Override
+    public String toString() {
+        return "SubmissionResponse{" +
+                "id=" + id +
+                ", assignment_id=" + assignment_id +
+                ", student_id=" + student_id +
+                ", submitted_at='" + submitted_at + '\'' +
+                ", attachment_path='" + attachment_path + '\'' +
+                ", score=" + score +
+                ", status='" + status + '\'' +
+                ", answer='" + answer + '\'' +
+                '}';
+    }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -21,26 +22,32 @@ import com.example.studyconnect.databinding.DetailTugasStudentBinding;
 import com.example.studyconnect.databinding.JawabanEsaiDialogBinding;
 import com.example.studyconnect.databinding.JawabanPilihanDialogBinding;
 import com.example.studyconnect.utils.Helper;
+import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.card.MaterialCardView;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ViewStudentAssignmentActivity extends AppCompatActivity {
+    @Inject
+    SharedPreferencesManager sharedPreferencesManager;
     private DetailTugasStudentBinding bindingFile;
     private JawabanEsaiDialogBinding bindingEsai;
     private JawabanPilihanDialogBinding bindingPilihan;
     private SubmissionViewModel viewModel;
-    private int assignmentId;
+    private int assignmentId, submissionId, maxScore;
     private String type, answer;
     private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int userId = sharedPreferencesManager.getData("userId", 0);
         assignmentId = getIntent().getIntExtra("assignmentId", 0);
         type = getIntent().getStringExtra("type");
 
@@ -60,8 +67,10 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
         }
 
         viewModel = new ViewModelProvider(this).get(SubmissionViewModel.class);
-
-//        Kurang IsView e nambah model nyar isine is answered
+        viewModel.getSubmissions(assignmentId).observe(this, submissionResponses -> {
+            submissionId = viewModel.getAnsweredSubmissionId(submissionResponses, assignmentId, userId);
+            Log.d("TAG", "onCreate: " + submissionId);
+        });
 
         initObserver();
         initView();
@@ -204,8 +213,20 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
         switch (type) {
             case "multiple_choice":
                 viewModel.getAssignment(assignmentId).observe(this, classAssignmentResponse -> {
+                    maxScore = classAssignmentResponse.getMax_score();
                     bindingPilihan.judulTugas.setText(classAssignmentResponse.getTitle());
-                    bindingPilihan.maxScore.setText(classAssignmentResponse.getMax_score() + " " + getString(R.string.poin));
+                    bindingPilihan.maxScore.setText(maxScore + " " + getString(R.string.poin));
+
+                    if (classAssignmentResponse.getAttachment_path() != null){
+                        Helper.loadImageWithGlide(this, classAssignmentResponse.getAttachment_path(), bindingPilihan.gambar);
+                        bindingPilihan.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
+
+                        bindingPilihan.fileCard.setOnClickListener(v -> {
+                            Helper.showFullScreenImageDialog(this, classAssignmentResponse.getAttachment_path());
+                        });
+                    } else {
+                        bindingPilihan.linearLampiran.setVisibility(View.GONE);
+                    }
 
                     if (classAssignmentResponse.getDue_date() != null) {
                         String formattedDate = Helper.formatDateYMDHI("Batas waktu : ", classAssignmentResponse.getDue_date());
@@ -215,13 +236,42 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                     String jsonOption = classAssignmentResponse.getOptions();
                     Helper.addRadioButtonsFromJsonArray(this, bindingPilihan.radioGroup, jsonOption);
                 });
+
+                viewModel.isAnswered().observe(this, isAnswered -> {
+                    if (submissionId != 0) {
+                        viewModel.getSubmissionById(submissionId).observe(this, submissionResponse -> {
+                            bindingPilihan.btnSubmitPilihan.setEnabled(false);
+                            bindingPilihan.btnSubmitPilihan.setText(R.string.text_diserahkan);
+
+                            bindingPilihan.radioGroup.setEnabled(false);
+                            Helper.setSelectedRadioButton(bindingPilihan.radioGroup, submissionResponse.getAnswer());
+
+                            if (submissionResponse.getStatus().equals("graded")) {
+                                bindingPilihan.maxScore.setText(submissionResponse.getScore() + "/" + maxScore);
+                            }
+                        });
+                    }
+                });
+
                 break;
             case "file_upload":
                 viewModel.getAssignment(assignmentId).observe(this, classAssignmentResponse -> {
+                    maxScore = classAssignmentResponse.getMax_score();
                     bindingFile.judulTugas.setText(classAssignmentResponse.getTitle());
-                    bindingFile.maxPoint.setText(classAssignmentResponse.getMax_score() + " " + getString(R.string.poin));
+                    bindingFile.maxPoint.setText(maxScore + " " + getString(R.string.poin));
                     bindingFile.deskripsi.setText(classAssignmentResponse.getDescription());
                     bindingFile.bottomJawaban.judulTugas.setText(classAssignmentResponse.getTitle());
+
+                    if (classAssignmentResponse.getAttachment_path() != null){
+                        Helper.loadImageWithGlide(this, classAssignmentResponse.getAttachment_path(), bindingFile.gambar);
+                        bindingFile.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
+
+                        bindingFile.fileCard.setOnClickListener(v -> {
+                            Helper.showFullScreenImageDialog(this, classAssignmentResponse.getAttachment_path());
+                        });
+                    } else {
+                        bindingFile.linearLampiran.setVisibility(View.GONE);
+                    }
 
                     if (classAssignmentResponse.getDue_date() != null) {
                         String formattedDate = Helper.formatDateYMDHI("Batas waktu : ", classAssignmentResponse.getDue_date());
@@ -229,17 +279,66 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                         bindingFile.bottomJawaban.dueDate.setText(formattedDate);
                     }
                 });
+
+                viewModel.isAnswered().observe(this, isAnswered -> {
+                    if (submissionId != 0) {
+                        viewModel.getSubmissionById(submissionId).observe(this, submissionResponse -> {
+                            bindingFile.bottomJawaban.btnRemove.setVisibility(View.GONE);
+
+                            Helper.loadImageWithGlide(this, submissionResponse.getAttachment_path(), bindingFile.bottomJawaban.gambar);
+                            bindingFile.bottomJawaban.namaGambar.setText(Helper.getFileNameFromPath(submissionResponse.getAttachment_path()));
+
+                            bindingFile.bottomJawaban.btnAddTugas.setText(R.string.text_diserahkan);
+                            bindingFile.btnUploadTugas.setText(R.string.text_diserahkan);
+                            bindingFile.btnUploadTugas.setEnabled(false);
+                            bindingFile.bottomJawaban.btnAddTugas.setEnabled(false);
+
+                            if (submissionResponse.getStatus().equals("graded")) {
+                                bindingFile.maxPoint.setText(submissionResponse.getScore() + "/" + maxScore);
+                            }
+                        });
+                    }
+                });
+
                 break;
             case "essay":
                 viewModel.getAssignment(assignmentId).observe(this, classAssignmentResponse -> {
+                    maxScore = classAssignmentResponse.getMax_score();
                     bindingEsai.judulTugas.setText(classAssignmentResponse.getTitle());
-                    bindingEsai.maxScore.setText(classAssignmentResponse.getMax_score() + " " + getString(R.string.poin));
+                    bindingEsai.maxScore.setText(maxScore + " " + getString(R.string.poin));
+
+                    if (classAssignmentResponse.getAttachment_path() != null){
+                        Helper.loadImageWithGlide(this, classAssignmentResponse.getAttachment_path(), bindingEsai.gambar);
+                        bindingEsai.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
+
+                        bindingEsai.fileCard.setOnClickListener(v -> {
+                            Helper.showFullScreenImageDialog(this, classAssignmentResponse.getAttachment_path());
+                        });
+                    } else {
+                        bindingEsai.linearLampiran.setVisibility(View.GONE);
+                    }
 
                     if (classAssignmentResponse.getDue_date() != null) {
                         String formattedDate = Helper.formatDateYMDHI("Batas waktu : ", classAssignmentResponse.getDue_date());
                         bindingEsai.dueDate.setText(formattedDate);
                     }
                 });
+
+                viewModel.isAnswered().observe(this, isAnswered -> {
+                    if (submissionId != 0) {
+                        viewModel.getSubmissionById(submissionId).observe(this, submissionResponse -> {
+                            bindingEsai.btnSubmit.setEnabled(false);
+                            bindingEsai.btnSubmit.setText(R.string.text_diserahkan);
+
+                            bindingEsai.edtJawabanEsai.setText(submissionResponse.getAnswer());
+
+                            if (submissionResponse.getStatus().equals("graded")) {
+                                bindingEsai.maxScore.setText(submissionResponse.getScore() + "/" + maxScore);
+                            }
+                        });
+                    }
+                });
+
                 break;
         }
     }

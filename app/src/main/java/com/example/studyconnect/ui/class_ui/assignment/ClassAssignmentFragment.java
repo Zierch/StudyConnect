@@ -129,7 +129,9 @@ public class ClassAssignmentFragment extends Fragment {
                     startActivity(intent);
                 }
             } else {
-                Toast.makeText(requireContext(), "Materi belum dibuat banh", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), ViewMateriActivity.class);
+                intent.putExtra("materiId", classAssignmentItem.getId());
+                startActivity(intent);
             }
         }, viewModel);
 

@@ -66,6 +66,7 @@
         <activity android:name=".ui.auth.SignUpActivity" />
         <activity android:name=".ui.class_ui.FormClassActivity" />
         <activity android:name=".ui.class_ui.assignment.ViewStudentAssignmentActivity" />
+        <activity android:name="com.example.studyconnect.ui.class_ui.assignment.ViewMateriActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

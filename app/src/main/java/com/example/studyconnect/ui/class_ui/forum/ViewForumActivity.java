@@ -53,6 +53,10 @@ public class ViewForumActivity extends AppCompatActivity {
             } else {
                 binding.namaGambar.setText(Helper.getFileNameFromPath(announcement.getAttachment_path()));
                 Helper.loadImageWithGlide(this, announcement.getAttachment_path(), binding.gambar);
+
+                binding.fileCard.setOnClickListener(v -> {
+                    Helper.showFullScreenImageDialog(this, announcement.getAttachment_path());
+                });
             }
 
         });
