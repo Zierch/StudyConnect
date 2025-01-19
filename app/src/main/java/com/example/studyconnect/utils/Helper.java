@@ -2,6 +2,7 @@ package com.example.studyconnect.utils;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,10 +14,15 @@ import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import androidx.appcompat.widget.AppCompatRadioButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
@@ -170,7 +176,7 @@ public class Helper {
             return "Format tanggal tidak valid";
         }
     }
-    
+
     public static String formatDateYMDHI(String textStartDate, String inputDate) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         inputFormat.setTimeZone(TimeZone.getTimeZone("GMT+7"));
@@ -274,7 +280,7 @@ public class Helper {
     public static void loadImageWithGlide(Context context, File imageFile, ImageView imageView) {
         Glide.with(context)
                 .load(imageFile)
-                .fitCenter()
+                .optionalCenterCrop()
                 .into(imageView);
     }
 
@@ -292,12 +298,16 @@ public class Helper {
                 String option = optionsArray.getString(i);
 
                 // Membuat RadioButton baru
-                RadioButton radioButton = new RadioButton(context);
+                AppCompatRadioButton radioButton = new AppCompatRadioButton(context);
                 radioButton.setText(option);
                 radioButton.setTextColor(context.getResources().getColor(R.color.black));
                 radioButton.setPadding(10, 0, 0, 0);
-                radioButton.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                radioButton.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                // Mengatur LayoutParams untuk RadioButton
+                RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
+                        RadioGroup.LayoutParams.MATCH_PARENT, // Lebar match_parent
+                        RadioGroup.LayoutParams.WRAP_CONTENT  // Tinggi wrap_content
+                );
+                radioButton.setLayoutParams(params);
 
                 // Menambahkan RadioButton ke RadioGroup
                 radioGroup.addView(radioButton);
@@ -306,5 +316,55 @@ public class Helper {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setSelectedRadioButton(RadioGroup radioGroup, String answer) {
+        if (radioGroup == null || answer == null || answer.isEmpty()) {
+            return;
+        }
+
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            View view = radioGroup.getChildAt(i);
+            if (view instanceof RadioButton) {
+                RadioButton radioButton = (RadioButton) view;
+
+                if (radioButton.getText().toString().equals(answer)) {
+                    radioButton.setChecked(true);
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void showFullScreenImageDialog(Context context, String imageUrl) {
+        if (imageUrl.isEmpty()){
+            return;
+        }
+        // Buat dialog
+        String newImageUrl = "https://studyconnect-api-production.up.railway.app/storage/"+imageUrl;
+        final Dialog dialog = new Dialog(context, android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.fullscreen_image_dialog);
+
+        // Inisialisasi view
+        ImageView fullscreenImageView = dialog.findViewById(R.id.fullscreenImageView);
+        ImageView closeButton = dialog.findViewById(R.id.closeButton);
+
+        // Gunakan Glide untuk memuat gambar
+        Glide.with(context)
+                .load(newImageUrl)
+                .fitCenter()
+                .into(fullscreenImageView);
+
+        // Tutup dialog saat tombol close diklik
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        // Tampilkan dialog
+        dialog.show();
     }
 }

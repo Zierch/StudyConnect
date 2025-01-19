@@ -1,5 +1,7 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -23,17 +25,18 @@ import okhttp3.ResponseBody;
 @HiltViewModel
 public class SubmissionViewModel extends ViewModel {
     private final StudyRepository repository;
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isAnswered = new MutableLiveData<>();
+    private final MutableLiveData<ClassAssignmentResponse> assignment = new MutableLiveData<>();
+    private final MutableLiveData<List<SubmissionResponse>> submissions = new MutableLiveData<>();
+    private final MutableLiveData<SubmissionResponse> submissionData = new MutableLiveData<>();
 
     @Inject
     public SubmissionViewModel(StudyRepository repository) {
         this.repository = repository;
     }
-    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-    private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
-    private final MutableLiveData<ClassAssignmentResponse> assignment = new MutableLiveData<>();
-    private final MutableLiveData<List<SubmissionResponse>> submissions = new MutableLiveData<>();
-    private final MutableLiveData<SubmissionResponse> submissionData = new MutableLiveData<>();
 
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
@@ -41,6 +44,10 @@ public class SubmissionViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsSuccess() {
         return isSuccess;
+    }
+
+    public LiveData<Boolean> isAnswered() {
+        return isAnswered;
     }
 
     public LiveData<String> getErrorMsg() {
@@ -74,6 +81,11 @@ public class SubmissionViewModel extends ViewModel {
                 }
             }
         });
+    }
+
+    public LiveData<List<SubmissionResponse>> getSubmissions(int assignmentId) {
+        fetchSubmissions(assignmentId);
+        return submissions;
     }
 
     public void fetchSubmissions(int assignmentId) {
@@ -177,14 +189,20 @@ public class SubmissionViewModel extends ViewModel {
         });
     }
 
-public boolean isAssignmentAnswered(int assignmentId, int studentId) {
-    if (submissions.getValue() != null) {
-        for (SubmissionResponse submission : submissions.getValue()) {
-            if (submission.getAssignment_id() == assignmentId && submission.getStudent_id() == studentId) {
-                return true;
+    public int getAnsweredSubmissionId(List<SubmissionResponse> list, int assignmentId, int studentId) {
+        isLoading.postValue(true);
+        if (list != null) {
+            for (SubmissionResponse submission : list) {
+                if (submission != null && submission.getAssignment_id() == assignmentId && submission.getStudent_id() == studentId) {
+                    isAnswered.postValue(true);
+                    isLoading.postValue(false);
+                    return submission.getId(); // Mengembalikan submissionId jika ditemukan
+                } else {
+                    isAnswered.postValue(false);
+                    isLoading.postValue(false);
+                }
             }
         }
+        return 0;
     }
-    return false;
-}
 }
