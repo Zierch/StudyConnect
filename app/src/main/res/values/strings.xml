@@ -20,7 +20,7 @@
     <string name="text_umumkan">Umumkan sesuatu kepada kelas anda</string>
     <string name="text_title_empty_forum">Di sinilah Anda dapat berbicara dengan kelas Anda</string>
     <string name="text_desc_empty_forum">Gunakan forum untuk membagikan pengumuman, tugas, dan menjawab pertanyaan</string>
-    <string name="text_nama_anda">Nama Guru</string>
+    <string name="text_nama_anda">Nama Anda</string>
     <string name="text_jam">21.00</string>
     <string name="text_deskripsi_pengumuman">Deskripsi pengumuman</string>
     <string name="text_tambah_komentar">Tambahkan komentar kelas</string>
@@ -87,4 +87,9 @@
     <string name="text_pilihan_ganda">Pilihan Ganda</string>
     <string name="text_jawaban_singkat">Jawaban Singkat</string>
     <string name="text_tambahkan_pilihan">Tambahkan Pilihan</string>
+    <string name="title_activity_view">ViewActivity</string>
+    <string name="text_petunjuk">Petunjuk</string>
+    <string name="text_tugas_siswa">Tugas Siswa</string>
+    <string name="view_pager">View Pager</string>
+    <string name="tab_layout">Tab Layout</string>
 </resources>

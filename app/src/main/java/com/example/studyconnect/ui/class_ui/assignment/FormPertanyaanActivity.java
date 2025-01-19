@@ -1,4 +1,4 @@
-package com.example.studyconnect;
+package com.example.studyconnect.ui.class_ui.assignment;
 
 import static com.example.studyconnect.utils.Helper.REQUEST_CODE_CAPTURE_IMAGE;
 import static com.example.studyconnect.utils.Helper.REQUEST_CODE_PICK_FILE;
@@ -20,14 +20,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.ActivityFormPertanyaanBinding;
 import com.example.studyconnect.databinding.BottomTwoDialogBinding;
 import com.example.studyconnect.databinding.BottomUploadDialogBinding;
 import com.example.studyconnect.databinding.ItemPilihanGandaBinding;
-import com.example.studyconnect.ui.class_ui.assignment.ClassAssignmentViewModel;
 import com.example.studyconnect.utils.Helper;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -42,8 +45,8 @@ public class FormPertanyaanActivity extends AppCompatActivity {
     private ClassAssignmentViewModel viewModel;
     private int questionPosition = 1;
     private int classId, assignmentId;
-    private boolean isUpdate;
-    private String scheduledAt, dueDate, type, options;
+    private boolean isUpdate, isEssay = false, isSuccess = false;
+    private String scheduledAt, dueDate, type, options = "";
     private File photoFile, file = null;
     private final Map<Integer, Map<String, Integer>> idMap = new HashMap<>();
 
@@ -78,6 +81,28 @@ public class FormPertanyaanActivity extends AppCompatActivity {
                 binding.edtPoinTugas.setText(String.valueOf(assignment.getMax_score()));
                 binding.switchDueDate.setChecked(assignment.getDue_date() != null);
                 type = assignment.getType();
+                isEssay = Objects.equals(type, "essay");
+                options = assignment.getOptions();
+
+                Log.d("form", options);
+                Log.d("form2", type);
+
+                if (assignment.getOptions() != null) {
+                    binding.tvBtnPilihan.setText(R.string.text_pilihan_ganda);
+
+                    try {
+                        JSONArray optionsArray = new JSONArray(assignment.getOptions());
+                        for (int i = 0; i < optionsArray.length(); i++) {
+                            String option = optionsArray.getString(i);
+
+                            setRadioPilihan(true, option);
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    binding.tvBtnPilihan.setText(R.string.text_jawaban_singkat);
+                }
 
                 if (assignment.getAttachment_path() != null) {
                     setFileShow(assignment.getAttachment_path());
@@ -115,8 +140,6 @@ public class FormPertanyaanActivity extends AppCompatActivity {
 
     @SuppressLint({"SetTextI18n", "QueryPermissionsNeeded"})
     private void initView() {
-        LinearLayout parentLayout = binding.parentPilihan;
-
         binding.btnPilihanGanda.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
                     FormPertanyaanActivity.this
@@ -132,6 +155,8 @@ public class FormPertanyaanActivity extends AppCompatActivity {
             bottomSheetBinding.option1.setOnClickListener(view -> {
                 binding.btnAddPilihan.setVisibility(View.GONE);
                 binding.parentPilihan.setVisibility(View.GONE);
+                binding.tvBtnPilihan.setText(R.string.text_jawaban_singkat);
+                isEssay = true;
 
                 bottomSheetDialog.dismiss();
             });
@@ -139,6 +164,8 @@ public class FormPertanyaanActivity extends AppCompatActivity {
             bottomSheetBinding.option2.setOnClickListener(view -> {
                 binding.btnAddPilihan.setVisibility(View.VISIBLE);
                 binding.parentPilihan.setVisibility(View.VISIBLE);
+                binding.tvBtnPilihan.setText(R.string.text_pilihan_ganda);
+                isEssay = false;
 
                 bottomSheetDialog.dismiss();
             });
@@ -149,40 +176,7 @@ public class FormPertanyaanActivity extends AppCompatActivity {
 
         View.OnClickListener onClickAddPilihan = view -> {
             if (questionPosition <= 4) {
-                ItemPilihanGandaBinding itemBinding = ItemPilihanGandaBinding.inflate(
-                        LayoutInflater.from(
-                                FormPertanyaanActivity.this
-                        ), parentLayout, false
-                );
-
-                int rootId = View.generateViewId();
-                int rbPilihanId = View.generateViewId();
-                int edtPilihanId = View.generateViewId();
-                int btnRemoveId = View.generateViewId();
-
-                itemBinding.getRoot().setId(rootId);
-                itemBinding.rbPilihan1.setId(rbPilihanId);
-                itemBinding.edtPilihan1.setId(edtPilihanId);
-                itemBinding.btnRemovePilihan.setId(btnRemoveId);
-
-                Map<String, Integer> componentIds = new HashMap<>();
-                componentIds.put("root", rootId);
-                componentIds.put("rbPilihan1", rbPilihanId);
-                componentIds.put("edtPilihan1", edtPilihanId);
-                componentIds.put("btnRemovePilihan", btnRemoveId);
-
-                idMap.put(rootId, componentIds);
-
-                itemBinding.edtPilihan1.setHint("Pilihan " + questionPosition);
-
-                itemBinding.btnRemovePilihan.setOnClickListener(v -> {
-                    parentLayout.removeView(itemBinding.getRoot());
-                    idMap.remove(rootId);
-                    questionPosition--;
-                });
-
-                parentLayout.addView(itemBinding.getRoot());
-                questionPosition++;
+                setRadioPilihan(false, null);
             }
         };
 
@@ -190,37 +184,53 @@ public class FormPertanyaanActivity extends AppCompatActivity {
         binding.rbPilihanParent.setOnClickListener(onClickAddPilihan);
 
         binding.btnPosting.setOnClickListener(view -> {
-            if (questionPosition - 1 >= 2 && questionPosition - 1 <= 4) {
-                String title = Objects.requireNonNull(binding.edtTitleTugas.getText()).toString();
-                String description = Objects.requireNonNull(binding.edtDeskripsiTugas.getText()).toString();
-                String points = Objects.requireNonNull(binding.edtPoinTugas.getText()).toString();
-                options = "";
+            isSuccess = false;
+            String title = Objects.requireNonNull(binding.edtTitleTugas.getText()).toString();
+            String description = Objects.requireNonNull(binding.edtDeskripsiTugas.getText()).toString();
+            String points = Objects.requireNonNull(binding.edtPoinTugas.getText()).toString();
 
-                StringBuilder optionsBuilder = new StringBuilder();
+            if (!isEssay) {
+                type = "multiple_choice";
 
-                for (Map.Entry<Integer, Map<String, Integer>> entry : idMap.entrySet()) {
-                    Map<String, Integer> componentIds = entry.getValue();
+                if (questionPosition - 1 >= 2 && questionPosition - 1 <= 4) {
+                    isSuccess = true;
+                    StringBuilder optionsBuilder = new StringBuilder();
 
-                    int edtPilihanId = componentIds.get("edtPilihan1");
+                    for (Map.Entry<Integer, Map<String, Integer>> entry : idMap.entrySet()) {
+                        Map<String, Integer> componentIds = entry.getValue();
 
-                    TextInputEditText edtPilihan = binding.getRoot().findViewById(edtPilihanId);
+                        int edtPilihanId = componentIds.get("edtPilihan1");
 
-                    optionsBuilder.append(Objects.requireNonNull(
-                            edtPilihan.getText()
-                    )).append(",");
-                }
+                        TextInputEditText edtPilihan = binding.getRoot().findViewById(edtPilihanId);
 
-                options = optionsBuilder.toString();
+                        optionsBuilder.append(Objects.requireNonNull(
+                                edtPilihan.getText()
+                        )).append(",");
+                    }
 
-                Log.d("options", "options: " + options);
+                    if (optionsBuilder.length() > 0 &&
+                            optionsBuilder.charAt(optionsBuilder.length() - 1) == ',') {
+                        optionsBuilder.deleteCharAt(optionsBuilder.length() - 1);
+                    }
 
-                if (!Objects.equals(options, "")) {
-                    type = "multiple_choice";
+                    options = optionsBuilder.toString();
                 } else {
-                    type = "essay";
+                    isSuccess = false;
+                    Toast.makeText(
+                            this,
+                            "Jumlah pilihan minimal 2 dan maksimal 4",
+                            Toast.LENGTH_SHORT
+                    ).show();
                 }
+            } else {
+                type = "essay";
+                isSuccess = true;
+            }
 
+            if (isSuccess) {
                 if (isUpdate) {
+                    Log.d("form3", options);
+                    Log.d("form4", type);
                     viewModel.updateAssignment(
                             assignmentId, title, description, dueDate,
                             points, file, type, options
@@ -231,8 +241,6 @@ public class FormPertanyaanActivity extends AppCompatActivity {
                             points, file, type, options
                     );
                 }
-            } else {
-                Toast.makeText(this, "Jumlah pilihan minimal 2 dan maksimal 4", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -354,6 +362,49 @@ public class FormPertanyaanActivity extends AppCompatActivity {
             bottomSheetDialog.setContentView(bottomSheetBinding.getRoot());
             bottomSheetDialog.show();
         });
+    }
+
+    private void setRadioPilihan(boolean isUpdate, String option) {
+        LinearLayout parentLayout = binding.parentPilihan;
+
+        ItemPilihanGandaBinding itemBinding = ItemPilihanGandaBinding.inflate(
+                LayoutInflater.from(
+                        FormPertanyaanActivity.this
+                ), parentLayout, false
+        );
+
+        int rootId = View.generateViewId();
+        int rbPilihanId = View.generateViewId();
+        int edtPilihanId = View.generateViewId();
+        int btnRemoveId = View.generateViewId();
+
+        itemBinding.getRoot().setId(rootId);
+        itemBinding.rbPilihan1.setId(rbPilihanId);
+        itemBinding.edtPilihan1.setId(edtPilihanId);
+        itemBinding.btnRemovePilihan.setId(btnRemoveId);
+
+        if (isUpdate) {
+            itemBinding.edtPilihan1.setText(option);
+        }
+
+        Map<String, Integer> componentIds = new HashMap<>();
+        componentIds.put("root", rootId);
+        componentIds.put("rbPilihan1", rbPilihanId);
+        componentIds.put("edtPilihan1", edtPilihanId);
+        componentIds.put("btnRemovePilihan", btnRemoveId);
+
+        idMap.put(rootId, componentIds);
+
+        itemBinding.edtPilihan1.setHint("Pilihan " + questionPosition);
+
+        itemBinding.btnRemovePilihan.setOnClickListener(v -> {
+            parentLayout.removeView(itemBinding.getRoot());
+            idMap.remove(rootId);
+            questionPosition--;
+        });
+
+        parentLayout.addView(itemBinding.getRoot());
+        questionPosition++;
     }
 
     @SuppressLint("SetTextI18n")

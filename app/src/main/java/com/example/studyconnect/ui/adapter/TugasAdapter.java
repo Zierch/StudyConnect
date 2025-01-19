@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.studyconnect.FormPertanyaanActivity;
+import com.example.studyconnect.ui.class_ui.assignment.FormPertanyaanActivity;
 import com.example.studyconnect.R;
 import com.example.studyconnect.data.model.ListTugasKelas;
 import com.example.studyconnect.data.response.RegisterResponse;
@@ -132,7 +132,7 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
                                 !Objects.equals(tugasKelasItem.getType(), "multiple_choice")
                 ) {
                     intent.putExtra("materialId", tugasKelasItem.getId());
-                }else {
+                } else {
                     intent.putExtra("assignmentId", tugasKelasItem.getId());
                 }
 
@@ -151,7 +151,7 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
                             tugasKelasItem.getId(),
                             tugasKelasItem.getClass_id()
                     );
-                }else {
+                } else {
                     viewModel.deleteAssignment(
                             tugasKelasItem.getId(),
                             tugasKelasItem.getClass_id()
@@ -178,11 +178,11 @@ public class TugasAdapter extends RecyclerView.Adapter<TugasAdapter.ViewHolder> 
         Intent intent;
 
         switch (tugasKelasItem.getType()) {
+            case "essay":
             case "multiple_choice":
                 intent = new Intent(holder.itemView.getContext(), FormPertanyaanActivity.class);
                 break;
             case "file_upload":
-            case "essay":
                 intent = new Intent(holder.itemView.getContext(), FormTugasActivity.class);
                 break;
             default:

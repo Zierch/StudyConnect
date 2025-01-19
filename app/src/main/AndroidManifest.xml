@@ -24,7 +24,12 @@
         android:theme="@style/Theme.StudyConnect"
         tools:targetApi="31">
         <activity
-            android:name=".FormPertanyaanActivity"
+            android:name=".ui.class_ui.assignment.ViewGuruActivity"
+            android:exported="false"
+            android:label="@string/title_activity_view"
+            android:theme="@style/Theme.StudyConnect.NoActionBar" />
+        <activity
+            android:name=".ui.class_ui.assignment.FormPertanyaanActivity"
             android:exported="false" />
         <activity
             android:name=".ui.class_ui.forum.ViewForumActivity"

@@ -1,5 +1,7 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
+import static androidx.lifecycle.Transformations.map;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -28,12 +30,19 @@ public class SubmissionViewModel extends ViewModel {
     public SubmissionViewModel(StudyRepository repository) {
         this.repository = repository;
     }
+
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
     private final MutableLiveData<ClassAssignmentResponse> assignment = new MutableLiveData<>();
     private final MutableLiveData<List<SubmissionResponse>> submissions = new MutableLiveData<>();
     private final MutableLiveData<SubmissionResponse> submissionData = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mIndex = new MutableLiveData<>();
+    private final LiveData<String> mText = map(mIndex, input -> "Hello world from section: " + input);
+
+    public LiveData<String> getText() {
+        return mText;
+    }
 
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
@@ -177,14 +186,14 @@ public class SubmissionViewModel extends ViewModel {
         });
     }
 
-public boolean isAssignmentAnswered(int assignmentId, int studentId) {
-    if (submissions.getValue() != null) {
-        for (SubmissionResponse submission : submissions.getValue()) {
-            if (submission.getAssignment_id() == assignmentId && submission.getStudent_id() == studentId) {
-                return true;
+    public boolean isAssignmentAnswered(int assignmentId, int studentId) {
+        if (submissions.getValue() != null) {
+            for (SubmissionResponse submission : submissions.getValue()) {
+                if (submission.getAssignment_id() == assignmentId && submission.getStudent_id() == studentId) {
+                    return true;
+                }
             }
         }
+        return false;
     }
-    return false;
-}
 }

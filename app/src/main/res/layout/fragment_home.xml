@@ -23,7 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@id/linearButton"
-                android:clipToPadding="false" />
+                android:clipToPadding="false"
+                android:paddingBottom="200dp" />
 
             <LinearLayout
                 android:id="@+id/linearButton"

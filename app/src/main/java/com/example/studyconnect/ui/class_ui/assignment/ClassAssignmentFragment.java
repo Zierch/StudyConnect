@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.studyconnect.FormPertanyaanActivity;
 import com.example.studyconnect.databinding.AddTugasDialogBinding;
 import com.example.studyconnect.databinding.FragmentClassAssignmentBinding;
 import com.example.studyconnect.ui.adapter.TugasAdapter;
@@ -124,7 +123,10 @@ public class ClassAssignmentFragment extends Fragment {
                     intent.putExtra("type", classAssignmentItem.getType());
                     startActivity(intent);
                 } else {
-//                Gawe GUru IKI
+                    Intent intent = new Intent(getContext(), ViewGuruActivity.class);
+                    intent.putExtra("assignmentId", classAssignmentItem.getId());
+                    intent.putExtra("type", classAssignmentItem.getType());
+                    startActivity(intent);
                 }
             } else {
                 Toast.makeText(requireContext(), "Materi belum dibuat banh", Toast.LENGTH_SHORT).show();
