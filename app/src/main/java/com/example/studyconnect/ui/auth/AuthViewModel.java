@@ -26,7 +26,7 @@ import okhttp3.ResponseBody;
 @HiltViewModel
 public class AuthViewModel extends ViewModel {
     private final StudyRepository repository;
-    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
     @Inject

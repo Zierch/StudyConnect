@@ -73,4 +73,9 @@ dependencies {
 //    Preference
     implementation(libs.preference)
     implementation(libs.glide);
+
+//    PdfViewer
+    implementation(libs.android.pdf.viewer){
+        exclude(group = "com.android.support", module = "support-compat")
+    }
 }

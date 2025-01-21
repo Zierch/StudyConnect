@@ -682,13 +682,13 @@ public class StudyRepository {
 
     // Method update assignment
     public LiveData<Result<MaterialResponse>> updateMaterial(
-            int classId, int id, RequestBody title, RequestBody desc,
+            int id, RequestBody title, RequestBody desc,
             MultipartBody.Part attachment, RequestBody teacherId
     ) {
         MutableLiveData<Result<MaterialResponse>> resultLiveData = new MutableLiveData<>();
 
         Call<MaterialResponse> call = apiService.updateMaterial(
-                classId, id, title, desc, attachment, teacherId
+                id, title, desc, attachment, teacherId
         );
         call.enqueue(new Callback<MaterialResponse>() {
             @Override

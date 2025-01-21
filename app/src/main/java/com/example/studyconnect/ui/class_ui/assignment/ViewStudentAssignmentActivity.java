@@ -151,6 +151,27 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                 bindingFile.bottomJawaban.btnAddTugas.setEnabled(true);
                 bindingFile.bottomJawaban.btnRemove.setVisibility(View.GONE);
             });
+            bindingFile.bottomJawaban.btnRemovePdf.setOnClickListener(v -> {
+                // Hapus file dari penyimpanan jika ada
+                if (file != null && file.exists()) {
+                    boolean deleted = file.delete();
+                    if (deleted) {
+                        Toast.makeText(this, "File dihapus: " + file.getName(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Gagal menghapus file", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                // Reset variabel file
+                file = null;
+
+                bindingFile.bottomJawaban.fileCard.setVisibility(View.GONE);
+                bindingFile.bottomJawaban.pdfCard.setVisibility(View.GONE);
+                bindingFile.bottomJawaban.cardEmpty.setVisibility(View.VISIBLE);
+                bindingFile.btnUploadTugas.setEnabled(true);
+                bindingFile.bottomJawaban.btnAddTugas.setEnabled(true);
+                bindingFile.bottomJawaban.btnRemove.setVisibility(View.GONE);
+            });
         } else if (type.equals("essay")) {
             // Set up the toolbar with back button functionality
             setSupportActionBar(bindingEsai.toolbar);
@@ -218,12 +239,40 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                     bindingPilihan.maxScore.setText(maxScore + " " + getString(R.string.poin));
 
                     if (classAssignmentResponse.getAttachment_path() != null){
-                        Helper.loadImageWithGlide(this, classAssignmentResponse.getAttachment_path(), bindingPilihan.gambar);
                         bindingPilihan.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
+                        bindingPilihan.namaPdf.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
 
-                        bindingPilihan.fileCard.setOnClickListener(v -> {
-                            Helper.showFullScreenImageDialog(this, classAssignmentResponse.getAttachment_path());
-                        });
+                        if (Helper.isPdfFile(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()))) {
+                            bindingPilihan.fileCard.setVisibility(View.GONE);
+                            bindingPilihan.pdfCard.setVisibility(View.VISIBLE);
+
+                            viewModel.isLoading.postValue(true);
+
+                            Helper.downloadPdfToCache(this, classAssignmentResponse.getAttachment_path(), new Helper.PdfDownloadListener() {
+                                @Override
+                                public void onDownloadSuccess(File pdfFile) {
+                                    Helper.showPdfPreview(bindingPilihan.pdfView, pdfFile);
+                                    bindingPilihan.pdfView.setOnClickListener(v -> {
+                                        Helper.showFullScreenFileDialog(ViewStudentAssignmentActivity.this, classAssignmentResponse.getAttachment_path(), pdfFile);
+                                    });
+                                    viewModel.isLoading.postValue(false);
+                                }
+
+                                @Override
+                                public void onDownloadFailed(String errorMessage) {
+                                    viewModel.isLoading.postValue(false);
+                                    Toast.makeText(ViewStudentAssignmentActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        } else {
+                            Helper.loadImageWithGlide(this, classAssignmentResponse.getAttachment_path(), bindingPilihan.gambar);
+
+                            bindingPilihan.fileCard.setOnClickListener(v -> {
+                                Helper.showFullScreenFileDialog(this, classAssignmentResponse.getAttachment_path(), null);
+                            });
+                        }
+                        
                     } else {
                         bindingPilihan.linearLampiran.setVisibility(View.GONE);
                     }
@@ -271,12 +320,40 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                     bindingFile.bottomJawaban.judulTugas.setText(classAssignmentResponse.getTitle());
 
                     if (classAssignmentResponse.getAttachment_path() != null){
-                        Helper.loadImageWithGlide(this, classAssignmentResponse.getAttachment_path(), bindingFile.gambar);
                         bindingFile.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
+                        bindingFile.namaPdf.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
 
-                        bindingFile.fileCard.setOnClickListener(v -> {
-                            Helper.showFullScreenImageDialog(this, classAssignmentResponse.getAttachment_path());
-                        });
+                        if (Helper.isPdfFile(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()))) {
+                            bindingFile.fileCard.setVisibility(View.GONE);
+                            bindingFile.pdfCard.setVisibility(View.VISIBLE);
+
+                            viewModel.isLoading.postValue(true);
+
+                            Helper.downloadPdfToCache(this, classAssignmentResponse.getAttachment_path(), new Helper.PdfDownloadListener() {
+                                @Override
+                                public void onDownloadSuccess(File pdfFile) {
+                                    Helper.showPdfPreview(bindingFile.pdfView, pdfFile);
+                                    bindingFile.pdfView.setOnClickListener(v -> {
+                                        Helper.showFullScreenFileDialog(ViewStudentAssignmentActivity.this, classAssignmentResponse.getAttachment_path(), pdfFile);
+                                    });
+                                    viewModel.isLoading.postValue(false);
+                                }
+
+                                @Override
+                                public void onDownloadFailed(String errorMessage) {
+                                    viewModel.isLoading.postValue(false);
+                                    Toast.makeText(ViewStudentAssignmentActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        } else {
+                            Helper.loadImageWithGlide(this, classAssignmentResponse.getAttachment_path(), bindingFile.gambar);
+
+                            bindingFile.fileCard.setOnClickListener(v -> {
+                                Helper.showFullScreenFileDialog(this, classAssignmentResponse.getAttachment_path(), null);
+                            });
+                        }
+                        
                     } else {
                         bindingFile.linearLampiran.setVisibility(View.GONE);
                     }
@@ -316,12 +393,40 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                     bindingEsai.maxScore.setText(maxScore + " " + getString(R.string.poin));
 
                     if (classAssignmentResponse.getAttachment_path() != null){
-                        Helper.loadImageWithGlide(this, classAssignmentResponse.getAttachment_path(), bindingEsai.gambar);
                         bindingEsai.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
+                        bindingEsai.namaPdf.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
 
-                        bindingEsai.fileCard.setOnClickListener(v -> {
-                            Helper.showFullScreenImageDialog(this, classAssignmentResponse.getAttachment_path());
-                        });
+                        if (Helper.isPdfFile(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()))) {
+                            bindingEsai.fileCard.setVisibility(View.GONE);
+                            bindingEsai.pdfCard.setVisibility(View.VISIBLE);
+
+                            viewModel.isLoading.postValue(true);
+
+                            Helper.downloadPdfToCache(this, classAssignmentResponse.getAttachment_path(), new Helper.PdfDownloadListener() {
+                                @Override
+                                public void onDownloadSuccess(File pdfFile) {
+                                    Helper.showPdfPreview(bindingEsai.pdfView, pdfFile);
+                                    bindingEsai.pdfView.setOnClickListener(v -> {
+                                        Helper.showFullScreenFileDialog(ViewStudentAssignmentActivity.this, classAssignmentResponse.getAttachment_path(), pdfFile);
+                                    });
+                                    viewModel.isLoading.postValue(false);
+                                }
+
+                                @Override
+                                public void onDownloadFailed(String errorMessage) {
+                                    viewModel.isLoading.postValue(false);
+                                    Toast.makeText(ViewStudentAssignmentActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        } else {
+                            Helper.loadImageWithGlide(this, classAssignmentResponse.getAttachment_path(), bindingEsai.gambar);
+
+                            bindingEsai.fileCard.setOnClickListener(v -> {
+                                Helper.showFullScreenFileDialog(this, classAssignmentResponse.getAttachment_path(), null);
+                            });
+                        }
+                        
                     } else {
                         bindingEsai.linearLampiran.setVisibility(View.GONE);
                     }
@@ -361,18 +466,32 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                 Uri fileUri = data.getData();
                 file = Helper.copyFileToAppDirectory(this, fileUri);
                 if (file != null) {
-                    Toast.makeText(this, "File berhasil diupload : " + file.getName(), Toast.LENGTH_SHORT).show();
-                    bindingFile.bottomJawaban.fileCard.setVisibility(View.VISIBLE);
-                    bindingFile.bottomJawaban.cardEmpty.setVisibility(View.GONE);
-                    bindingFile.bottomJawaban.btnRemove.setVisibility(View.VISIBLE);
+                    if (Helper.isPdfFile(file.getPath())){
+                        bindingFile.bottomJawaban.pdfCard.setVisibility(View.VISIBLE);
+                        bindingFile.bottomJawaban.fileCard.setVisibility(View.GONE);
+                        bindingFile.bottomJawaban.cardEmpty.setVisibility(View.GONE);
+                        bindingFile.bottomJawaban.btnRemovePdf.setVisibility(View.VISIBLE);
 
-                    bindingFile.bottomJawaban.btnAddTugas.setText(R.string.text_serahkan);
-                    bindingFile.btnUploadTugas.setText(R.string.text_serahkan);
+                        bindingFile.bottomJawaban.btnAddTugas.setText(R.string.text_serahkan);
+                        bindingFile.btnUploadTugas.setText(R.string.text_serahkan);
 
-                    Helper.loadImageWithGlide(this, file, bindingFile.bottomJawaban.gambar);
-                    bindingFile.bottomJawaban.namaGambar.setText(file.getName());
+                        Helper.showPdfPreview(bindingFile.bottomJawaban.pdfView, file);
+                        bindingFile.bottomJawaban.namaPdf.setText(file.getName());
 
-                    changeClickListener();
+                        changeClickListener();
+                    } else {
+                        bindingFile.bottomJawaban.fileCard.setVisibility(View.VISIBLE);
+                        bindingFile.bottomJawaban.cardEmpty.setVisibility(View.GONE);
+                        bindingFile.bottomJawaban.btnRemove.setVisibility(View.VISIBLE);
+
+                        bindingFile.bottomJawaban.btnAddTugas.setText(R.string.text_serahkan);
+                        bindingFile.btnUploadTugas.setText(R.string.text_serahkan);
+
+                        Helper.loadImageWithGlide(this, file, bindingFile.bottomJawaban.gambar);
+                        bindingFile.bottomJawaban.namaGambar.setText(file.getName());
+
+                        changeClickListener();
+                    }
                 }
             }
         }

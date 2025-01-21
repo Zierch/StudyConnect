@@ -1,6 +1,7 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -8,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.databinding.InfoMateriBinding;
-import com.example.studyconnect.databinding.InfoPengumumanBinding;
-import com.example.studyconnect.ui.class_ui.forum.ForumViewModel;
 import com.example.studyconnect.utils.Helper;
+
+import java.io.File;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -50,18 +51,44 @@ public class ViewMateriActivity extends AppCompatActivity {
 
         viewModel.getMaterial(materiId).observe(this, materialResponse -> {
             binding.judul.setText(materialResponse.getTitle());
-            if (materialResponse.getDescription() != null){
-            binding.tvDeskripsi.setText(materialResponse.getDescription());
+            if (materialResponse.getDescription() != null) {
+                binding.tvDeskripsi.setText(materialResponse.getDescription());
             } else {
                 binding.tvDeskripsi.setVisibility(View.GONE);
             }
-            if (materialResponse.getAttachment_path() != null){
+            if (materialResponse.getAttachment_path() != null) {
                 binding.namaGambar.setText(Helper.getFileNameFromPath(materialResponse.getAttachment_path()));
-                Helper.loadImageWithGlide(this, materialResponse.getAttachment_path(), binding.gambar);
+                binding.namaPdf.setText(Helper.getFileNameFromPath(materialResponse.getAttachment_path()));
 
-                binding.fileCard.setOnClickListener(v -> {
-                    Helper.showFullScreenImageDialog(this, materialResponse.getAttachment_path());
-                });
+                if (Helper.isPdfFile(Helper.getFileNameFromPath(materialResponse.getAttachment_path()))) {
+                    binding.fileCard.setVisibility(View.GONE);
+                    binding.pdfCard.setVisibility(View.VISIBLE);
+
+                    viewModel.isLoading.postValue(true);
+
+                    Helper.downloadPdfToCache(this, materialResponse.getAttachment_path(), new Helper.PdfDownloadListener() {
+                        @Override
+                        public void onDownloadSuccess(File pdfFile) {
+                            Helper.showPdfPreview(binding.pdfView, pdfFile);
+                            binding.pdfView.setOnClickListener(v -> {
+                                Helper.showFullScreenFileDialog(ViewMateriActivity.this, materialResponse.getAttachment_path(), pdfFile);
+                            });
+                            viewModel.isLoading.postValue(false);
+                        }
+
+                        @Override
+                        public void onDownloadFailed(String errorMessage) {
+                            viewModel.isLoading.postValue(false);
+                            Toast.makeText(ViewMateriActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    Helper.loadImageWithGlide(this, materialResponse.getAttachment_path(), binding.gambar);
+                    binding.fileCard.setOnClickListener(v -> {
+                        Helper.showFullScreenFileDialog(this, materialResponse.getAttachment_path(), null);
+                    });
+                }
             }
         });
     }

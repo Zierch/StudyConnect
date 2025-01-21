@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +17,13 @@ import com.example.studyconnect.data.response.AnnouncementResponse;
 import com.example.studyconnect.data.response.RegisterResponse;
 import com.example.studyconnect.databinding.BottomTwoDialogBinding;
 import com.example.studyconnect.databinding.ItemForumGambarBinding;
+import com.example.studyconnect.ui.class_ui.assignment.ViewMateriActivity;
 import com.example.studyconnect.ui.class_ui.forum.FormForumActivity;
 import com.example.studyconnect.ui.class_ui.forum.ForumViewModel;
 import com.example.studyconnect.utils.Helper;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,8 +95,30 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ViewHolder> 
             holder.binding.fileCard.setVisibility(View.GONE);
         } else {
             holder.binding.namaGambar.setText(Helper.getFileNameFromPath(announcementItem.getAttachment_path()));
-            Log.d("TAG", "onBindViewHolder: " + announcementItem.getAttachment_path());
-            Helper.loadImageWithGlide(holder.itemView.getContext(), announcementItem.getAttachment_path(), holder.binding.gambar);
+            holder.binding.namaPdf.setText(Helper.getFileNameFromPath(announcementItem.getAttachment_path()));
+            if (Helper.isPdfFile(Helper.getFileNameFromPath(announcementItem.getAttachment_path()))) {
+                holder.binding.fileCard.setVisibility(View.GONE);
+                holder.binding.pdfCard.setVisibility(View.VISIBLE);
+
+                viewModel.isLoading.postValue(true);
+
+                Helper.downloadPdfToCache(holder.itemView.getContext(), announcementItem.getAttachment_path(), new Helper.PdfDownloadListener() {
+                    @Override
+                    public void onDownloadSuccess(File pdfFile) {
+                        Helper.showPdfPreview(holder.binding.pdfView, pdfFile);
+                        viewModel.isLoading.postValue(false);
+                    }
+
+                    @Override
+                    public void onDownloadFailed(String errorMessage) {
+                        viewModel.isLoading.postValue(false);
+                        Toast.makeText(holder.itemView.getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } else {
+                Helper.loadImageWithGlide(holder.itemView.getContext(), announcementItem.getAttachment_path(), holder.binding.gambar);
+            }
         }
 
         holder.binding.ivEditForum.setOnClickListener(v -> {

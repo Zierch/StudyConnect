@@ -8,7 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.databinding.InfoPengumumanBinding;
+import com.example.studyconnect.ui.class_ui.assignment.ViewMateriActivity;
 import com.example.studyconnect.utils.Helper;
+
+import java.io.File;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -52,11 +55,37 @@ public class ViewForumActivity extends AppCompatActivity {
                 binding.fileCard.setVisibility(View.GONE);
             } else {
                 binding.namaGambar.setText(Helper.getFileNameFromPath(announcement.getAttachment_path()));
-                Helper.loadImageWithGlide(this, announcement.getAttachment_path(), binding.gambar);
+                binding.namaPdf.setText(Helper.getFileNameFromPath(announcement.getAttachment_path()));
+                if (Helper.isPdfFile(Helper.getFileNameFromPath(announcement.getAttachment_path()))) {
+                    binding.fileCard.setVisibility(View.GONE);
+                    binding.pdfCard.setVisibility(View.VISIBLE);
 
-                binding.fileCard.setOnClickListener(v -> {
-                    Helper.showFullScreenImageDialog(this, announcement.getAttachment_path());
-                });
+                    viewModel.isLoading.postValue(true);
+
+                    Helper.downloadPdfToCache(this, announcement.getAttachment_path(), new Helper.PdfDownloadListener() {
+                        @Override
+                        public void onDownloadSuccess(File pdfFile) {
+                            Helper.showPdfPreview(binding.pdfView, pdfFile);
+                            binding.pdfView.setOnClickListener(v -> {
+                                Helper.showFullScreenFileDialog(ViewForumActivity.this, announcement.getAttachment_path(), pdfFile);
+                            });
+                            viewModel.isLoading.postValue(false);
+                        }
+
+                        @Override
+                        public void onDownloadFailed(String errorMessage) {
+                            viewModel.isLoading.postValue(false);
+                            Toast.makeText( ViewForumActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    Helper.loadImageWithGlide(this, announcement.getAttachment_path(), binding.gambar);
+
+                    binding.fileCard.setOnClickListener(v -> {
+                        Helper.showFullScreenFileDialog(this, announcement.getAttachment_path(), null);
+                    });
+                }
             }
 
         });

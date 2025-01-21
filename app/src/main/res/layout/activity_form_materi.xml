@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:hint="@string/text_judul_tugas_wajib"
+        android:hint="@string/text_judul_materi_wajib"
         android:inputType="textCapWords"
         android:padding="20dp"
         android:textColor="@color/black"

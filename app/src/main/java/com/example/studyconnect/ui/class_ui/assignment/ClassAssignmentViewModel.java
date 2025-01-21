@@ -45,7 +45,7 @@ public class ClassAssignmentViewModel extends ViewModel {
     private final MutableLiveData<ClassAssignmentResponse> assignment = new MutableLiveData<>();
     private final MutableLiveData<MaterialResponse> material = new MutableLiveData<>();
     private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
 
@@ -196,7 +196,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
         LiveData<Result<MaterialResponse>> liveData =
                 repository.updateMaterial(
-                        classId, id, titleBody, descriptionBody, filePart, teacherIdBody
+                        id, titleBody, descriptionBody, filePart, teacherIdBody
                 );
         liveData.observeForever(result -> {
             if (result != null) {

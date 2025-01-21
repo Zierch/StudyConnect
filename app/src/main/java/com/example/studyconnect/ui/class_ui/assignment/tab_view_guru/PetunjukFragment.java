@@ -13,8 +13,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.studyconnect.R;
 import com.example.studyconnect.databinding.FragmentPetunjukTugasBinding;
 import com.example.studyconnect.ui.class_ui.assignment.SubmissionViewModel;
+import com.example.studyconnect.ui.class_ui.assignment.ViewMateriActivity;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -71,12 +74,40 @@ public class PetunjukFragment extends Fragment {
             binding.maxPoint.setText(maxScore + " " + getString(R.string.poin));
 
             if (classAssignmentResponse.getAttachment_path() != null){
-                Helper.loadImageWithGlide(requireContext(), classAssignmentResponse.getAttachment_path(), binding.gambar);
                 binding.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
+                binding.namaPdf.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
 
-                binding.fileCard.setOnClickListener(v -> {
-                    Helper.showFullScreenImageDialog(requireContext(), classAssignmentResponse.getAttachment_path());
-                });
+                if (Helper.isPdfFile(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()))) {
+                    binding.fileCard.setVisibility(View.GONE);
+                    binding.pdfCard.setVisibility(View.VISIBLE);
+
+                    viewModel.isLoading.postValue(true);
+
+                    Helper.downloadPdfToCache(requireContext(), classAssignmentResponse.getAttachment_path(), new Helper.PdfDownloadListener() {
+                        @Override
+                        public void onDownloadSuccess(File pdfFile) {
+                            Helper.showPdfPreview(binding.pdfView, pdfFile);
+                            binding.pdfView.setOnClickListener(v -> {
+                                Helper.showFullScreenFileDialog(requireContext(), classAssignmentResponse.getAttachment_path(), pdfFile);
+                            });
+                            viewModel.isLoading.postValue(false);
+                        }
+
+                        @Override
+                        public void onDownloadFailed(String errorMessage) {
+                            viewModel.isLoading.postValue(false);
+                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    Helper.loadImageWithGlide(requireContext(), classAssignmentResponse.getAttachment_path(), binding.gambar);
+
+                    binding.fileCard.setOnClickListener(v -> {
+                        Helper.showFullScreenFileDialog(requireContext(), classAssignmentResponse.getAttachment_path(), null);
+                    });
+                }
+                
             } else {
                 binding.linearLampiran.setVisibility(View.GONE);
             }

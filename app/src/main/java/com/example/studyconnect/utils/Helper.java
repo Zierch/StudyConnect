@@ -10,8 +10,10 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -27,6 +29,8 @@ import androidx.appcompat.widget.AppCompatRadioButton;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.example.studyconnect.R;
+import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +39,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -90,11 +96,42 @@ public class Helper {
     }
 
     public static File copyFileToAppDirectory(Context context, Uri uri) {
+        // Daftar tipe MIME yang diizinkan (PDF dan gambar)
+        String[] allowedMimeTypes = {
+                "application/pdf", // PDF
+                "image/jpeg",      // JPEG
+                "image/png",       // PNG
+                "image/gif",       // GIF
+                "image/bmp",       // BMP
+                "image/webp"       // WEBP
+        };
+
+        // Dapatkan tipe MIME dari file
+        String mimeType = context.getContentResolver().getType(uri);
+
+        // Validasi tipe MIME
+        boolean isAllowed = false;
+        if (mimeType != null) {
+            for (String allowedType : allowedMimeTypes) {
+                if (mimeType.equals(allowedType)) {
+                    isAllowed = true;
+                    break;
+                }
+            }
+        }
+
+        // Jika tipe file tidak diizinkan, kembalikan null
+        if (!isAllowed) {
+            return null;
+        }
+
+        // Dapatkan nama file dari URI
         String fileName = getFileNameFromUri(context, uri);
         if (fileName == null) {
             fileName = "temp_file";
         }
 
+        // Salin file ke direktori aplikasi
         File outputFile = new File(context.getCacheDir(), fileName);
 
         try (InputStream inputStream = context.getContentResolver().openInputStream(uri);
@@ -113,6 +150,14 @@ public class Helper {
         return null;
     }
 
+    public static boolean isPdfFile(String filePath) {
+        if (filePath != null) {
+            String extension = filePath.substring(filePath.lastIndexOf(".") + 1).toLowerCase();
+            return extension.equals("pdf");
+        }
+        return false;
+    }
+    
     @SuppressLint("Range")
     public static String getFileNameFromUri(Context context, Uri uri) {
         String fileName = null;
@@ -269,12 +314,25 @@ public class Helper {
         dialog.show();
     }
 
-    public static void loadImageWithGlide(Context context, String imageUrl, ImageView imageView) {
-        String newImageUrl = "https://studyconnect-api-production.up.railway.app/storage/"+imageUrl;
-        Glide.with(context)
-                .load(newImageUrl)
-                .optionalCenterCrop()
-                .into(imageView);
+    public static void loadImageWithGlide(Context context, String fileUrl, ImageView imageView) {
+        if (fileUrl == null || fileUrl.isEmpty()) {
+            return;
+        }
+
+        // Periksa jenis file
+        boolean isPdf = isPdfFile(fileUrl);
+        String fullFileUrl = "https://studyconnect-api-production.up.railway.app/storage/" + fileUrl;
+
+        if (isPdf) {
+            // Tampilkan ikon PDF
+            imageView.setImageResource(R.drawable.ic_pdf); // Ganti dengan ikon PDF Anda
+        } else {
+            // Tampilkan gambar menggunakan Glide
+            Glide.with(context)
+                    .load(fullFileUrl)
+                    .optionalCenterCrop()
+                    .into(imageView);
+        }
     }
 
     public static void loadImageWithGlide(Context context, File imageFile, ImageView imageView) {
@@ -285,7 +343,16 @@ public class Helper {
     }
 
     public static String getFileNameFromPath(String attachmentPath) {
-        return attachmentPath.substring(attachmentPath.lastIndexOf("_") + 1);
+        // Cari posisi underscore pertama
+        int underscoreIndex = attachmentPath.indexOf("_");
+
+        // Jika underscore ditemukan, ambil substring setelahnya
+        if (underscoreIndex != -1) {
+            return attachmentPath.substring(underscoreIndex + 1);
+        }
+
+        // Jika tidak ada underscore, kembalikan string asli
+        return attachmentPath;
     }
 
     public static void addRadioButtonsFromJsonArray(Context context, RadioGroup radioGroup, String jsonArrayString) {
@@ -336,35 +403,120 @@ public class Helper {
         }
     }
 
-    public static void showFullScreenImageDialog(Context context, String imageUrl) {
-        if (imageUrl.isEmpty()){
+    public static void showPdfPreview(PDFView pdfView, File pdfFile) {
+        if (pdfFile == null) {
             return;
         }
+
+        // Tampilkan halaman pertama PDF sebagai preview
+        pdfView.fromFile(pdfFile)
+                .pages(0) // Hanya tampilkan halaman pertama
+                .enableSwipe(false) // Nonaktifkan swipe untuk preview
+                .enableDoubletap(false) // Nonaktifkan zoom untuk preview
+                .enableAnnotationRendering(false) // Nonaktifkan rendering anotasi
+                .scrollHandle(null) // Nonaktifkan scroll handle
+                .load();
+    }
+
+    public static void showFullScreenFileDialog(Context context, String fileUrl, File pdfFile) {
+        if (fileUrl.isEmpty()) {
+            return;
+        }
+
         // Buat dialog
-        String newImageUrl = "https://studyconnect-api-production.up.railway.app/storage/"+imageUrl;
         final Dialog dialog = new Dialog(context, android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.fullscreen_image_dialog);
+        dialog.setContentView(R.layout.fullscreen_file_dialog);
 
         // Inisialisasi view
-        ImageView fullscreenImageView = dialog.findViewById(R.id.fullscreenImageView);
+        PDFView pdfView = dialog.findViewById(R.id.pdfView);
+        ImageView fullImageView = dialog.findViewById(R.id.fullscreenImageView);
         ImageView closeButton = dialog.findViewById(R.id.closeButton);
 
-        // Gunakan Glide untuk memuat gambar
-        Glide.with(context)
-                .load(newImageUrl)
-                .fitCenter()
-                .into(fullscreenImageView);
+        // Periksa jenis file
+        boolean isPdf = isPdfFile(fileUrl);
+        String fullFileUrl = "https://studyconnect-api-production.up.railway.app/storage/"+ fileUrl;
+
+        if (isPdf) {
+            // Tampilkan PDF
+            fullImageView.setVisibility(View.GONE);
+            pdfView.setVisibility(View.VISIBLE);
+            pdfView.fromFile(pdfFile)
+                    .enableSwipe(true)
+                    .enableDoubletap(true)
+                    .defaultPage(0)
+                    .enableAnnotationRendering(false)
+                    .password(null)
+                    .scrollHandle(new DefaultScrollHandle(context))
+                    .load();
+        } else {
+            // Tampilkan gambar
+            Glide.with(context)
+                    .load(fullFileUrl)
+                    .fitCenter()
+                    .into(fullImageView);
+        }
 
         // Tutup dialog saat tombol close diklik
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        closeButton.setOnClickListener(v -> dialog.dismiss());
 
         // Tampilkan dialog
         dialog.show();
+    }
+
+    public interface PdfDownloadListener {
+        void onDownloadSuccess(File pdfFile);
+        void onDownloadFailed(String errorMessage);
+    }
+
+    public static void downloadPdfToCache(Context context, String pdfUrl, PdfDownloadListener listener) {
+        String fullPdfUrl = "https://studyconnect-api-production.up.railway.app/storage/" + pdfUrl;
+        new AsyncTask<Void, Void, File>() {
+            @Override
+            protected File doInBackground(Void... voids) {
+                try {
+                    // Buat URL koneksi
+                    URL url = new URL(fullPdfUrl);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoInput(true);
+                    connection.connect();
+
+                    // Buat file di cache direktori
+                    File file = new File(context.getCacheDir(), "temp.pdf");
+                    FileOutputStream output = new FileOutputStream(file);
+
+                    // Unduh file
+                    InputStream input = connection.getInputStream();
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = input.read(buffer)) > 0) {
+                        output.write(buffer, 0, length);
+                    }
+
+                    // Tutup stream
+                    output.close();
+                    input.close();
+                    return file;
+                } catch (Exception e) {
+                    Log.e("Helper", "Error downloading PDF", e);
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(File pdfFile) {
+                if (pdfFile != null) {
+                    // Panggil listener jika berhasil
+                    if (listener != null) {
+                        listener.onDownloadSuccess(pdfFile);
+                    }
+                } else {
+                    // Panggil listener jika gagal
+                    if (listener != null) {
+                        listener.onDownloadFailed("Gagal mengunduh PDF");
+                    }
+                }
+            }
+        }.execute();
     }
 }

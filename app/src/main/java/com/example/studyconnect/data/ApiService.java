@@ -131,7 +131,6 @@ public interface ApiService {
     @Multipart
     @POST("material/{id}?_method=PUT")
     Call<MaterialResponse> updateMaterial(
-            @Path("classId") int classId,
             @Path("id") int id,
             @Part("title") RequestBody title,
             @Part("description") RequestBody description,

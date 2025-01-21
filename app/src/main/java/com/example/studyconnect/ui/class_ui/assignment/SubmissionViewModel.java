@@ -32,7 +32,7 @@ public class SubmissionViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isAnswered = new MutableLiveData<>();

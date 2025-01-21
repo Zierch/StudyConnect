@@ -132,7 +132,7 @@ public class FormScoringActivity extends AppCompatActivity {
                     Helper.loadImageWithGlide(this, submissionResponse.getAttachment_path(), binding.gambar);
                     binding.namaGambar.setText(Helper.getFileNameFromPath(submissionResponse.getAttachment_path()));
                     binding.fileCard.setOnClickListener(v -> {
-                        Helper.showFullScreenImageDialog(this, submissionResponse.getAttachment_path());
+                        Helper.showFullScreenFileDialog(this, submissionResponse.getAttachment_path(), null);
                     });
                     break;
                 case "essay":

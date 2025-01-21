@@ -29,7 +29,7 @@ public class ForumViewModel extends ViewModel {
     // LiveData untuk class, user, dan status loading/success/error
     private final MutableLiveData<ClassResponse> classData = new MutableLiveData<>();
     private final MutableLiveData<RegisterResponse> user = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
     private final MutableLiveData<String> errorMsg = new MutableLiveData<>();
     private final MutableLiveData<List<AnnouncementResponse>> announcements = new MutableLiveData<>();
