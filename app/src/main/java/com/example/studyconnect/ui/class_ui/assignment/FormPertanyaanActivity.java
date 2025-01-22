@@ -9,13 +9,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
@@ -46,7 +50,7 @@ public class FormPertanyaanActivity extends AppCompatActivity {
     private int questionPosition = 1;
     private int classId, assignmentId;
     private boolean isUpdate, isEssay = false, isSuccess = false;
-    private String scheduledAt, dueDate, type, options = "";
+    private String scheduledAt, dueDate, type, link, options = "";
     private File photoFile, file = null;
     private final Map<Integer, Map<String, Integer>> idMap = new HashMap<>();
 
@@ -233,12 +237,12 @@ public class FormPertanyaanActivity extends AppCompatActivity {
                     Log.d("form4", type);
                     viewModel.updateAssignment(
                             assignmentId, title, description, dueDate,
-                            points, file, type, options
+                            points, file, link, type, options
                     );
                 } else {
                     viewModel.createAssignment(
                             classId, title, description, dueDate, scheduledAt,
-                            points, file, type, options
+                            points, file, link, type, options
                     );
                 }
             }
@@ -276,6 +280,55 @@ public class FormPertanyaanActivity extends AppCompatActivity {
             BottomUploadDialogBinding uploadDialog = BottomUploadDialogBinding.inflate(
                     LayoutInflater.from(FormPertanyaanActivity.this)
             );
+            uploadDialog.btnUploadLink.setVisibility(View.VISIBLE);
+
+            uploadDialog.btnUploadLink.setOnClickListener(v1 -> {
+                // Buat dialog untuk memasukkan link
+                AlertDialog.Builder builder = new AlertDialog.Builder(FormPertanyaanActivity.this);
+                builder.setTitle("Tambahkan Link");
+
+                // Buat container (LinearLayout) untuk menambahkan padding
+                LinearLayout container = new LinearLayout(FormPertanyaanActivity.this);
+                container.setOrientation(LinearLayout.VERTICAL);
+                int padding = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics()
+                );
+                container.setPadding(padding, padding, padding, padding); // Atur padding
+
+                // Tambahkan input field
+                final EditText input = new EditText(FormPertanyaanActivity.this);
+                input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+                input.setHint("Tambahkan link");
+                container.addView(input);
+
+                // Set container sebagai view untuk dialog
+                builder.setView(container);
+
+                builder.setPositiveButton("Tambahkan", (dialog, which) -> {
+                    String url = input.getText().toString().trim();
+
+                    // Validasi URL
+                    if (!url.isEmpty() && android.util.Patterns.WEB_URL.matcher(url).matches()) {
+                        link = url;
+                        binding.namaFile.setText(link);
+                        binding.btnRemove.setVisibility(View.VISIBLE);
+                        binding.btnAddFile.setEnabled(false);
+                    } else {
+                        Toast.makeText(FormPertanyaanActivity.this, "URL tidak valid", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                builder.setNegativeButton("Batal", (dialog, which) -> {
+                    dialog.cancel();
+                });
+
+                // Tampilkan dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                // Tutup bottom sheet
+                bottomSheetDialog.dismiss();
+            });
 
             uploadDialog.btnUploadFile.setOnClickListener(v1 -> {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);

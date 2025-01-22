@@ -7,6 +7,7 @@ public class ClassAssignmentResponse {
     private int class_id;
     private int max_score;
     private String attachment_path;
+    private String link_url;
     private String due_date;
     private String description;
     private String scheduled_at;
@@ -148,6 +149,14 @@ public class ClassAssignmentResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getLink_url() {
+        return link_url;
+    }
+
+    public void setLink_url(String link_url) {
+        this.link_url = link_url;
     }
 
     @Override

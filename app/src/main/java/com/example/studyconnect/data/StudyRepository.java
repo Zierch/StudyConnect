@@ -493,13 +493,13 @@ public class StudyRepository {
     // Method create assignment
     public LiveData<Result<ClassAssignmentResponse>> createAssignment(
             int classId, RequestBody title, RequestBody desc, MultipartBody.Part attachment,
-            RequestBody dueDate, RequestBody points, RequestBody typeAssignment,
+            RequestBody link, RequestBody dueDate, RequestBody points, RequestBody typeAssignment,
             RequestBody options, RequestBody scheduleAt
     ) {
         MutableLiveData<Result<ClassAssignmentResponse>> resultLiveData = new MutableLiveData<>();
 
         Call<ClassAssignmentResponse> call = apiService.createAssignment(
-                classId, title, desc, attachment, dueDate, points,
+                classId, title, desc, attachment, link, dueDate, points,
                 typeAssignment, options, scheduleAt
         );
         call.enqueue(new Callback<ClassAssignmentResponse>() {
@@ -531,13 +531,13 @@ public class StudyRepository {
     // Method update assignment
     public LiveData<Result<ClassAssignmentResponse>> updateAssignment(
             int id, RequestBody title, RequestBody desc, MultipartBody.Part attachment,
-            RequestBody dueDate, RequestBody points, RequestBody typeAssignment,
+            RequestBody link, RequestBody dueDate, RequestBody points, RequestBody typeAssignment,
             RequestBody options
     ) {
         MutableLiveData<Result<ClassAssignmentResponse>> resultLiveData = new MutableLiveData<>();
 
         Call<ClassAssignmentResponse> call = apiService.updateAssignment(
-                id, title, desc, attachment, dueDate, points, typeAssignment, options
+                id, title, desc, attachment, link, dueDate, points, typeAssignment, options
         );
         call.enqueue(new Callback<ClassAssignmentResponse>() {
             @Override
@@ -648,12 +648,12 @@ public class StudyRepository {
     // Method create assignment
     public LiveData<Result<MaterialResponse>> createMaterial(
             int classId, RequestBody title, RequestBody desc,
-            MultipartBody.Part attachment, RequestBody teacherId
+            MultipartBody.Part attachment, RequestBody link, RequestBody teacherId
     ) {
         MutableLiveData<Result<MaterialResponse>> resultLiveData = new MutableLiveData<>();
 
         Call<MaterialResponse> call = apiService.createMaterial(
-                classId, title, desc, attachment, teacherId
+                classId, title, desc, attachment, link, teacherId
         );
         call.enqueue(new Callback<MaterialResponse>() {
             @Override
@@ -683,12 +683,12 @@ public class StudyRepository {
     // Method update assignment
     public LiveData<Result<MaterialResponse>> updateMaterial(
             int id, RequestBody title, RequestBody desc,
-            MultipartBody.Part attachment, RequestBody teacherId
+            MultipartBody.Part attachment, RequestBody link, RequestBody teacherId
     ) {
         MutableLiveData<Result<MaterialResponse>> resultLiveData = new MutableLiveData<>();
 
         Call<MaterialResponse> call = apiService.updateMaterial(
-                id, title, desc, attachment, teacherId
+                id, title, desc, attachment, link, teacherId
         );
         call.enqueue(new Callback<MaterialResponse>() {
             @Override

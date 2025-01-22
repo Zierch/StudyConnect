@@ -56,6 +56,13 @@ public class ViewMateriActivity extends AppCompatActivity {
             } else {
                 binding.tvDeskripsi.setVisibility(View.GONE);
             }
+            if (materialResponse.getLink_url() != null){
+                binding.tvLink.setText(materialResponse.getLink_url());
+
+                binding.tvLink.setVisibility(View.VISIBLE);
+                binding.fileCard.setVisibility(View.GONE);
+                binding.pdfCard.setVisibility(View.GONE);
+            }
             if (materialResponse.getAttachment_path() != null) {
                 binding.namaGambar.setText(Helper.getFileNameFromPath(materialResponse.getAttachment_path()));
                 binding.namaPdf.setText(Helper.getFileNameFromPath(materialResponse.getAttachment_path()));

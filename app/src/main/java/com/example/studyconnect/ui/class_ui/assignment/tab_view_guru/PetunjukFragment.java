@@ -73,6 +73,14 @@ public class PetunjukFragment extends Fragment {
             binding.judulTugas.setText(classAssignmentResponse.getTitle());
             binding.maxPoint.setText(maxScore + " " + getString(R.string.poin));
 
+            if (classAssignmentResponse.getLink_url() != null){
+                binding.tvLink.setText(classAssignmentResponse  .getLink_url());
+
+                binding.tvLink.setVisibility(View.VISIBLE);
+                binding.fileCard.setVisibility(View.GONE);
+                binding.pdfCard.setVisibility(View.GONE);
+            }
+
             if (classAssignmentResponse.getAttachment_path() != null){
                 binding.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
                 binding.namaPdf.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));

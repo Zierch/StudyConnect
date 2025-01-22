@@ -1,6 +1,7 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -117,7 +118,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
     public void createMaterial(
             int classId, String title, String description, File attachmentFile,
-            String teacherId
+            String link, String teacherId
     ) {
         isLoading.postValue(true);
         isSuccess.postValue(false);
@@ -136,6 +137,10 @@ public class ClassAssignmentViewModel extends ViewModel {
         }
 
         RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody linkBody = null;
+        if (link != null){
+            linkBody = RequestBody.create(MediaType.parse("text/plain"), link);
+        }
         RequestBody descriptionBody = RequestBody.create(
                 MediaType.parse("text/plain"), description != null ? description : ""
         );
@@ -145,7 +150,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
         LiveData<Result<MaterialResponse>> liveData =
                 repository.createMaterial(
-                        classId, titleBody, descriptionBody, filePart, teacherIdBody
+                        classId, titleBody, descriptionBody, filePart, linkBody, teacherIdBody
                 );
         liveData.observeForever(result -> {
             if (result != null) {
@@ -167,8 +172,8 @@ public class ClassAssignmentViewModel extends ViewModel {
     }
 
     public void updateMaterial(
-            int classId, int id, String title, String description, File attachmentFile,
-            String teacherId
+            int id, String title, String description, File attachmentFile,
+            String link, String teacherId
     ) {
         isLoading.postValue(true);
         isSuccess.postValue(false);
@@ -187,6 +192,10 @@ public class ClassAssignmentViewModel extends ViewModel {
         }
 
         RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody linkBody = null;
+        if (link != null){
+            linkBody = RequestBody.create(MediaType.parse("text/plain"), link);
+        }
         RequestBody descriptionBody = RequestBody.create(
                 MediaType.parse("text/plain"), description != null ? description : ""
         );
@@ -196,7 +205,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
         LiveData<Result<MaterialResponse>> liveData =
                 repository.updateMaterial(
-                        id, titleBody, descriptionBody, filePart, teacherIdBody
+                        id, titleBody, descriptionBody, filePart, linkBody, teacherIdBody
                 );
         liveData.observeForever(result -> {
             if (result != null) {
@@ -367,8 +376,8 @@ public class ClassAssignmentViewModel extends ViewModel {
 
     public void createAssignment(
             int classId, String title, String description, String dueDate,
-            String scheduleAt, String points, File attachmentFile, String type,
-            String options
+            String scheduleAt, String points, File attachmentFile, String link,
+            String type, String options
     ) {
         isLoading.postValue(true);
         isSuccess.postValue(false);
@@ -387,6 +396,10 @@ public class ClassAssignmentViewModel extends ViewModel {
         }
 
         RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody linkBody = null;
+        if (link != null){
+            linkBody = RequestBody.create(MediaType.parse("text/plain"), link);
+        }
         RequestBody descriptionBody = RequestBody.create(
                 MediaType.parse("text/plain"), description != null ? description : ""
         );
@@ -406,7 +419,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
         LiveData<Result<ClassAssignmentResponse>> liveData =
                 repository.createAssignment(
-                        classId, titleBody, descriptionBody, filePart, dueDateBody, maxScoreBody,
+                        classId, titleBody, descriptionBody, filePart, linkBody, dueDateBody, maxScoreBody,
                         typeAssignmentBody, optionsBody, scheduleAtBody
                 );
         liveData.observeForever(result -> {
@@ -430,7 +443,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
     public void updateAssignment(
             int id, String title, String description, String dueDate, String points,
-            File attachmentFile, String type, String options
+            File attachmentFile, String link, String type, String options
     ) {
         isLoading.postValue(true);
         isSuccess.postValue(false);
@@ -449,6 +462,10 @@ public class ClassAssignmentViewModel extends ViewModel {
         }
 
         RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"), title);
+        RequestBody linkBody = null;
+        if (link != null){
+            linkBody = RequestBody.create(MediaType.parse("text/plain"), link);
+        }
         RequestBody descriptionBody = RequestBody.create(
                 MediaType.parse("text/plain"), description != null ? description : ""
         );
@@ -465,7 +482,7 @@ public class ClassAssignmentViewModel extends ViewModel {
 
         LiveData<Result<ClassAssignmentResponse>> liveData =
                 repository.updateAssignment(
-                        id, titleBody, descriptionBody, filePart, dueDateBody, maxScoreBody,
+                        id, titleBody, descriptionBody, filePart, linkBody, dueDateBody, maxScoreBody,
                         typeAssignmentBody, optionsBody
                 );
         liveData.observeForever(result -> {

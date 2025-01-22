@@ -99,8 +99,21 @@
             android:layout_gravity="start"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/lampiran"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tvLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:layout_marginStart="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Link akan muncul di sini"
+            android:textColor="@color/md_theme_primary"
+            android:visibility="gone" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/fileCard"

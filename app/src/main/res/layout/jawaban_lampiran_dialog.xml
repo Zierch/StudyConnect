@@ -52,8 +52,22 @@
             android:layout_gravity="start"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/lampiran"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tvLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:layout_gravity="start"
+            android:layout_marginStart="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Link akan muncul di sini"
+            android:textColor="@color/md_theme_primary"
+            android:visibility="gone" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/fileCard"
@@ -136,7 +150,8 @@
 
                     <TextView
                         android:id="@+id/namaPdf"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:gravity="center_vertical"

@@ -1,29 +1,40 @@
 package com.example.studyconnect.ui.class_ui.assignment;
 
+import static com.example.studyconnect.utils.Helper.REQUEST_CODE_CAPTURE_IMAGE;
+import static com.example.studyconnect.utils.Helper.REQUEST_CODE_PICK_FILE;
 import static com.example.studyconnect.utils.Helper.REQUEST_CODE_PICK_IMAGE;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.studyconnect.R;
+import com.example.studyconnect.databinding.BottomUploadDialogBinding;
 import com.example.studyconnect.databinding.DetailTugasStudentBinding;
 import com.example.studyconnect.databinding.JawabanEsaiDialogBinding;
 import com.example.studyconnect.databinding.JawabanPilihanDialogBinding;
 import com.example.studyconnect.utils.Helper;
 import com.example.studyconnect.utils.SharedPreferencesManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 
 import java.io.File;
@@ -123,12 +134,56 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
             });
 
             bindingFile.bottomJawaban.btnAddTugas.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
+                        ViewStudentAssignmentActivity.this);
+                BottomUploadDialogBinding uploadDialog = BottomUploadDialogBinding.inflate(
+                        LayoutInflater.from(ViewStudentAssignmentActivity.this)
+                );
+
+                uploadDialog.btnUploadFile.setOnClickListener(v1 -> {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("*/*");
+                    startActivityForResult(intent, REQUEST_CODE_PICK_FILE);
+                    bottomSheetDialog.dismiss();
+                });
+
+                uploadDialog.btnUploadFoto.setOnClickListener(v1 -> {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    );
+                    startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+                    bottomSheetDialog.dismiss();
+                });
+
+                bottomSheetDialog.setContentView(uploadDialog.getRoot());
+                bottomSheetDialog.show();
             });
             bindingFile.btnUploadTugas.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(
+                        ViewStudentAssignmentActivity.this);
+                BottomUploadDialogBinding uploadDialog = BottomUploadDialogBinding.inflate(
+                        LayoutInflater.from(ViewStudentAssignmentActivity.this)
+                );
+
+                uploadDialog.btnUploadFile.setOnClickListener(v1 -> {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("*/*");
+                    startActivityForResult(intent, REQUEST_CODE_PICK_FILE);
+                    bottomSheetDialog.dismiss();
+                });
+
+                uploadDialog.btnUploadFoto.setOnClickListener(v1 -> {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    );
+                    startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+                    bottomSheetDialog.dismiss();
+                });
+
+                bottomSheetDialog.setContentView(uploadDialog.getRoot());
+                bottomSheetDialog.show();
             });
 
             bindingFile.bottomJawaban.btnRemove.setOnClickListener(v -> {
@@ -238,6 +293,14 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                     bindingPilihan.judulTugas.setText(classAssignmentResponse.getTitle());
                     bindingPilihan.maxScore.setText(maxScore + " " + getString(R.string.poin));
 
+                    if (classAssignmentResponse.getLink_url() != null){
+                        bindingPilihan.tvLink.setText(classAssignmentResponse.getLink_url());
+
+                        bindingPilihan.tvLink.setVisibility(View.VISIBLE);
+                        bindingPilihan.fileCard.setVisibility(View.GONE);
+                        bindingPilihan.pdfCard.setVisibility(View.GONE);
+                    }
+
                     if (classAssignmentResponse.getAttachment_path() != null){
                         bindingPilihan.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
                         bindingPilihan.namaPdf.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
@@ -319,6 +382,14 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                     bindingFile.deskripsi.setText(classAssignmentResponse.getDescription());
                     bindingFile.bottomJawaban.judulTugas.setText(classAssignmentResponse.getTitle());
 
+                    if (classAssignmentResponse.getLink_url() != null){
+                        bindingFile.tvLink.setText(classAssignmentResponse.getLink_url());
+
+                        bindingFile.tvLink.setVisibility(View.VISIBLE);
+                        bindingFile.fileCard.setVisibility(View.GONE);
+                        bindingFile.pdfCard.setVisibility(View.GONE);
+                    }
+
                     if (classAssignmentResponse.getAttachment_path() != null){
                         bindingFile.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
                         bindingFile.namaPdf.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));
@@ -391,6 +462,14 @@ public class ViewStudentAssignmentActivity extends AppCompatActivity {
                     maxScore = classAssignmentResponse.getMax_score();
                     bindingEsai.judulTugas.setText(classAssignmentResponse.getTitle());
                     bindingEsai.maxScore.setText(maxScore + " " + getString(R.string.poin));
+
+                    if (classAssignmentResponse.getLink_url() != null){
+                        bindingEsai.tvLink.setText(classAssignmentResponse.getLink_url());
+
+                        bindingEsai.tvLink.setVisibility(View.VISIBLE);
+                        bindingEsai.fileCard.setVisibility(View.GONE);
+                        bindingEsai.pdfCard.setVisibility(View.GONE);
+                    }
 
                     if (classAssignmentResponse.getAttachment_path() != null){
                         bindingEsai.namaGambar.setText(Helper.getFileNameFromPath(classAssignmentResponse.getAttachment_path()));

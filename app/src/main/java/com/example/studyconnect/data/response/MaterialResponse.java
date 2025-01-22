@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 public class MaterialResponse {
     private String attachment_path;
+    private String link_url;
     private String updated_at;
     private int teacher_id;
     private int class_id;
@@ -92,6 +93,14 @@ public class MaterialResponse {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getLink_url() {
+        return link_url;
+    }
+
+    public void setLink_url(String link_url) {
+        this.link_url = link_url;
     }
 
     @NonNull

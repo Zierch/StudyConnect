@@ -88,6 +88,7 @@ public interface ApiService {
             @Part("title") RequestBody title,
             @Part("description") RequestBody description,
             @Part MultipartBody.Part attachment,
+            @Part("link_url") RequestBody link_url,
             @Part("due_date") RequestBody dueDate,
             @Part("max_score") RequestBody maxScore,
             @Part("type") RequestBody typeAssignment,
@@ -102,6 +103,7 @@ public interface ApiService {
             @Part("title") RequestBody title,
             @Part("description") RequestBody description,
             @Part MultipartBody.Part attachment,
+            @Part("link_url") RequestBody link_url,
             @Part("due_date") RequestBody dueDate,
             @Part("max_score") RequestBody maxScore,
             @Part("type") RequestBody typeAssignment,
@@ -125,6 +127,7 @@ public interface ApiService {
             @Part("title") RequestBody title,
             @Part("description") RequestBody description,
             @Part MultipartBody.Part attachment,
+            @Part("link_url") RequestBody link_url,
             @Part("teacher_id") RequestBody teacherId
     );
 
@@ -135,6 +138,7 @@ public interface ApiService {
             @Part("title") RequestBody title,
             @Part("description") RequestBody description,
             @Part MultipartBody.Part attachment,
+            @Part("link_url") RequestBody link_url,
             @Part("teacher_id") RequestBody teacherId
     );
 
