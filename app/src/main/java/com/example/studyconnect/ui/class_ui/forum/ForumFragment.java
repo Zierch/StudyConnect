@@ -21,15 +21,20 @@ import com.example.studyconnect.utils.Helper;
 
 public class ForumFragment extends Fragment {
 
+    public static final String IS_ARCHIVED = "isArchived";
+    private static final String ARG_CLASS_ID = "classId";
+
     private FragmentForumBinding binding;
     private ForumViewModel viewModel;
     private ForumAdapter adapter;
     private int classId;
+    private boolean isArchived;
 
-    public static ForumFragment newInstance(int classId) {
+    public static ForumFragment newInstance(int classId, boolean isArchived) {
         ForumFragment fragment = new ForumFragment();
         Bundle args = new Bundle();
-        args.putInt("classId", classId);
+        args.putInt(ARG_CLASS_ID, classId);
+        args.putBoolean(IS_ARCHIVED, isArchived);
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,7 +43,8 @@ public class ForumFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            classId = getArguments().getInt("classId");
+            isArchived = getArguments().getBoolean(IS_ARCHIVED);
+            classId = getArguments().getInt(ARG_CLASS_ID);
         }
     }
 
@@ -64,6 +70,9 @@ public class ForumFragment extends Fragment {
     }
 
     private void initView() {
+        if (isArchived) {
+            binding.cardAdd.setEnabled(false);
+        }
         binding.cardAdd.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), FormForumActivity.class);
             intent.putExtra("isUpdate", false);

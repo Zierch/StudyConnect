@@ -117,7 +117,7 @@ public class ClassFragment extends Fragment {
             }
 
             if (itemId == R.id.navigation_forum) {
-                selectedFragment = ForumFragment.newInstance(classId);
+                selectedFragment = ForumFragment.newInstance(classId, isArchived);
             } else if (itemId == R.id.navigation_class_assignment) {
                 selectedFragment = ClassAssignmentFragment.newInstance(classId, isArchived);
             } else if (itemId == R.id.navigation_student_list) {

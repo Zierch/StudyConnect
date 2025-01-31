@@ -38,6 +38,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="15dp"
+        android:visibility="gone"
         android:background="@drawable/ic_more"
         android:backgroundTint="@color/black"
         android:contentDescription="@string/text_settings"

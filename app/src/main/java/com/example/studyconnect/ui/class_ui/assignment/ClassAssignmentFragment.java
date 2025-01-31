@@ -53,7 +53,7 @@ public class ClassAssignmentFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            isArchived = getArguments().getBoolean("isArchived");
+            isArchived = getArguments().getBoolean(IS_ARCHIVED);
             classId = getArguments().getInt(ARG_CLASS_ID);
         }
     }

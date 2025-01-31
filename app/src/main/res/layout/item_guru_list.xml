@@ -18,7 +18,9 @@
             android:id="@+id/iv_profile_guru"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/powder_smoke"
+            android:background="@drawable/background_circle"
+            android:backgroundTint="#373643"
+            android:src="@mipmap/ic_study_connect_foreground"
             android:contentDescription="@string/text_profile" />
     </com.google.android.material.card.MaterialCardView>
 
