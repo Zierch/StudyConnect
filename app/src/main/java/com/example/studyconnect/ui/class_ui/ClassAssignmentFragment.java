@@ -19,6 +19,9 @@ public class ClassAssignmentFragment extends Fragment {
 
         binding = FragmentClassAssignmentBinding.inflate(inflater, container, false);
 
+        // Belum ada tugas dari API, jadi tampilkan keadaan kosong.
+        binding.includeTugasEmptyList.getRoot().setVisibility(View.VISIBLE);
+
         return binding.getRoot();
     }
 
