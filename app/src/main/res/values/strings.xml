@@ -58,4 +58,23 @@
     <string name="text_serahkan">Serahkan</string>
     <string name="swipe_up">Swipe Up</string>
     <string name="text_belum_ada_data">Belum ada data dari server</string>
+    <string name="text_login_subtitle">Masuk dengan akun sekolah Anda</string>
+    <string name="text_email">Email</string>
+    <string name="text_password">Password</string>
+    <string name="text_masuk">Masuk</string>
+    <string name="text_email_password_kosong">Email dan password wajib diisi</string>
+    <string name="text_login_gagal">Login gagal, coba lagi</string>
+    <string name="text_login_berhasil">Login berhasil</string>
+    <string name="text_belum_punya_kelas">Belum ada kelas. Gabung atau buat kelas dulu.</string>
+    <string name="text_memuat">Memuat…</string>
+    <string name="text_gagal_muat_kelas">Gagal memuat kelas</string>
+    <string name="text_gabung_belum_tersedia">Gabung kelas belum tersedia</string>
+    <string name="text_buat_belum_tersedia">Buat kelas belum tersedia</string>
+    <string name="text_belum_ada_tugas">Belum ada tugas di kelas ini</string>
+    <string name="text_belum_ada_pengumuman">Belum ada pengumuman di kelas ini</string>
+    <string name="text_belum_ada_siswa">Belum ada siswa yang bergabung</string>
+    <string name="text_tenggat">Tenggat</string>
+    <string name="text_keluar">Keluar</string>
+    <string name="text_daftar_siswa_khusus_guru">Daftar siswa hanya dapat dilihat guru kelas</string>
+    <string name="text_nama_siswa">Siswa</string>
 </resources>
