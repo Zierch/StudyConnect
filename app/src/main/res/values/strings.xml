@@ -57,4 +57,5 @@
     <string name="text_pilihan">Pilihan</string>
     <string name="text_serahkan">Serahkan</string>
     <string name="swipe_up">Swipe Up</string>
+    <string name="text_belum_ada_data">Belum ada data dari server</string>
 </resources>

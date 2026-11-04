@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_forum"
-        android:name="com.example.studyconnect.ui.class_ui.ClassAssignmentFragment"
+        android:name="com.example.studyconnect.ui.class_ui.ForumFragment"
         android:label="Forum"
         tools:layout="@layout/fragment_forum" />
 
