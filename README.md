@@ -7,12 +7,25 @@ materi, pengumuman, tugas, forum, dan daftar anggota kelas.
 
 ## Status
 
-Tahap awal. Semua layar utama (home, kelas, tugas, forum, daftar siswa) sudah punya
-layout + fragment, tetapi lapisan jaringan masih kerangka: `ApiService` belum berisi
-endpoint dan `MainActivity` langsung memasang `fragment_home`.
+Tahap UI. Layar beranda dan layar kelas (tab Forum, Tugas, Orang) sudah bisa dibuka
+dan dinavigasi. Lapisan jaringan masih kerangka: `ApiService` belum berisi endpoint,
+jadi semua layar menampilkan keadaan kosong dan tombol aksi belum menyimpan apa pun.
 
 Artinya: aplikasi bisa di-build dan dijalankan untuk melihat UI, belum bisa login atau
 mengambil data dari API.
+
+## Screenshot
+
+Diambil dari emulator Pixel 7 (Android 16), isinya keadaan kosong karena API belum
+tersambung:
+
+| Beranda | Kelas · Forum |
+| --- | --- |
+| <img src="docs/screenshots/beranda.png" width="240" alt="Beranda"> | <img src="docs/screenshots/kelas-forum.png" width="240" alt="Kelas, tab Forum"> |
+
+| Kelas · Tugas | Kelas · Orang |
+| --- | --- |
+| <img src="docs/screenshots/kelas-tugas.png" width="240" alt="Kelas, tab Tugas"> | <img src="docs/screenshots/kelas-orang.png" width="240" alt="Kelas, tab Orang"> |
 
 ## Rencana fitur
 
@@ -28,7 +41,7 @@ mengambil data dari API.
 |---|---|
 | Bahasa | Java 8 |
 | UI | XML + ViewBinding, Material Design 3, Navigation Component |
-| Dependency injection | Dagger Hilt |
+| Dependency injection | Dagger Hilt (dependency sudah ada, `@HiltAndroidApp` belum dipasang) |
 | HTTP client | Retrofit 2 + Gson |
 | Min / target SDK | 24 / 34 |
 | IDE | Android Studio (AGP 8.6) |
@@ -39,10 +52,14 @@ Versi dependency terpusat di `gradle/libs.versions.toml`.
 
 ```
 app/src/main/java/com/example/studyconnect/
-├── MainActivity.java
+├── MainActivity.java               # beranda: tombol gabung/buat kelas
 ├── data/ApiService.java            # antarmuka Retrofit (masih kosong)
 ├── di/AppModule.java               # provider Retrofit + SharedPreferences
-├── ui/class_ui/                    # Forum, Tugas, Daftar Siswa
+├── ui/class_ui/
+│   ├── ClassActivity.java          # toolbar + tiga tab (Forum, Tugas, Orang)
+│   ├── ForumFragment.java
+│   ├── ClassAssignmentFragment.java
+│   └── StudentListFragment.java
 └── utils/SharedPreferencesManager.java
 ```
 
