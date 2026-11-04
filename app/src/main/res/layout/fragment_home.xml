@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -14,20 +14,10 @@
         android:background="@color/md_theme_background"
         android:paddingStart="15dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:navigationIcon="@drawable/ic_menu"
-        app:title="Study Connect"
-        tools:ignore="RtlSymmetry">
-
-        <ImageView
-            android:id="@+id/profile_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/background_circle"
-            android:contentDescription="@string/text_profile" />
-
-    </androidx.appcompat.widget.Toolbar>
+        app:menu="@menu/home_menu"
+        app:title="@string/app_name"
+        app:titleTextColor="@color/md_theme_primary"
+        tools:ignore="RtlSymmetry" />
 
     <View
         android:layout_width="match_parent"
@@ -35,75 +25,69 @@
         android:layout_below="@id/toolbar"
         android:background="@drawable/toolbar_shadow" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvKelas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/linearButton"
         android:layout_below="@id/toolbar"
-        android:fillViewport="true">
+        android:clipToPadding="false"
+        android:paddingStart="15dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="100dp"
+        tools:listitem="@layout/item_kelas" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="15dp">
+    <TextView
+        android:id="@+id/tvKosong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/linearButton"
+        android:layout_below="@id/toolbar"
+        android:gravity="center"
+        android:padding="32dp"
+        android:text="@string/text_belum_punya_kelas"
+        android:textColor="@color/md_theme_onSurfaceVariant"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
-            <LinearLayout
-                android:id="@+id/linearButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="100dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/joinClass"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/button"
-                    android:paddingTop="-3dp"
-                    android:paddingBottom="-3dp"
-                    android:text="@string/text_gabung_ke_kelas"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    tools:ignore="ButtonStyle" />
+    <LinearLayout
+        android:id="@+id/linearButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/md_theme_background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="15dp">
 
-                <Button
-                    android:id="@+id/createClass"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button"
-                    android:paddingTop="-3dp"
-                    android:paddingBottom="-3dp"
-                    android:text="@string/text_buat_kelas"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"
-                    tools:ignore="ButtonStyle" />
-            </LinearLayout>
+        <Button
+            android:id="@+id/joinClass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/button"
+            android:text="@string/text_gabung_ke_kelas"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            tools:ignore="ButtonStyle" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/add"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="100dp"
-                app:cardElevation="3dp">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/text_add"
-                    android:src="@drawable/ic_add"
-                    app:tint="@color/md_theme_outlineVariant_highContrast" />
-            </androidx.cardview.widget.CardView>
-
-
-        </RelativeLayout>
-
-    </androidx.core.widget.NestedScrollView>
+        <Button
+            android:id="@+id/createClass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:text="@string/text_buat_kelas"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -104,6 +104,7 @@
 
         <!--        nek pas forum chat e kosong iso dishow-->
         <include
+            android:id="@+id/includeForumEmpty"
             layout="@layout/forum_empty_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,6 +113,7 @@
             app:layout_constraintTop_toBottomOf="@id/materialCardView2" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvForum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="120dp"
