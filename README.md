@@ -1,5 +1,7 @@
 # StudyConnect 📱
 
+[![Android CI](https://github.com/Zierch/StudyConnect/actions/workflows/android.yml/badge.svg)](https://github.com/Zierch/StudyConnect/actions/workflows/android.yml)
+
 Aplikasi mobile **StudyConnect** — tugas akhir SMK. Aplikasi kelas untuk guru dan siswa:
 materi, pengumuman, tugas, forum, dan daftar anggota kelas.
 
