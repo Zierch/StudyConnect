@@ -1,52 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp">
+    android:orientation="vertical">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
-        app:cardCornerRadius="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_profile_pict"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/powder_smoke"
-            android:contentDescription="@string/text_profile" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <TextView
-        android:id="@+id/tvNamaSiswa"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:text="@string/text_nama_anda"
-        app:layout_constraintBottom_toBottomOf="@+id/materialCardView3"
-        app:layout_constraintStart_toEndOf="@+id/materialCardView3"
-        app:layout_constraintTop_toTopOf="@+id/materialCardView3" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="15dp"
-        android:background="@drawable/ic_more"
-        android:backgroundTint="@color/sc_icon_muted"
-        android:contentDescription="@string/text_settings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tvInisial"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/sc_circle_avatar"
+            android:gravity="center"
+            android:text="AP"
+            android:textColor="@color/sc_primary"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNamaSiswa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_nama_anda"
+                android:textColor="@color/sc_on_surface"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPeran"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_nama_siswa"
+                android:textColor="@color/sc_on_surface_muted"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/sc_divider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="@color/sc_divider" />
+</LinearLayout>

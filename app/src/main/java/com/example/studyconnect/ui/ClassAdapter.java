@@ -1,11 +1,15 @@
 package com.example.studyconnect.ui;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import androidx.core.content.ContextCompat;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.studyconnect.R;
 import com.example.studyconnect.data.ClassItem;
 import com.example.studyconnect.databinding.ItemKelasBinding;
 
@@ -45,6 +49,10 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.Holder> {
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         ClassItem item = items.get(position);
+        Context context = holder.binding.getRoot().getContext();
+        int[] headers = {R.color.sc_primary, R.color.sc_teal, R.color.sc_purple};
+        holder.binding.cardHeader.setBackgroundColor(
+                ContextCompat.getColor(context, headers[position % headers.length]));
         holder.binding.namaKelas.setText(item.getName());
         holder.binding.namaRuang.setText(item.getSubject() == null ? "" : item.getSubject());
         holder.binding.namaGuru.setText(item.getDescription() == null ? "" : item.getDescription());

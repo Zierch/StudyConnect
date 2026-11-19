@@ -78,4 +78,32 @@
     <string name="text_keluar">Keluar</string>
     <string name="text_daftar_siswa_khusus_guru">Daftar siswa hanya dapat dilihat guru kelas</string>
     <string name="text_nama_siswa">Siswa</string>
+
+    <!-- Frame FigCraft: Classroom-inspired UI -->
+    <string name="text_kelas">Kelas</string>
+    <string name="text_kata_sandi">Kata sandi</string>
+    <string name="text_inisial_z">Z</string>
+    <string name="text_banner_guru">%1$s · Tahun ajaran 2026/2027</string>
+    <string name="text_belum_tersedia">Fitur ini belum tersedia</string>
+    <string name="text_login_tagline">Kelas, tugas, dan diskusi dalam satu tempat</string>
+    <string name="text_hint_email">nama@sekolah.test</string>
+    <string name="text_hint_password">••••••••••</string>
+    <string name="text_lupa">Lupa kata sandi?</string>
+    <string name="text_atau">atau</string>
+    <string name="text_belum_punya_akun">Belum punya akun?</string>
+    <string name="text_daftar">Daftar</string>
+    <string name="text_versi">Versi 1.0 · Tugas Akhir SMK</string>
+    <string name="text_salam_pagi">Selamat pagi, %1$s</string>
+    <string name="text_kelas_aktif">%1$d kelas aktif · Tahun ajaran 2026/2027</string>
+    <string name="text_kelas_anda">KELAS ANDA</string>
+    <string name="text_pengumuman">PENGUMUMAN</string>
+    <string name="text_tugas_materi">TUGAS &amp; MATERI</string>
+    <string name="text_guru_label">GURU</string>
+    <string name="text_siswa_label">SISWA (%1$d)</string>
+    <string name="text_kode_gabung">Kode kelas untuk bergabung</string>
+    <string name="text_salin">Salin</string>
+    <string name="text_sudah_dikumpulkan">Sudah dikumpulkan</string>
+    <string name="text_belum_dikumpulkan">Belum dikumpulkan</string>
+    <string name="text_kode_kelas">Kode kelas: %1$s</string>
+    <string name="text_tenggat_label">Tenggat %1$s</string>
 </resources>

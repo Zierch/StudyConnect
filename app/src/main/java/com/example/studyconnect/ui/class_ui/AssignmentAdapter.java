@@ -40,7 +40,28 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.Ho
         holder.binding.tvDiposting.setText(due == null || due.isEmpty()
                 ? holder.binding.getRoot().getContext().getString(
                         com.example.studyconnect.R.string.tak_ada_batas_waktu)
-                : due);
+                : holder.binding.getRoot().getContext().getString(
+                        com.example.studyconnect.R.string.text_tenggat_label, due));
+        String title = item.getTitle() == null ? "" : item.getTitle().trim();
+        holder.binding.tvInitial.setText(title.isEmpty() ? "T"
+                : String.valueOf(Character.toUpperCase(title.charAt(0))));
+        String status = item.getStatus() == null ? "" : item.getStatus().toLowerCase();
+        boolean submitted = status.contains("submit") || status.contains("selesai")
+                || status.contains("dikumpulkan");
+        boolean materi = "materi".equalsIgnoreCase(item.getType());
+        holder.binding.statusBadge.setText(materi
+                ? com.example.studyconnect.R.string.text_materi
+                : submitted ? com.example.studyconnect.R.string.text_sudah_dikumpulkan
+                : com.example.studyconnect.R.string.text_belum_dikumpulkan);
+        holder.binding.statusBadge.setBackgroundResource(materi
+                ? com.example.studyconnect.R.drawable.sc_pill_info
+                : submitted ? com.example.studyconnect.R.drawable.sc_pill_success
+                : com.example.studyconnect.R.drawable.sc_pill_warn);
+        holder.binding.statusBadge.setTextColor(androidx.core.content.ContextCompat.getColor(
+                holder.binding.getRoot().getContext(), materi
+                        ? com.example.studyconnect.R.color.sc_primary
+                        : submitted ? com.example.studyconnect.R.color.sc_success_text
+                        : com.example.studyconnect.R.color.sc_warn_text));
     }
 
     @Override

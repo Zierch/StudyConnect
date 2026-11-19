@@ -15,6 +15,11 @@ import java.util.List;
 public class NameAdapter extends RecyclerView.Adapter<NameAdapter.Holder> {
 
     private final List<String> names = new ArrayList<>();
+    private int roleLabel = com.example.studyconnect.R.string.text_nama_siswa;
+
+    public void setRoleLabel(int resId) {
+        this.roleLabel = resId;
+    }
 
     public void submit(List<String> data) {
         names.clear();
@@ -33,7 +38,27 @@ public class NameAdapter extends RecyclerView.Adapter<NameAdapter.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        holder.binding.tvNamaSiswa.setText(names.get(position));
+        String nama = names.get(position);
+        if (nama == null) {
+            nama = "";
+        }
+        holder.binding.tvNamaSiswa.setText(nama);
+        holder.binding.tvPeran.setText(roleLabel);
+        if (nama.trim().isEmpty()) {
+            holder.binding.tvInisial.setText("?");
+            return;
+        }
+        String[] kata = nama.trim().split("\\s+");
+        if (kata.length == 0 || kata[0].isEmpty()) {
+            holder.binding.tvInisial.setText("?");
+            return;
+        }
+        StringBuilder inisial = new StringBuilder();
+        inisial.append(Character.toUpperCase(kata[0].charAt(0)));
+        if (kata.length > 1 && !kata[1].isEmpty()) {
+            inisial.append(Character.toUpperCase(kata[1].charAt(0)));
+        }
+        holder.binding.tvInisial.setText(inisial.toString());
     }
 
     @Override

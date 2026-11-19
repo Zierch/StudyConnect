@@ -41,7 +41,20 @@ public class StudentListFragment extends Fragment {
         int classId = ClassActivity.classIdOf(requireActivity());
 
         teacherAdapter = new NameAdapter();
+        teacherAdapter.setRoleLabel(R.string.text_guru_label);
         studentAdapter = new NameAdapter();
+        studentAdapter.setRoleLabel(R.string.text_nama_siswa);
+        String code = requireActivity().getIntent()
+                .getStringExtra(ClassActivity.EXTRA_CLASS_CODE);
+        binding.tvKodeGabung.setText(code == null || code.isEmpty() ? "—" : code);
+        binding.btnSalin.setOnClickListener(v -> {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager)
+                    requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE);
+            if (clipboard != null) {
+                clipboard.setPrimaryClip(android.content.ClipData.newPlainText(
+                        getString(R.string.text_kode_gabung), binding.tvKodeGabung.getText()));
+            }
+        });
         binding.rvGuruList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvGuruList.setAdapter(teacherAdapter);
         binding.rvSiswaList.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -101,6 +114,7 @@ public class StudentListFragment extends Fragment {
             }
         }
         studentAdapter.submit(names);
+        binding.tvJumlahSiswa.setText(getString(R.string.text_siswa_label, names.size()));
         boolean empty = names.isEmpty();
         binding.tvKosongSiswa.setVisibility(empty ? View.VISIBLE : View.GONE);
         if (empty) {

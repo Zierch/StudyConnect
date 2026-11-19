@@ -2,8 +2,6 @@ package com.example.studyconnect;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,7 +11,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.studyconnect.data.Api;
 import com.example.studyconnect.data.ApiClient;
@@ -54,24 +51,17 @@ public class MainActivity extends AppCompatActivity {
             return windowInsets;
         });
 
-        // Menu sudah dipasang lewat app:menu di layout; cukup pasang pendengar klik.
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.action_logout) {
-                logout();
-                return true;
-            }
-            return false;
-        });
+        binding.toolbarAvatar.setOnClickListener(view -> logout());
+        binding.fabAdd.setOnClickListener(view ->
+                Toast.makeText(this, R.string.text_buat_belum_tersedia, Toast.LENGTH_SHORT).show());
 
         adapter = new ClassAdapter(this::openClass);
         binding.rvKelas.setLayoutManager(new LinearLayoutManager(this));
         binding.rvKelas.setAdapter(adapter);
 
-        binding.joinClass.setOnClickListener(view ->
-                Toast.makeText(this, R.string.text_gabung_belum_tersedia, Toast.LENGTH_SHORT).show());
-        binding.createClass.setOnClickListener(view ->
-                Toast.makeText(this, R.string.text_buat_belum_tersedia, Toast.LENGTH_SHORT).show());
+        String nama = Session.name(this);
+        binding.tvSalam.setText(getString(R.string.text_salam_pagi,
+                nama == null || nama.isEmpty() ? "Zierch" : nama));
     }
 
     @Override
@@ -106,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
         call = null;
         binding.progress.setVisibility(View.GONE);
         adapter.submit(classes);
+        binding.tvSubKelas.setText(getString(R.string.text_kelas_aktif,
+                classes == null ? 0 : classes.size()));
         boolean empty = classes == null || classes.isEmpty();
         binding.tvKosong.setVisibility(empty ? View.VISIBLE : View.GONE);
         if (empty) {
@@ -133,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(ClassActivity.EXTRA_CLASS_ID, item.getId());
         intent.putExtra(ClassActivity.EXTRA_CLASS_NAME, item.getName());
         intent.putExtra(ClassActivity.EXTRA_TEACHER_ID, item.getTeacherId());
+        intent.putExtra(ClassActivity.EXTRA_CLASS_CODE, item.getCode());
         startActivity(intent);
     }
 }

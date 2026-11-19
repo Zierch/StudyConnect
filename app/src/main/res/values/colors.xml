@@ -5,7 +5,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- Classroom Cobalt — token semantik (light). -->
-    <color name="sc_background">#E8EAED</color>
+    <color name="sc_background">#F1F3F4</color>
     <color name="sc_surface">#FFFFFF</color>
     <color name="sc_surface_alt">#F1F3F4</color>
     <color name="sc_on_surface">#202124</color>
@@ -41,7 +41,7 @@
     <color name="md_theme_onError">#FFFFFF</color>
     <color name="md_theme_errorContainer">#FCE8E6</color>
     <color name="md_theme_onErrorContainer">#B31412</color>
-    <color name="md_theme_background">#E8EAED</color>
+    <color name="md_theme_background">#F1F3F4</color>
     <color name="md_theme_onBackground">#202124</color>
     <color name="md_theme_surface">#FFFFFF</color>
     <color name="md_theme_onSurface">#202124</color>

@@ -33,10 +33,6 @@ public class ForumFragment extends Fragment {
         binding = FragmentForumBinding.inflate(inflater, container, false);
         int classId = ClassActivity.classIdOf(requireActivity());
 
-        binding.namaKelas.setText(ClassActivity.classNameOf(requireActivity()));
-        binding.namaRuang.setText(getString(R.string.text_forum));
-        binding.namaGuru.setText(Session.name(requireContext()));
-
         adapter = new AnnouncementAdapter();
         adapter.setAuthorName(Session.name(requireContext()));
         binding.rvForum.setLayoutManager(new LinearLayoutManager(requireContext()));

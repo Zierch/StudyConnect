@@ -55,6 +55,31 @@ public class AnnouncementAdapter extends RecyclerView.Adapter<AnnouncementAdapte
         holder.binding.tvDeskripsiForum.setText(item.getContent());
         holder.binding.tvProfileName.setText(authorName);
         holder.binding.tvJamUpload.setText(pretty(item.getCreatedAt()));
+        holder.binding.tvInisial.setText(inisial(authorName));
+        String lampiran = item.getAttachmentPath();
+        if (lampiran == null || lampiran.isEmpty()) {
+            holder.binding.chipLampiran.setVisibility(android.view.View.GONE);
+        } else {
+            holder.binding.chipLampiran.setVisibility(android.view.View.VISIBLE);
+            holder.binding.chipLampiran.setText(
+                    lampiran.substring(lampiran.lastIndexOf('/') + 1));
+        }
+    }
+
+    private static String inisial(String nama) {
+        if (nama == null || nama.trim().isEmpty()) {
+            return "G";
+        }
+        String[] kata = nama.trim().split("\\s+");
+        if (kata.length == 0 || kata[0].isEmpty()) {
+            return "G";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(Character.toUpperCase(kata[0].charAt(0)));
+        if (kata.length > 1 && !kata[1].isEmpty()) {
+            sb.append(Character.toUpperCase(kata[1].charAt(0)));
+        }
+        return sb.toString();
     }
 
     /** "2026-11-04T14:06:07.000000Z" -> "4 Nov 2026, 14:06". */

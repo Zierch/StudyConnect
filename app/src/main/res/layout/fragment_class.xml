@@ -4,60 +4,203 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/sc_background">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/md_theme_background"
-        android:paddingStart="15dp"
+        android:layout_height="64dp"
+        android:background="@color/sc_surface"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/baseline_arrow_back_24"
-        app:title="Study Connect"
+        app:titleTextColor="@color/sc_on_surface"
         tools:ignore="RtlSymmetry">
 
-        <ImageView
-            android:id="@+id/profile_image"
+        <TextView
+            android:id="@+id/toolbarAvatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/background_circle"
-            android:contentDescription="@string/text_profile" />
-
+            android:layout_gravity="end|center_vertical"
+            android:background="@drawable/sc_circle_primary"
+            android:gravity="center"
+            android:text="@string/text_inisial_z"
+            android:textColor="@color/sc_on_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
+    <!-- Banner kelas FigCraft: biru + dua lingkaran dekoratif -->
+    <FrameLayout
+        android:id="@+id/classBanner"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:background="@color/sc_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <View
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/sc_circle_decor" />
+
+        <View
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/sc_circle_decor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="24dp">
+
+            <TextView
+                android:id="@+id/bannerNama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_nama_kelas"
+                android:textAllCaps="true"
+                android:textColor="@color/sc_on_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/bannerGuru"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/text_nama_guru"
+                android:textColor="@color/sc_on_primary_subtle"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/bannerKode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/text_kode_kelas"
+                android:textColor="#BBCEF5"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/tabRow"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/sc_surface"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/classBanner">
+
+        <TextView
+            android:id="@+id/tabForum"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/text_forum"
+            android:textColor="@color/sc_primary"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tabTugas"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/text_tugas"
+            android:textColor="@color/sc_on_surface_muted"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tabOrang"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/text_orang"
+            android:textColor="@color/sc_on_surface_muted"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/indicatorRow"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/sc_surface"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabRow">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/indForum"
+                android:layout_width="60dp"
+                android:layout_height="3dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/sc_primary" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/indTugas"
+                android:layout_width="60dp"
+                android:layout_height="3dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/sc_primary"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/indOrang"
+                android:layout_width="60dp"
+                android:layout_height="3dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/sc_primary"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+
     <View
-        android:id="@+id/toolbarDivider"
+        android:id="@+id/tabDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/sc_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-    <View
-        android:id="@+id/navDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/sc_divider"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:layout_constraintTop_toBottomOf="@id/indicatorRow" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment_fragment_class"
@@ -65,10 +208,21 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbarDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabDivider"
         app:navGraph="@navigation/class_navigation" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:contentDescription="@string/text_add"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/sc_primary"
+        app:tint="@color/sc_on_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
