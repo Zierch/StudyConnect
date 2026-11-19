@@ -31,4 +31,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/materialCardView3"
         app:layout_constraintStart_toEndOf="@+id/materialCardView3"
         app:layout_constraintTop_toTopOf="@+id/materialCardView3" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/sc_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

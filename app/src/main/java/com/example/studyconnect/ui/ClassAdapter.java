@@ -48,6 +48,9 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.Holder> {
         holder.binding.namaKelas.setText(item.getName());
         holder.binding.namaRuang.setText(item.getSubject() == null ? "" : item.getSubject());
         holder.binding.namaGuru.setText(item.getDescription() == null ? "" : item.getDescription());
+        String code = item.getCode();
+        holder.binding.kodeKelas.setText(code == null || code.isEmpty()
+                ? "Kode kelas: —" : "Kode kelas: " + code);
         holder.binding.getRoot().setOnClickListener(view -> onClick.onClass(item));
     }
 

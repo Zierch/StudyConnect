@@ -19,6 +19,13 @@ Ada juga logout (menu di pojok kanan beranda). Yang belum ada: membuat/mengubah 
 (gabung kelas, buat kelas, posting pengumuman, tambah tugas, kirim jawaban). Tombol
 untuk itu masih menampilkan pesan "belum tersedia" agar tidak terlihat seperti berfungsi.
 
+## Tampilan
+
+Memakai palet **Classroom Cobalt**: kanvas `#E8EAED`, permukaan `#FFFFFF`, biru
+`#1A73E8`, teks `#202124`/`#5F6368`. Dark mode mengikuti pengaturan sistem Android
+(kanvas `#1F2124`, permukaan `#2A2D31`, aksen `#8AB4F8`) lewat `values-night/`.
+Pemisah antar kartu dan bagian memakai token `sc_divider` agar tidak menyatu.
+
 ## Screenshot
 
 Diambil dari emulator Pixel 7 (Android 16) yang tersambung ke API lokal:
@@ -30,6 +37,18 @@ Diambil dari emulator Pixel 7 (Android 16) yang tersambung ke API lokal:
 | Kelas · Tugas | Kelas · Orang |
 | --- | --- |
 | <img src="docs/screenshots/kelas-tugas.png" width="240" alt="Kelas, tab Tugas"> | <img src="docs/screenshots/kelas-orang.png" width="240" alt="Kelas, tab Orang"> |
+
+### Dark mode
+
+Lima layar yang sama dengan `Night mode: yes` pada emulator:
+
+| Login | Beranda | Kelas · Forum |
+| --- | --- | --- |
+| <img src="docs/screenshots/login-gelap.png" width="240" alt="Login gelap"> | <img src="docs/screenshots/beranda-gelap.png" width="240" alt="Beranda kelas gelap"> | <img src="docs/screenshots/kelas-forum-gelap.png" width="240" alt="Kelas, tab Forum gelap"> |
+
+| Kelas · Tugas | Kelas · Orang |
+| --- | --- |
+| <img src="docs/screenshots/kelas-tugas-gelap.png" width="240" alt="Kelas, tab Tugas gelap"> | <img src="docs/screenshots/kelas-orang-gelap.png" width="240" alt="Kelas, tab Orang gelap"> |
 
 Data pada tangkapan layar adalah data contoh yang dibuat lewat API, bukan data sekolah.
 

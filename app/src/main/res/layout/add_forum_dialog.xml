@@ -22,7 +22,7 @@
             android:layout_height="30dp"
             android:layout_gravity="start"
             android:background="@drawable/baseline_close_24"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/sc_icon_muted"
             android:contentDescription="@string/close" />
 
         <ImageView
@@ -32,7 +32,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
             android:background="@drawable/ic_more"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/sc_icon_muted"
             android:contentDescription="@string/text_settings" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -51,7 +51,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black"
+        android:background="@color/sc_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
@@ -73,7 +73,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
-        android:background="@color/white"
+        android:background="@color/sc_surface"
         android:hint="@string/text_umumkan_sesuatu"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="20dp"
-        android:background="@color/black"
+        android:background="@color/sc_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edtDeskripsiForum" />
@@ -109,13 +109,13 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/baseline_attachment_24"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/sc_icon_muted"
                 android:contentDescription="@string/lampiran" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/sc_surface"
                 android:padding="20dp"
                 android:text="@string/text_tambahkan_lampiran" />
         </LinearLayout>
@@ -125,7 +125,7 @@
         android:id="@+id/view3"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black"
+        android:background="@color/sc_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_add_file" />

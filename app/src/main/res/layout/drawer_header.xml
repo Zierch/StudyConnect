@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Study Connect"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:textColor="@color/md_theme_outline_highContrast"
         android:layout_margin="16dp"/>
 

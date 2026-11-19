@@ -13,7 +13,7 @@
         android:backgroundTint="@android:color/transparent"
         android:gravity="start"
         android:text="@string/text_batalkan_pendaftaran"
-        android:textColor="@color/black" />
+        android:textColor="@color/sc_on_surface" />
 
     <Button
         android:id="@+id/editKelas"
@@ -24,7 +24,7 @@
         android:backgroundTint="@android:color/transparent"
         android:gravity="start"
         android:text="@string/text_edit_kelas"
-        android:textColor="@color/black" />
+        android:textColor="@color/sc_on_surface" />
 
     <Button
         android:id="@+id/arsipkanKelas"
@@ -35,5 +35,5 @@
         android:backgroundTint="@android:color/transparent"
         android:gravity="start"
         android:text="@string/text_arsipkan_kelas"
-        android:textColor="@color/black" />
+        android:textColor="@color/sc_on_surface" />
 </LinearLayout>

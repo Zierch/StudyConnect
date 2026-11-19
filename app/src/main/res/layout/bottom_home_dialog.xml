@@ -13,7 +13,7 @@
         android:backgroundTint="@android:color/transparent"
         android:gravity="start"
         android:text="Gabung ke kelas"
-        android:textColor="@color/black" />
+        android:textColor="@color/sc_on_surface" />
 
     <Button
         android:id="@+id/createClass"
@@ -23,5 +23,5 @@
         android:backgroundTint="@android:color/transparent"
         android:gravity="start"
         android:text="Buat kelas"
-        android:textColor="@color/black" />
+        android:textColor="@color/sc_on_surface" />
 </LinearLayout>

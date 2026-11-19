@@ -16,7 +16,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:menu="@menu/home_menu"
         app:title="@string/app_name"
-        app:titleTextColor="@color/md_theme_primary"
+        app:titleTextColor="@color/sc_link"
         tools:ignore="RtlSymmetry" />
 
     <View

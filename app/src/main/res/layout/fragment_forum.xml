@@ -17,6 +17,8 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="15dp"
             app:cardElevation="4dp"
+        app:strokeColor="@color/sc_divider"
+        app:strokeWidth="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -24,7 +26,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/md_theme_onPrimaryFixedVariant"
+                android:background="@color/sc_primary"
                 android:orientation="vertical"
                 android:padding="15dp">
 
@@ -34,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_nama_kelas"
-                    android:textColor="@color/white"
+                    android:textColor="@color/sc_on_primary"
                     android:textSize="18sp" />
 
                 <TextView
@@ -44,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/text_deskripsi"
-                    android:textColor="@color/white"
+                    android:textColor="@color/sc_on_primary"
                     android:textSize="12sp" />
 
                 <TextView
@@ -53,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/text_nama_guru"
-                    android:textColor="@color/white"
+                    android:textColor="@color/sc_on_primary"
                     android:textSize="12sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -65,6 +67,8 @@
             android:layout_marginTop="10dp"
             app:cardCornerRadius="15dp"
             app:cardElevation="4dp"
+        app:strokeColor="@color/sc_divider"
+        app:strokeWidth="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialCardView">
@@ -72,7 +76,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/sc_surface"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -97,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center"
                     android:text="@string/text_umumkan"
-                    android:textColor="@color/black"
+                    android:textColor="@color/sc_on_surface"
                     android:textSize="12sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
